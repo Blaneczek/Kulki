@@ -9,6 +9,8 @@
 class USpringArmComponent;
 class UCameraComponent;
 
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnAttributeChanged, float /*NewValue*/);
+
 UCLASS()
 class KULKI_API AKulkiPlayerCharacter : public ACharacter
 {
@@ -25,12 +27,19 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	float DebugSpeed = 100.f;
-	
+
+	float GetStrengthValue() const { return 7.f; } 
+	float GetSpeedValue() const { return 10.f; } 
+
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TObjectPtr<UCameraComponent> Camera;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TObjectPtr<USpringArmComponent> CameraArm;
-	
+
+
+public:
+	FOnAttributeChanged OnStrengthChanged;
+	FOnAttributeChanged OnSpeedChanged;
 };

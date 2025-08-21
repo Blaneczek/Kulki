@@ -31,6 +31,7 @@ void AKulkiMenuGameMode::BeginPlay()
 
 void AKulkiMenuGameMode::StartGame()
 {
+    //TODO: Check if Level01 is valid (IsValid() doesnt work)
     UGameplayStatics::OpenLevelBySoftObjectPtr(GetWorld(), Level01);
 }
 

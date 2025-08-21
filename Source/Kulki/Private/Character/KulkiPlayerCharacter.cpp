@@ -5,6 +5,7 @@
 
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "UI/KulkiHUD.h"
 
 AKulkiPlayerCharacter::AKulkiPlayerCharacter()
 {
@@ -12,8 +13,7 @@ AKulkiPlayerCharacter::AKulkiPlayerCharacter()
 
 	CameraArm = CreateDefaultSubobject<USpringArmComponent>("CameraArm");
 	CameraArm->SetupAttachment(RootComponent);
-	CameraArm->SetUsingAbsoluteRotation(true);
-	CameraArm->SetRelativeRotation(FRotator(0.f, 90.f, 0.0f));
+	CameraArm->SetRelativeRotation(FRotator(-90.f, 0.0f, 0.0f));
 	
 	Camera = CreateDefaultSubobject<UCameraComponent>("Camera");
 	Camera->SetupAttachment(CameraArm);
@@ -23,13 +23,21 @@ AKulkiPlayerCharacter::AKulkiPlayerCharacter()
 void AKulkiPlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	//Init Main widget with controller 
+	if (const APlayerController* PC = Cast<APlayerController>(GetController()))
+	{
+		if (AKulkiHUD* KulkiHUD = Cast<AKulkiHUD>(PC->GetHUD()))
+		{
+			KulkiHUD->InitOverlayWidget(this);
+		}
+	}
 }
 
 void AKulkiPlayerCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
+	
 }
 
 

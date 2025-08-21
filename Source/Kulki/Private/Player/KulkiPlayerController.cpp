@@ -7,7 +7,6 @@
 #include "EnhancedInputSubsystems.h"
 #include "Character/KulkiPlayerCharacter.h"
 #include "GameFramework/CharacterMovementComponent.h"
-#include "Kismet/KismetMathLibrary.h"
 #include "Math/UnitConversion.h"
 
 AKulkiPlayerController::AKulkiPlayerController()
@@ -71,6 +70,7 @@ void AKulkiPlayerController::StopPlayerInput()
 
 void AKulkiPlayerController::FollowMouseCursor()
 {
+	//TODO: maybe try something different 
 	AKulkiPlayerCharacter* PlayerCharacter = Cast<AKulkiPlayerCharacter>(GetCharacter());
 	if (!PlayerCharacter)
 	{
