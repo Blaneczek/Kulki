@@ -7,6 +7,8 @@
 #include "KulkiEnemyBaseCharacter.generated.h"
 
 
+class UKulkiAttributesComponent;
+
 UCLASS()
 class KULKI_API AKulkiEnemyBaseCharacter : public APawn
 {
@@ -18,6 +20,7 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
-public:	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	TObjectPtr<UKulkiAttributesComponent> AttributesComponent;
 
 };

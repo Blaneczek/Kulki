@@ -13,8 +13,8 @@ void UKulkiWidgetController::InitAttributesValue()
 {
 	if (IsValid(PlayerCharacter))
 	{
-		OnStrengthChanged.Broadcast(PlayerCharacter->GetStrengthValue());
-		OnSpeedChanged.Broadcast(PlayerCharacter->GetSpeedValue());		
+		OnStrengthChanged.Broadcast(PlayerCharacter->GetAttributesComponent()->GetStrengthValue());
+		OnSpeedChanged.Broadcast(PlayerCharacter->GetAttributesComponent()->GetSpeedValue());		
 	}	
 }
 
@@ -22,13 +22,13 @@ void UKulkiWidgetController::BindCallbacks()
 {
 	if (IsValid(PlayerCharacter))
 	{
-		PlayerCharacter->OnStrengthChanged.AddLambda(
+		PlayerCharacter->GetAttributesComponent()->OnStrengthChangedDelegate.AddLambda(
 			[this](float NewStrength)
 		{
 			OnStrengthChanged.Broadcast(NewStrength);
 		});
 
-		PlayerCharacter->OnSpeedChanged.AddLambda(
+		PlayerCharacter->GetAttributesComponent()->OnSpeedChangedDelegate.AddLambda(
 			[this](float NewSpeed)
 		{
 			OnSpeedChanged.Broadcast(NewSpeed);

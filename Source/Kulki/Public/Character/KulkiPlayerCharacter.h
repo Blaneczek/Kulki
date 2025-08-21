@@ -3,13 +3,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Component/KulkiAttributesComponent.h"
 #include "GameFramework/Character.h"
 #include "KulkiPlayerCharacter.generated.h"
 
+class UKulkiAttributesComponent;
 class USpringArmComponent;
 class UCameraComponent;
-
-DECLARE_MULTICAST_DELEGATE_OneParam(FOnAttributeChanged, float /*NewValue*/);
 
 UCLASS()
 class KULKI_API AKulkiPlayerCharacter : public ACharacter
@@ -28,9 +28,9 @@ public:
 	UPROPERTY(EditAnywhere)
 	float DebugSpeed = 100.f;
 
-	float GetStrengthValue() const { return 7.f; } 
-	float GetSpeedValue() const { return 10.f; } 
-
+	UFUNCTION(BlueprintCallable)
+	UKulkiAttributesComponent* GetAttributesComponent() const { return AttributesComponent; };
+	
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TObjectPtr<UCameraComponent> Camera;
@@ -38,8 +38,6 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TObjectPtr<USpringArmComponent> CameraArm;
 
-
-public:
-	FOnAttributeChanged OnStrengthChanged;
-	FOnAttributeChanged OnSpeedChanged;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+    TObjectPtr<UKulkiAttributesComponent> AttributesComponent;
 };

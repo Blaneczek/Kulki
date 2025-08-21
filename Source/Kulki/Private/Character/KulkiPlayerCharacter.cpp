@@ -4,6 +4,7 @@
 #include "Character/KulkiPlayerCharacter.h"
 
 #include "Camera/CameraComponent.h"
+#include "Component/KulkiAttributesComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "UI/KulkiHUD.h"
 
@@ -18,6 +19,8 @@ AKulkiPlayerCharacter::AKulkiPlayerCharacter()
 	Camera = CreateDefaultSubobject<UCameraComponent>("Camera");
 	Camera->SetupAttachment(CameraArm);
 	Camera->ProjectionMode = ECameraProjectionMode::Orthographic;
+
+	AttributesComponent = CreateDefaultSubobject<UKulkiAttributesComponent>("AttributesComponent");
 }
 
 void AKulkiPlayerCharacter::BeginPlay()
@@ -39,5 +42,6 @@ void AKulkiPlayerCharacter::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 	
 }
+
 
 

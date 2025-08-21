@@ -23,6 +23,7 @@ void AKulkiHUD::InitOverlayWidget(AKulkiPlayerCharacter* PlayerCharacter)
 	OverlayWidget = CreateWidget<UKulkiOverlayWidget>(GetWorld(), OverlayWidgetClass);
 	OverlayWidget->SetWidgetController(GetWidgetController(PlayerCharacter));
 	WidgetController->InitAttributesValue();
+	WidgetController->BindCallbacks();
 	
 	OverlayWidget->AddToViewport();
 }
