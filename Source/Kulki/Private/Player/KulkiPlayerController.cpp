@@ -77,7 +77,7 @@ void AKulkiPlayerController::FollowMouseCursor()
 		return;
 	}
 
-	if (PlayerCharacter->GetMovementComponent()->Velocity.Length() >= PlayerCharacter->DebugSpeed)
+	if (PlayerCharacter->GetMovementComponent()->Velocity.Length() >= PlayerCharacter->GetMovementSpeed())
 	{
 		return;
 	}
@@ -87,7 +87,7 @@ void AKulkiPlayerController::FollowMouseCursor()
 	if (HitResult.bBlockingHit)
 	{
 		const FVector HitDirection = (HitResult.ImpactPoint - PlayerCharacter->GetActorLocation()).GetSafeNormal();
-		PlayerCharacter->GetCharacterMovement()->AddForce(FVector(HitDirection.X * 5000.f, HitDirection.Y * 5000.f, 0.f));
+		PlayerCharacter->GetCharacterMovement()->AddForce(FVector(HitDirection.X * PlayerCharacter->DebugMovementForce, HitDirection.Y * PlayerCharacter->DebugMovementForce, 0.f));
 	}
 }
 

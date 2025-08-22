@@ -24,18 +24,20 @@ protected:
 
 public:	
 	virtual void Tick(float DeltaTime) override;
-
-	UPROPERTY(EditAnywhere)
-	float DebugSpeed = 100.f;
-
+	
 	UFUNCTION(BlueprintCallable)
 	UKulkiAttributesComponent* GetAttributesComponent() const { return AttributesComponent; }
 
-private:
-	UFUNCTION()
-	void OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
-		int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+	float GetMovementSpeed() const { return MovementSpeed; }
+	
+	UPROPERTY(EditAnywhere)
+	float DebugSpeed = 10.f;
+	
+	UPROPERTY(EditAnywhere)
+	float DebugStrength = 10.f;
 
+	UPROPERTY(EditAnywhere)
+	float DebugMovementForce = 3000.f;
 	
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -50,4 +52,13 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
     TObjectPtr<UKulkiAttributesComponent> AttributesComponent;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TObjectPtr<UCapsuleComponent> CapsuleCollision;
+	
+private:
+	UFUNCTION()
+	void OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
+		int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+	float MovementSpeed;
 };

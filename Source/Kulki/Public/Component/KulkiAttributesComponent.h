@@ -23,21 +23,31 @@ protected:
 public:	
 	UFUNCTION(BlueprintCallable)
 	float GetStrengthValue() const {return Strength; }
-	UFUNCTION(BlueprintCallable)
-	void SetStrengthValue(float NewStrength);
 	
 	UFUNCTION(BlueprintCallable)
-	float GetSpeedValue() const {return Speed; }
-	UFUNCTION(BlueprintCallable)
-	void SetSpeedValue(float NewSpeed);
+	void SetStrengthAttribute(float NewStrength, UStaticMeshComponent* Mesh, UCapsuleComponent* CapsuleCollision, float& OutMovementSpeed, bool bChangeCapsuleSize = false);
 
-	void SetOwnerSize(UStaticMeshComponent* Mesh, UCapsuleComponent* CapsuleCollision);
-	void SetOwnerSpeed();
+	UFUNCTION(BlueprintCallable)
+	void AddToStrengthAttribute(float ValueToAdd, UStaticMeshComponent* Mesh, UCapsuleComponent* CapsuleCollision, float& OutMovementSpeed);
 	
+	UFUNCTION(BlueprintCallable)
+	float GetSpeedAttribute() const {return Speed; }
+	
+	UFUNCTION(BlueprintCallable)
+	void SetSpeedAttribute(float NewSpeed, float& OutMovementSpeed);
+
+	UFUNCTION(BlueprintCallable)
+	void AddToSpeedAttribute(float ValueToAdd, float& OutMovementSpeed);
+
 	FOnAttributeChangedSignature OnStrengthChangedDelegate;
 	FOnAttributeChangedSignature OnSpeedChangedDelegate;
-	
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	float BaseMovementSpeed = 500.f;
 private:
+	void SetOwnerSize(UStaticMeshComponent* Mesh, UCapsuleComponent* CapsuleCollision, bool bChangeCapsuleSize);
+	void SetOwnerSpeed(float& OutMovementSpeed);
+	
 	float Strength;
 	float Speed;
 };

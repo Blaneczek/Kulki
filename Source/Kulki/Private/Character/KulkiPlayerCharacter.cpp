@@ -7,6 +7,7 @@
 #include "Character/KulkiEnemyBaseCharacter.h"
 #include "Component/KulkiAttributesComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "UI/KulkiHUD.h"
 
@@ -16,8 +17,10 @@ AKulkiPlayerCharacter::AKulkiPlayerCharacter()
 
 	SphereMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("SphereMesh"));
 	SphereMesh->SetupAttachment(RootComponent);
-	SphereMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	SphereMesh->CastShadow = false;
+
+	CapsuleCollision = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Capsule"));
+	CapsuleCollision->SetupAttachment(RootComponent);
 	
 	CameraArm = CreateDefaultSubobject<USpringArmComponent>("CameraArm");
 	CameraArm->SetupAttachment(RootComponent);
@@ -34,10 +37,9 @@ void AKulkiPlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// Set initial values and size
-	AttributesComponent->SetStrengthValue(3.f);
-	AttributesComponent->SetSpeedValue(1.f);
-	AttributesComponent->SetOwnerSize(SphereMesh, GetCapsuleComponent());
+	// Set default attributes
+	AttributesComponent->SetStrengthAttribute(DebugStrength, SphereMesh, CapsuleCollision, MovementSpeed, true);
+	AttributesComponent->SetSpeedAttribute(DebugSpeed, MovementSpeed);
 	
 	// Init Main widget with controller 
 	if (const APlayerController* PC = Cast<APlayerController>(GetController()))
@@ -48,7 +50,7 @@ void AKulkiPlayerCharacter::BeginPlay()
 		}
 	}
 
-	GetCapsuleComponent()->OnComponentBeginOverlap.AddDynamic(this, &AKulkiPlayerCharacter::OnOverlap);
+	CapsuleCollision->OnComponentBeginOverlap.AddDynamic(this, &AKulkiPlayerCharacter::OnOverlap);
 }
 
 void AKulkiPlayerCharacter::Tick(float DeltaTime)
@@ -63,57 +65,34 @@ void AKulkiPlayerCharacter::OnOverlap(UPrimitiveComponent* OverlappedComponent, 
 	// TODO: try something different 
 	if (AKulkiEnemyBaseCharacter* Enemy = Cast<AKulkiEnemyBaseCharacter>(OtherActor))
 	{
+		float Value = -10.f;
 		if (AttributesComponent->GetStrengthValue() >= Enemy->GetAttributesComponent()->GetStrengthValue())
 		{
-			switch (Enemy->Type)
-			{
-			case EEnemyType::RED:
-				{
-					AttributesComponent->SetStrengthValue(AttributesComponent->GetStrengthValue() + 0.5f);
-					break;
-				}
-			case EEnemyType::YELLOW:
-				{
-					AttributesComponent->SetSpeedValue(AttributesComponent->GetSpeedValue() + 0.5f);
-					break;
-				}
-			case EEnemyType::PURPLE:
-				{
-					AttributesComponent->SetStrengthValue(AttributesComponent->GetStrengthValue() - 0.5f);
-					AttributesComponent->SetSpeedValue(AttributesComponent->GetSpeedValue() - 0.5f);
-					break;
-				}
-			default: break;
-			}
-			
-			AttributesComponent->SetOwnerSize(SphereMesh, GetCapsuleComponent());
-			Enemy->Destroy();
+			Value *= -1;
+			Enemy->Destroy();	
 		}
-		else
+
+		switch (Enemy->Type)
 		{
-			switch (Enemy->Type)
-			{
 			case EEnemyType::RED:
 				{
-					AttributesComponent->SetStrengthValue(AttributesComponent->GetStrengthValue() - 0.5f);
+					AttributesComponent->AddToStrengthAttribute(Value, SphereMesh, CapsuleCollision, MovementSpeed);
 					break;
 				}
 			case EEnemyType::YELLOW:
 				{
-					AttributesComponent->SetSpeedValue(AttributesComponent->GetSpeedValue() - 0.5f);
+					AttributesComponent->AddToSpeedAttribute(Value, MovementSpeed);
 					break;
 				}
 			case EEnemyType::PURPLE:
 				{
-					AttributesComponent->SetStrengthValue(AttributesComponent->GetStrengthValue() - 0.5f);
-					AttributesComponent->SetSpeedValue(AttributesComponent->GetSpeedValue() - 0.5f);
+					//TODO: find a way to set Value as always negative
+					AttributesComponent->AddToStrengthAttribute(-10.f, SphereMesh, CapsuleCollision, MovementSpeed);
+					AttributesComponent->AddToSpeedAttribute(-10.f, MovementSpeed);
 					break;
 				}
 			default: break;
-			}
-			
-			AttributesComponent->SetOwnerSize(SphereMesh, GetCapsuleComponent());
-		}		
+		}						
 	}
 }
 

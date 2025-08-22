@@ -5,6 +5,8 @@
 #include "BlueprintEditor.h"
 #include "Component/KulkiAttributesComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
+#include "GameFramework/PawnMovementComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 
 AKulkiEnemyBaseCharacter::AKulkiEnemyBaseCharacter()
@@ -15,7 +17,6 @@ AKulkiEnemyBaseCharacter::AKulkiEnemyBaseCharacter()
 
 	SphereMesh = CreateDefaultSubobject<UStaticMeshComponent>("SphereMesh");
 	SphereMesh->SetupAttachment(RootComponent);
-	SphereMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	SphereMesh->CastShadow = false;
 
 	AttributesComponent = CreateDefaultSubobject<UKulkiAttributesComponent>("AttributesComponent");
@@ -25,9 +26,8 @@ void AKulkiEnemyBaseCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
-	AttributesComponent->SetStrengthValue(DebugStrength);
-    AttributesComponent->SetSpeedValue(DebugSpeed);
-    AttributesComponent->SetOwnerSize(SphereMesh, GetCapsuleComponent());
+	AttributesComponent->SetStrengthAttribute(DebugStrength, SphereMesh, GetCapsuleComponent(), GetCharacterMovement()->MaxWalkSpeed);
+    AttributesComponent->SetSpeedAttribute(DebugSpeed,GetCharacterMovement()->MaxWalkSpeed);
 
 	SetMeshColor();
 }
