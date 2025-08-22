@@ -19,6 +19,9 @@ AKulkiEnemyBaseCharacter::AKulkiEnemyBaseCharacter()
 	SphereMesh->SetupAttachment(RootComponent);
 	SphereMesh->CastShadow = false;
 
+	CapsuleCollision = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Capsule"));
+	CapsuleCollision->SetupAttachment(RootComponent);
+	
 	AttributesComponent = CreateDefaultSubobject<UKulkiAttributesComponent>("AttributesComponent");
 }
 
@@ -26,7 +29,7 @@ void AKulkiEnemyBaseCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
-	AttributesComponent->SetStrengthAttribute(DebugStrength, SphereMesh, GetCapsuleComponent(), GetCharacterMovement()->MaxWalkSpeed);
+	AttributesComponent->SetStrengthAttribute(DebugStrength, SphereMesh, CapsuleCollision, GetCharacterMovement()->MaxWalkSpeed);
     AttributesComponent->SetSpeedAttribute(DebugSpeed,GetCharacterMovement()->MaxWalkSpeed);
 
 	SetMeshColor();

@@ -48,6 +48,9 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
     TObjectPtr<UKulkiAttributesComponent> AttributesComponent;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TObjectPtr<UCapsuleComponent> CapsuleCollision;
 	
 private:
 	UPROPERTY()

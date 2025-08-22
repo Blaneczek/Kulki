@@ -57,14 +57,6 @@ void UKulkiAttributesComponent::AddToSpeedAttribute(float ValueToAdd, float& Out
 
 void UKulkiAttributesComponent::SetOwnerSize(UStaticMeshComponent* Mesh, UCapsuleComponent* CapsuleCollision, bool bChangeCapsuleSize)
 {
-	// For Enemy
-	if (!bChangeCapsuleSize && Mesh)
-	{
-		Mesh->SetWorldScale3D(FVector(Strength * 0.1f, Strength * 0.1f, 1.f));
-		return;
-	}
-
-	// For Player
 	if (CapsuleCollision && Mesh)
 	{
 		Mesh->SetWorldScale3D(FVector(Strength * 0.1f, Strength * 0.1f, 1.f));
