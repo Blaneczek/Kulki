@@ -2,17 +2,64 @@
 
 
 #include "Character/KulkiEnemyBaseCharacter.h"
+#include "BlueprintEditor.h"
+#include "Component/KulkiAttributesComponent.h"
+#include "Components/CapsuleComponent.h"
+#include "Kismet/KismetMathLibrary.h"
 
 AKulkiEnemyBaseCharacter::AKulkiEnemyBaseCharacter()
 {
 	PrimaryActorTick.bCanEverTick = false;
 
+	Type = EEnemyType::NONE;
+
+	SphereMesh = CreateDefaultSubobject<UStaticMeshComponent>("SphereMesh");
+	SphereMesh->SetupAttachment(RootComponent);
+	SphereMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	SphereMesh->CastShadow = false;
+
+	AttributesComponent = CreateDefaultSubobject<UKulkiAttributesComponent>("AttributesComponent");
 }
 
 void AKulkiEnemyBaseCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	AttributesComponent->SetStrengthValue(DebugStrength);
+    AttributesComponent->SetSpeedValue(DebugSpeed);
+    AttributesComponent->SetOwnerSize(SphereMesh, GetCapsuleComponent());
+
+	SetMeshColor();
+}
+
+void AKulkiEnemyBaseCharacter::SetMeshColor()
+{
+	FLinearColor Color = FLinearColor::Gray;
+	switch (Type)
+	{
+	case EEnemyType::YELLOW:
+		{
+			Color = FLinearColor::Yellow;
+			break;
+		}
+	case EEnemyType::RED:
+		{
+			Color = FLinearColor::Red;
+			break;
+		}
+	case EEnemyType::PURPLE:
+		{
+			Color = FLinearColor(0.5f, 0.f, 0.5f, 1.f);
+			break;
+		}
+	default: break;
+	}
+
+	if (UMaterialInstanceDynamic* DynMaterial = UMaterialInstanceDynamic::Create(SphereMesh->GetMaterial(0), this))
+	{
+		DynMaterial->SetVectorParameterValue("MeshColor", Color);
+		SphereMesh->SetMaterial(0, DynMaterial);
+	}
 }
 
 

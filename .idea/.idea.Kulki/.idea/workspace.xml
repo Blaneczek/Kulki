@@ -14,15 +14,24 @@
   <component name="ChangeListManager">
     <list default="true" id="afbf4fc1-8513-469a-b1a5-ac1f5cec4871" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Kulki/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Kulki/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Config/DefaultEditor.ini" beforeDir="false" afterPath="$PROJECT_DIR$/Config/DefaultEditor.ini" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Config/DefaultEngine.ini" beforeDir="false" afterPath="$PROJECT_DIR$/Config/DefaultEngine.ini" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Blueprints/Character/Enemy/BP_EnemyTest.uasset" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/Blueprints/Character/Player/BP_PlayerCharacter.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/Character/Player/BP_PlayerCharacter.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Blueprints/GameMode/BP_MenuGameMode.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/GameMode/BP_MenuGameMode.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Maps/DEV_Test.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Maps/DEV_Test.umap" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/Maps/DEV_Test/8/WI/IN1ID5OGCKI2LLYT3FVY18.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/Maps/DEV_Test/C/87/3WYIWGR3AE7AJCIBSV6FH9.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/Maps/DEV_Test/C/87/3WYIWGR3AE7AJCIBSV6FH9.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Kulki.sln.DotSettings.user" beforeDir="false" afterPath="$PROJECT_DIR$/Kulki.sln.DotSettings.user" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/Kulki/Kulki.Build.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Kulki/Kulki.Build.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/Kulki/Private/Character/KulkiEnemyBaseCharacter.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Kulki/Private/Character/KulkiEnemyBaseCharacter.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/Kulki/Private/Character/KulkiPlayerCharacter.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Kulki/Private/Character/KulkiPlayerCharacter.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/Kulki/Private/Component/KulkiAttributesComponent.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Kulki/Private/Component/KulkiAttributesComponent.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Kulki/Private/UI/KulkiHUD.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Kulki/Private/UI/KulkiHUD.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Kulki/Private/UI/KulkiWidgetController.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Kulki/Private/UI/KulkiWidgetController.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/Kulki/Private/GameMode/KulkiMenuGameMode.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Kulki/Private/GameMode/KulkiMenuGameMode.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/Kulki/Private/Player/KulkiPlayerController.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Kulki/Private/Player/KulkiPlayerController.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/Kulki/Public/Character/KulkiEnemyBaseCharacter.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Kulki/Public/Character/KulkiEnemyBaseCharacter.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/Kulki/Public/Character/KulkiPlayerCharacter.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Kulki/Public/Character/KulkiPlayerCharacter.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/Kulki/Public/Component/KulkiAttributesComponent.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Kulki/Public/Component/KulkiAttributesComponent.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Kulki/Public/UI/KulkiWidgetController.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Kulki/Public/UI/KulkiWidgetController.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -38,9 +47,36 @@
   <component name="HighlightingSettingsPerFile">
     <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="cidr-memory-view://5" root0="FORCE_HIGHLIGHTING" />
+    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="cidr-memory-view://21" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.42.34433/include/atomic" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../ActionRPG/Source/ActionRPG/Private/RPGPlayerControllerBase.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../Aura/Source/Aura/Private/Actor/AuraEffectActor.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../Aura/Source/Aura/Private/Actor/AuraProjectile.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../Aura/Source/Aura/Private/Character/AuraCharacterBase.cpp" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../Aura/Source/Aura/Private/Player/AuraPlayerController.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../Aura/Source/Aura/Private/UI/Widget/AuraUserWidget.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../Aura/Source/Aura/Private/UI/WidgetController/AuraOverlayWidgetController.cpp" root0="SKIP_HIGHLIGHTING" />
@@ -68,18 +104,25 @@
     <setting file="file://$PROJECT_DIR$/../PacManRepo/Source/PacMan/PlayerControllers/PMPlayerController.cpp" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../ShooterGame/Source/ShooterGame/Private/Player/ShooterPlayerController.cpp" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../../UE/UE_5.5/Engine/Plugins/Compositing/OpenCVLensDistortion/Source/OpenCVLensDistortion/OpenCVLensDistortion.Build.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../../../UE/UE_5.5/Engine/Source/Runtime/Core/Private/HAL/ConsoleManager.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../../UE/UE_5.5/Engine/Source/Runtime/Core/Public/Math/UnrealMathSSE.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../../UE/UE_5.5/Engine/Source/Runtime/Core/Public/UObject/WeakObjectPtrTemplates.h" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../../../UE/UE_5.5/Engine/Source/Runtime/CoreUObject/Private/Misc/PackageName.cpp" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../../../UE/UE_5.5/Engine/Source/Runtime/CoreUObject/Public/Misc/PackageName.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../../UE/UE_5.5/Engine/Source/Runtime/CoreUObject/Public/Templates/Casts.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../../UE/UE_5.5/Engine/Source/Runtime/CoreUObject/Public/UObject/ObjectHandle.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../../UE/UE_5.5/Engine/Source/Runtime/CoreUObject/Public/UObject/ObjectHandleTracking.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../../UE/UE_5.5/Engine/Source/Runtime/CoreUObject/Public/UObject/ObjectPtr.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../../UE/UE_5.5/Engine/Source/Runtime/CoreUObject/Public/UObject/SoftObjectPtr.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../../UE/UE_5.5/Engine/Source/Runtime/CoreUObject/Public/UObject/WeakObjectPtr.h" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../../../UE/UE_5.5/Engine/Source/Runtime/Engine/Classes/Components/PrimitiveComponent.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../../UE/UE_5.5/Engine/Source/Runtime/Engine/Classes/GameFramework/Actor.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../../UE/UE_5.5/Engine/Source/Runtime/Engine/Classes/Kismet/KismetSystemLibrary.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../../UE/UE_5.5/Engine/Source/Runtime/Engine/Private/Components/CharacterMovementComponent.cpp" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../../../UE/UE_5.5/Engine/Source/Runtime/Engine/Private/Components/PrimitiveComponent.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../../UE/UE_5.5/Engine/Source/Runtime/Engine/Private/GameplayStatics.cpp" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../../../UE/UE_5.5/Engine/Source/Runtime/NavigationSystem/Private/NavigationSystem.cpp" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../../../UE/UE_5.5/Engine/Source/Runtime/OodleDataCompression/Sdks/2.9.7/include/oodle2base.h" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
   <component name="ProblemsViewState">
@@ -234,6 +277,9 @@
       <workItem from="1755783118941" duration="24000" />
       <workItem from="1755783171246" duration="8254000" />
       <workItem from="1755793579794" duration="7395000" />
+      <workItem from="1755803922856" duration="1188000" />
+      <workItem from="1755805219231" duration="168000" />
+      <workItem from="1755853314266" duration="17466000" />
     </task>
     <servers />
   </component>

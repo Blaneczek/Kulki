@@ -83,11 +83,11 @@ void AKulkiPlayerController::FollowMouseCursor()
 	}
 	
 	FHitResult HitResult;
-	GetHitResultUnderCursor(ECollisionChannel::ECC_Visibility, false, HitResult);	
+	GetHitResultUnderCursor(ECollisionChannel::ECC_GameTraceChannel1, false, HitResult);	
 	if (HitResult.bBlockingHit)
 	{
 		const FVector HitDirection = (HitResult.ImpactPoint - PlayerCharacter->GetActorLocation()).GetSafeNormal();
-		PlayerCharacter->GetCharacterMovement()->AddForce(HitDirection * 5000);
+		PlayerCharacter->GetCharacterMovement()->AddForce(FVector(HitDirection.X * 5000.f, HitDirection.Y * 5000.f, 0.f));
 	}
 }
 

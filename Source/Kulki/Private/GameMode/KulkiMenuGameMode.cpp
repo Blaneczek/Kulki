@@ -31,8 +31,10 @@ void AKulkiMenuGameMode::BeginPlay()
 
 void AKulkiMenuGameMode::StartGame()
 {
-    //TODO: Check if Level01 is valid (IsValid() doesnt work)
-    UGameplayStatics::OpenLevelBySoftObjectPtr(GetWorld(), Level01);
+    if (Level01.IsPending())
+    {
+        UGameplayStatics::OpenLevelBySoftObjectPtr(GetWorld(), Level01);
+    }
 }
 
 void AKulkiMenuGameMode::ExitGame()

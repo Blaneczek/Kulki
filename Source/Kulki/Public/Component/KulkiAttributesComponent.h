@@ -6,6 +6,7 @@
 #include "Components/ActorComponent.h"
 #include "KulkiAttributesComponent.generated.h"
 
+class UCapsuleComponent;
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnAttributeChangedSignature, float /*NewValue*/);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -30,6 +31,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SetSpeedValue(float NewSpeed);
 
+	void SetOwnerSize(UStaticMeshComponent* Mesh, UCapsuleComponent* CapsuleCollision);
+	void SetOwnerSpeed();
+	
 	FOnAttributeChangedSignature OnStrengthChangedDelegate;
 	FOnAttributeChangedSignature OnSpeedChangedDelegate;
 	
