@@ -7,7 +7,6 @@
 #include "Character/KulkiEnemyBaseCharacter.h"
 #include "Component/KulkiAttributesComponent.h"
 #include "Components/CapsuleComponent.h"
-#include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "UI/KulkiHUD.h"
@@ -63,33 +62,41 @@ void AKulkiPlayerCharacter::OnOverlap(UPrimitiveComponent* OverlappedComponent, 
 		return;
 	}
 	
-	float Value = -10.f;
-	if (AttributesComponent->GetStrengthAttribute() >= Enemy->GetAttributesComponent()->GetStrengthAttribute())
+	float Helper = -1.f;
+	if (AttributesComponent->StrengthAttribute.Value >= Enemy->GetAttributesComponent()->StrengthAttribute.Value)
 	{
-		Value *= -1;
-		Enemy->Destroy();	
+		Helper = 1.f;
 	}
 
 	switch (Enemy->Type)
 	{
 		case EEnemyType::RED:
 		{
-			AttributesComponent->AddToStrengthAttribute(Value, SphereMesh, CapsuleCollision, MovementSpeed);
+			const float EnemyStrength = Enemy->GetAttributesComponent()->StrengthAttribute.Value * Helper;	
+			AttributesComponent->AddToStrengthAttribute(EnemyStrength , SphereMesh, CapsuleCollision, MovementSpeed);
 			break;
 		}
 		case EEnemyType::YELLOW:
 		{
-			AttributesComponent->AddToSpeedAttribute(Value, MovementSpeed);
+			const float EnemySpeed = Enemy->GetAttributesComponent()->SpeedAttribute.Value * Helper;	
+			AttributesComponent->AddToSpeedAttribute(EnemySpeed, MovementSpeed);
 			break;
 		}
 		case EEnemyType::PURPLE:
 		{
-			AttributesComponent->AddToStrengthAttribute(-UKismetMathLibrary::Abs(Value), SphereMesh, CapsuleCollision, MovementSpeed);
-			AttributesComponent->AddToSpeedAttribute(-UKismetMathLibrary::Abs(Value), MovementSpeed);
+			const float EnemyStrength = Enemy->GetAttributesComponent()->StrengthAttribute.Value * Helper;
+			const float EnemySpeed = Enemy->GetAttributesComponent()->SpeedAttribute.Value * Helper;
+			AttributesComponent->AddToStrengthAttribute(-UKismetMathLibrary::Abs(EnemyStrength), SphereMesh, CapsuleCollision, MovementSpeed);
+			AttributesComponent->AddToSpeedAttribute(-UKismetMathLibrary::Abs(EnemySpeed), MovementSpeed);
 			break;
 		}
 		default: break;
-	}						
+	}
+
+	if (Helper > 0.f)
+	{
+		Enemy->Destroy();
+	}
 }
 
 

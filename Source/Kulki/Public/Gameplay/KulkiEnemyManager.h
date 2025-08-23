@@ -13,11 +13,14 @@ struct FSpawnDistanceThreshold
 {
 	GENERATED_BODY()
 
+	FSpawnDistanceThreshold() {}
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float MinDistance = 0.f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float MaxDistance = 0.f;
 };
+
 UCLASS()
 class KULKI_API AKulkiEnemyManager : public AActor
 {

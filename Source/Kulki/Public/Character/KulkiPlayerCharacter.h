@@ -22,9 +22,10 @@ public:
 	UFUNCTION(BlueprintCallable)
 	UKulkiAttributesComponent* GetAttributesComponent() const { return AttributesComponent; }
 
+	UFUNCTION(BlueprintCallable)
 	float GetMovementSpeed() const { return MovementSpeed; }
 
-	float GetMovementForce() const { return MovementSpeed; }
+	float GetMovementForce() const { return MovementForce; }
 	
 protected:
 	virtual void BeginPlay() override;

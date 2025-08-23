@@ -32,11 +32,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	EEnemyType Type;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float DebugStrength;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float DebugSpeed;
+	void SetAttributesValue(float Strength, float Speed);
 	
 protected:
 	virtual void BeginPlay() override;
@@ -52,9 +48,14 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TObjectPtr<UCapsuleComponent> CapsuleCollision;
 	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    float BaseStrength;
+    
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    float BaseSpeed;
+	
 private:
 	UPROPERTY()
 	FLinearColor MeshColor = FLinearColor::Gray;
 
-	
 };

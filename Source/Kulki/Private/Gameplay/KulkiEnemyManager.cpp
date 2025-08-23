@@ -43,13 +43,11 @@ void AKulkiEnemyManager::SpawnEnemies()
 				SpawnTransform.SetLocation(FVector(SpawnLocation.Location.X, SpawnLocation.Location.Y, 85.f));
 				AKulkiEnemyBaseCharacter* Enemy = GetWorld()->SpawnActorDeferred<AKulkiEnemyBaseCharacter>(EnemyClass, SpawnTransform, this, nullptr, ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn);
 				Enemy->Type = static_cast<EEnemyType>(UKismetMathLibrary::RandomIntegerInRange(1,3));
-				Enemy->DebugStrength = UKismetMathLibrary::RandomIntegerInRange(10, 70);
-				Enemy->DebugSpeed = UKismetMathLibrary::RandomIntegerInRange(10, 50);
+				Enemy->SetAttributesValue(UKismetMathLibrary::RandomIntegerInRange(10, 70), UKismetMathLibrary::RandomIntegerInRange(10, 50)); // TODO: change this
 				UGameplayStatics::FinishSpawningActor(Enemy, SpawnTransform);
 				UE_LOG(LogTemp, Warning, TEXT("spawned enemy"));
 			}		
-		}
-		
+		}	
 	}
 }
 

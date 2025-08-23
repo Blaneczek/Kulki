@@ -13,8 +13,8 @@ void UKulkiWidgetController::InitAttributesValue()
 {
 	if (IsValid(PlayerCharacter))
 	{
-		OnStrengthChanged.Broadcast(PlayerCharacter->GetAttributesComponent()->GetStrengthAttribute());
-		OnSpeedChanged.Broadcast(PlayerCharacter->GetAttributesComponent()->GetSpeedAttribute());		
+		OnStrengthChanged.Broadcast(PlayerCharacter->GetAttributesComponent()->StrengthAttribute.Value);
+		OnSpeedChanged.Broadcast(PlayerCharacter->GetAttributesComponent()->StrengthAttribute.Value);		
 	}	
 }
 

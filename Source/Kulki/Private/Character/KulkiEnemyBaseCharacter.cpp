@@ -2,12 +2,10 @@
 
 
 #include "Character/KulkiEnemyBaseCharacter.h"
-#include "BlueprintEditor.h"
 #include "Component/KulkiAttributesComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
-#include "GameFramework/PawnMovementComponent.h"
-#include "Kismet/KismetMathLibrary.h"
+
 
 AKulkiEnemyBaseCharacter::AKulkiEnemyBaseCharacter()
 {
@@ -25,16 +23,23 @@ AKulkiEnemyBaseCharacter::AKulkiEnemyBaseCharacter()
 	AttributesComponent = CreateDefaultSubobject<UKulkiAttributesComponent>("AttributesComponent");
 }
 
+
+
 void AKulkiEnemyBaseCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
-	AttributesComponent->SetStrengthAttribute(DebugStrength, SphereMesh, CapsuleCollision, GetCharacterMovement()->MaxWalkSpeed);
-    AttributesComponent->SetSpeedAttribute(DebugSpeed,GetCharacterMovement()->MaxWalkSpeed);
-
+	AttributesComponent->SetStrengthAttribute(BaseStrength, SphereMesh, CapsuleCollision, GetCharacterMovement()->MaxWalkSpeed);
+    AttributesComponent->SetSpeedAttribute(BaseSpeed,GetCharacterMovement()->MaxWalkSpeed);
+	
 	SetMeshColor();
 }
 
+void AKulkiEnemyBaseCharacter::SetAttributesValue(float Strength, float Speed)
+{
+	BaseStrength = Strength;
+	BaseSpeed = Speed;
+}
 void AKulkiEnemyBaseCharacter::SetMeshColor()
 {
 	FLinearColor Color = FLinearColor::Gray;
