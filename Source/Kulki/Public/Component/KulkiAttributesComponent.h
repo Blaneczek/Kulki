@@ -17,15 +17,11 @@ class KULKI_API UKulkiAttributesComponent : public UActorComponent
 public:	
 	UKulkiAttributesComponent();
 
-protected:
-	virtual void BeginPlay() override;
-
-public:	
 	UFUNCTION(BlueprintCallable)
-	float GetStrengthValue() const {return Strength; }
+	float GetStrengthAttribute() const {return Strength; }
 	
 	UFUNCTION(BlueprintCallable)
-	void SetStrengthAttribute(float NewStrength, UStaticMeshComponent* Mesh, UCapsuleComponent* CapsuleCollision, float& OutMovementSpeed, bool bChangeCapsuleSize = false);
+	void SetStrengthAttribute(float NewStrength, UStaticMeshComponent* Mesh, UCapsuleComponent* CapsuleCollision, float& OutMovementSpeed);
 
 	UFUNCTION(BlueprintCallable)
 	void AddToStrengthAttribute(float ValueToAdd, UStaticMeshComponent* Mesh, UCapsuleComponent* CapsuleCollision, float& OutMovementSpeed);
@@ -44,8 +40,15 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	float BaseMovementSpeed = 500.f;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	float CapsulePadding = 30.f;
+	
+protected:
+	virtual void BeginPlay() override;
+	
 private:
-	void SetOwnerSize(UStaticMeshComponent* Mesh, UCapsuleComponent* CapsuleCollision, bool bChangeCapsuleSize);
+	void SetOwnerSize(UStaticMeshComponent* Mesh, UCapsuleComponent* CapsuleCollision);
 	void SetOwnerSpeed(float& OutMovementSpeed);
 	
 	float Strength;

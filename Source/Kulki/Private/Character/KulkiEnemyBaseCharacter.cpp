@@ -40,22 +40,22 @@ void AKulkiEnemyBaseCharacter::SetMeshColor()
 	FLinearColor Color = FLinearColor::Gray;
 	switch (Type)
 	{
-	case EEnemyType::YELLOW:
+		case EEnemyType::YELLOW:
 		{
 			Color = FLinearColor::Yellow;
 			break;
 		}
-	case EEnemyType::RED:
+		case EEnemyType::RED:
 		{
 			Color = FLinearColor::Red;
 			break;
 		}
-	case EEnemyType::PURPLE:
+		case EEnemyType::PURPLE:
 		{
 			Color = FLinearColor(0.5f, 0.f, 0.5f, 1.f);
 			break;
 		}
-	default: break;
+		default: break;
 	}
 
 	if (UMaterialInstanceDynamic* DynMaterial = UMaterialInstanceDynamic::Create(SphereMesh->GetMaterial(0), this))

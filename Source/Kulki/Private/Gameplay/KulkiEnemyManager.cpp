@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Gameplay/KulkiEnemyController.h"
+#include "Gameplay/KulkiEnemyManager.h"
 
 #include "NavigationSystem.h"
 #include "Character/KulkiEnemyBaseCharacter.h"
@@ -9,20 +9,20 @@
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
 
-AKulkiEnemyController::AKulkiEnemyController()
+AKulkiEnemyManager::AKulkiEnemyManager()
 {
 	PrimaryActorTick.bCanEverTick = false;
 
 }
 
-void AKulkiEnemyController::BeginPlay()
+void AKulkiEnemyManager::BeginPlay()
 {
 	Super::BeginPlay();
 
 	SpawnEnemies();
 }
 
-void AKulkiEnemyController::SpawnEnemies()
+void AKulkiEnemyManager::SpawnEnemies()
 {
 	AKulkiPlayerCharacter* Player = Cast<AKulkiPlayerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 	if (!Player)
@@ -41,7 +41,7 @@ void AKulkiEnemyController::SpawnEnemies()
 			{
 				FTransform SpawnTransform;
 				SpawnTransform.SetLocation(FVector(SpawnLocation.Location.X, SpawnLocation.Location.Y, 85.f));
-				AKulkiEnemyBaseCharacter* Enemy = GetWorld()->SpawnActorDeferred<AKulkiEnemyBaseCharacter>(EnemyClass, SpawnTransform, this, nullptr, ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
+				AKulkiEnemyBaseCharacter* Enemy = GetWorld()->SpawnActorDeferred<AKulkiEnemyBaseCharacter>(EnemyClass, SpawnTransform, this, nullptr, ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn);
 				Enemy->Type = static_cast<EEnemyType>(UKismetMathLibrary::RandomIntegerInRange(1,3));
 				Enemy->DebugStrength = UKismetMathLibrary::RandomIntegerInRange(10, 70);
 				Enemy->DebugSpeed = UKismetMathLibrary::RandomIntegerInRange(10, 50);

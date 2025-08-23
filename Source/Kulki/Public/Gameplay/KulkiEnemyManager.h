@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "KulkiEnemyController.generated.h"
+#include "KulkiEnemyManager.generated.h"
 
 class AKulkiEnemyBaseCharacter;
 
@@ -19,12 +19,12 @@ struct FSpawnDistanceThreshold
 	float MaxDistance = 0.f;
 };
 UCLASS()
-class KULKI_API AKulkiEnemyController : public AActor
+class KULKI_API AKulkiEnemyManager : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
-	AKulkiEnemyController();
+	AKulkiEnemyManager();
 
 protected:
 	virtual void BeginPlay() override;

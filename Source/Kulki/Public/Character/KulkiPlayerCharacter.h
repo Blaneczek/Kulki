@@ -18,28 +18,17 @@ class KULKI_API AKulkiPlayerCharacter : public ACharacter
 
 public:
 	AKulkiPlayerCharacter();
-
-protected:
-	virtual void BeginPlay() override;
-
-public:	
-	virtual void Tick(float DeltaTime) override;
 	
 	UFUNCTION(BlueprintCallable)
 	UKulkiAttributesComponent* GetAttributesComponent() const { return AttributesComponent; }
 
 	float GetMovementSpeed() const { return MovementSpeed; }
-	
-	UPROPERTY(EditAnywhere)
-	float DebugSpeed = 10.f;
-	
-	UPROPERTY(EditAnywhere)
-	float DebugStrength = 10.f;
 
-	UPROPERTY(EditAnywhere)
-	float DebugMovementForce = 3000.f;
+	float GetMovementForce() const { return MovementSpeed; }
 	
 protected:
+	virtual void BeginPlay() override;
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TObjectPtr<UStaticMeshComponent> SphereMesh;
 	
@@ -54,6 +43,15 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TObjectPtr<UCapsuleComponent> CapsuleCollision;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Kulki | Attributes")
+	float DefaultStrengthAttribute = 30.f;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Kulki | Attributes")
+	float DefaultSpeedAttribute = 30.f;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Kulki")
+	float MovementForce = 3000.f;
 	
 private:
 	UFUNCTION()

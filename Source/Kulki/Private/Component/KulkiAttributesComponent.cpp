@@ -19,10 +19,10 @@ void UKulkiAttributesComponent::BeginPlay()
 
 }
 
-void UKulkiAttributesComponent::SetStrengthAttribute(float NewStrength, UStaticMeshComponent* Mesh, UCapsuleComponent* CapsuleCollision, float& OutMovementSpeed, bool bChangeCapsuleSize)
+void UKulkiAttributesComponent::SetStrengthAttribute(float NewStrength, UStaticMeshComponent* Mesh, UCapsuleComponent* CapsuleCollision, float& OutMovementSpeed)
 {
 	Strength = UKismetMathLibrary::Clamp(NewStrength,0.f, 200);
-	SetOwnerSize(Mesh, CapsuleCollision, bChangeCapsuleSize);
+	SetOwnerSize(Mesh, CapsuleCollision);
 	SetOwnerSpeed(OutMovementSpeed);
 	OnStrengthChangedDelegate.Broadcast(Strength);
 	if (Strength <= 0)
@@ -35,7 +35,7 @@ void UKulkiAttributesComponent::AddToStrengthAttribute(float ValueToAdd, UStatic
                                                        UCapsuleComponent* CapsuleCollision, float& OutMovementSpeed)
 {
 	const float NewStrength = Strength + ValueToAdd;
-	SetStrengthAttribute(NewStrength, Mesh, CapsuleCollision, OutMovementSpeed, true);
+	SetStrengthAttribute(NewStrength, Mesh, CapsuleCollision, OutMovementSpeed);
 }
 
 void UKulkiAttributesComponent::SetSpeedAttribute(float NewSpeed, float& OutMovementSpeed)
@@ -55,7 +55,7 @@ void UKulkiAttributesComponent::AddToSpeedAttribute(float ValueToAdd, float& Out
 	SetSpeedAttribute(NewSpeed, OutMovementSpeed);
 }
 
-void UKulkiAttributesComponent::SetOwnerSize(UStaticMeshComponent* Mesh, UCapsuleComponent* CapsuleCollision, bool bChangeCapsuleSize)
+void UKulkiAttributesComponent::SetOwnerSize(UStaticMeshComponent* Mesh, UCapsuleComponent* CapsuleCollision)
 {
 	if (CapsuleCollision && Mesh)
 	{
@@ -65,7 +65,7 @@ void UKulkiAttributesComponent::SetOwnerSize(UStaticMeshComponent* Mesh, UCapsul
 		FVector Bounds;
 		float SphereRadius;
 		UKismetSystemLibrary::GetComponentBounds(Mesh, Origin, Bounds, SphereRadius);
-		const float FixedRadius = Bounds.X - 40.f;
+		const float FixedRadius = Bounds.X - CapsulePadding;
 		CapsuleCollision->SetCapsuleHalfHeight(FixedRadius * 2.f);
 		CapsuleCollision->SetCapsuleRadius(FixedRadius);		
 	}
