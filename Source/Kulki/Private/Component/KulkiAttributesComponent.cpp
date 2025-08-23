@@ -52,11 +52,11 @@ void UKulkiAttributesComponent::SetSpeedAttribute(float NewSpeed, float& OutMove
 	}
 }
 
-void UKulkiAttributesComponent::AddToSpeedAttribute(float EnemySpeed, float& OutMovementSpeed)
+void UKulkiAttributesComponent::AddToSpeedAttribute(float EnemyStrength, float& OutMovementSpeed)
 {
 	if (SpeedAttribute.AddToValueCurve)
 	{
-		const float NewSpeed = SpeedAttribute.Value + SpeedAttribute.AddToValueCurve->GetFloatValue(EnemySpeed);
+		const float NewSpeed = SpeedAttribute.Value + SpeedAttribute.AddToValueCurve->GetFloatValue(EnemyStrength);
 		SetSpeedAttribute(NewSpeed, OutMovementSpeed);
 	}
 }
@@ -79,7 +79,7 @@ void UKulkiAttributesComponent::SetOwnerSize(UStaticMeshComponent* Mesh, UCapsul
 
 void UKulkiAttributesComponent::SetOwnerSpeed(float& OutMovementSpeed)
 {
-	const float NewValue = BaseMovementSpeed + (SpeedAttribute.Value * 10.f) - (SpeedAttribute.Value * 5.f);
+	const float NewValue = BaseMovementSpeed + (SpeedAttribute.Value * 10.f) - (StrengthAttribute.Value * 5.f);
 	OutMovementSpeed = UKismetMathLibrary::Clamp(NewValue, MinMovementSpeed, MaxMovementSpeed);
 }
 

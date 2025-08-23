@@ -56,47 +56,70 @@ void AKulkiPlayerCharacter::BeginPlay()
 void AKulkiPlayerCharacter::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
+	if (bIsImmune)
+	{
+		return;
+	}
+	
 	AKulkiEnemyBaseCharacter* Enemy = Cast<AKulkiEnemyBaseCharacter>(OtherActor);
 	if (!Enemy)
 	{
 		return;
 	}
-	
+
+	// If Enemy is bigger than Player, we want negative number 
 	float Helper = -1.f;
 	if (AttributesComponent->StrengthAttribute.Value >= Enemy->GetAttributesComponent()->StrengthAttribute.Value)
 	{
 		Helper = 1.f;
 	}
 
+	// Added/subtracted value depends on Enemy size (Strength)
+	const float EnemyStrength = Enemy->GetAttributesComponent()->StrengthAttribute.Value * Helper;
+	
 	switch (Enemy->Type)
 	{
 		case EEnemyType::RED:
-		{
-			const float EnemyStrength = Enemy->GetAttributesComponent()->StrengthAttribute.Value * Helper;	
+		{		
 			AttributesComponent->AddToStrengthAttribute(EnemyStrength , SphereMesh, CapsuleCollision, MovementSpeed);
 			break;
 		}
 		case EEnemyType::YELLOW:
 		{
-			const float EnemySpeed = Enemy->GetAttributesComponent()->SpeedAttribute.Value * Helper;	
-			AttributesComponent->AddToSpeedAttribute(EnemySpeed, MovementSpeed);
+			AttributesComponent->AddToSpeedAttribute(EnemyStrength, MovementSpeed);
 			break;
 		}
 		case EEnemyType::PURPLE:
 		{
-			const float EnemyStrength = Enemy->GetAttributesComponent()->StrengthAttribute.Value * Helper;
-			const float EnemySpeed = Enemy->GetAttributesComponent()->SpeedAttribute.Value * Helper;
+			// Purple Enemy always subtracts player's attributes
 			AttributesComponent->AddToStrengthAttribute(-UKismetMathLibrary::Abs(EnemyStrength), SphereMesh, CapsuleCollision, MovementSpeed);
-			AttributesComponent->AddToSpeedAttribute(-UKismetMathLibrary::Abs(EnemySpeed), MovementSpeed);
+			AttributesComponent->AddToSpeedAttribute(-UKismetMathLibrary::Abs(EnemyStrength), MovementSpeed);
 			break;
 		}
 		default: break;
 	}
 
+	// Destroys Enemy if it is smaller 
 	if (Helper > 0.f)
 	{
 		Enemy->Destroy();
 	}
+	else
+	{
+		// Gives Player immunity after being caught 
+		ActivateImmunity();
+		//TODO: Give player immunity and set Enemy AI to Idle State
+	}
+}
+
+void AKulkiPlayerCharacter::ActivateImmunity()
+{
+	bIsImmune = true;
+}
+
+void AKulkiPlayerCharacter::DeactivateImmunity()
+{
+	bIsImmune = false;
 }
 
 

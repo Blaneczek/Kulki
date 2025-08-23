@@ -59,5 +59,9 @@ private:
 	void OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
 		int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
+	void ActivateImmunity();
+	void DeactivateImmunity();
+	
 	float MovementSpeed;
+	bool bIsImmune = false;
 };
