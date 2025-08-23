@@ -8,6 +8,7 @@
 #include "Component/KulkiAttributesComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "Kismet/KismetMaterialLibrary.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "UI/KulkiHUD.h"
 
@@ -51,6 +52,8 @@ void AKulkiPlayerCharacter::BeginPlay()
 	}
 
 	CapsuleCollision->OnComponentBeginOverlap.AddDynamic(this, &AKulkiPlayerCharacter::OnOverlap);
+
+	DynamicMaterialInstance = UMaterialInstanceDynamic::Create(SphereMesh->GetMaterial(0), this);
 }
 
 void AKulkiPlayerCharacter::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
@@ -108,17 +111,36 @@ void AKulkiPlayerCharacter::OnOverlap(UPrimitiveComponent* OverlappedComponent, 
 	{
 		// Gives Player immunity after being caught 
 		ActivateImmunity();
-		//TODO: Give player immunity and set Enemy AI to Idle State
+		//TODO: Set Enemy AI to Idle State
 	}
 }
 
 void AKulkiPlayerCharacter::ActivateImmunity()
 {
 	bIsImmune = true;
+
+	FLinearColor BaseColor = FLinearColor::Green;
+	if (IsValid(DynamicMaterialInstance))
+	{
+		FMaterialParameterInfo ParamInfo = FMaterialParameterInfo(TEXT("MeshColor"));
+		DynamicMaterialInstance->GetVectorParameterValue(ParamInfo, BaseColor);
+		DynamicMaterialInstance->SetVectorParameterValue("MeshColor", ImmunityColor);
+		SphereMesh->SetMaterial(0, DynamicMaterialInstance);
+	}
+	
+	FTimerHandle ImmunityTimer;
+	FTimerDelegate ImmunityDelegate;
+	ImmunityDelegate.BindUFunction(this, FName("DeactivateImmunity"), BaseColor);
+	GetWorldTimerManager().SetTimer(ImmunityTimer, ImmunityDelegate, ImmunityTime, false);
 }
 
-void AKulkiPlayerCharacter::DeactivateImmunity()
+void AKulkiPlayerCharacter::DeactivateImmunity(FLinearColor Color)
 {
+	if (IsValid(DynamicMaterialInstance))
+	{
+		DynamicMaterialInstance->SetVectorParameterValue("MeshColor", Color);
+		SphereMesh->SetMaterial(0, DynamicMaterialInstance);
+	}
 	bIsImmune = false;
 }
 

@@ -53,6 +53,12 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Kulki")
 	float MovementForce = 3000.f;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Kulki")
+	float ImmunityTime = 2.f;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Kulki")
+	FLinearColor ImmunityColor;
 	
 private:
 	UFUNCTION()
@@ -60,7 +66,12 @@ private:
 		int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
 	void ActivateImmunity();
-	void DeactivateImmunity();
+	
+	UFUNCTION()
+	void DeactivateImmunity(FLinearColor Color);
+
+	UPROPERTY()
+	TObjectPtr<UMaterialInstanceDynamic> DynamicMaterialInstance;
 	
 	float MovementSpeed;
 	bool bIsImmune = false;
