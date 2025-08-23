@@ -21,7 +21,7 @@ struct FSpawnDistanceRange
 	float MaxDistance = 0.f;
 	
 	UPROPERTY(EditAnywhere)
-	int32 NumberToSpawn = 0.f;
+	uint32 NumberToSpawn = 0.f;
 };
 
 
@@ -55,12 +55,13 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	TMap<EEnemyType, FSpawnEnemyData> SpawnData;
+
+	UPROPERTY(EditAnywhere)
+	bool bNotSpawn_Debug;
 	
 protected:
 	virtual void BeginPlay() override;
 
 private:
 	void SpawnEnemies();
-	
-	void SpawnEnemies_Debug();
 };
