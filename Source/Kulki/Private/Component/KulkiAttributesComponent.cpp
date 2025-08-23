@@ -79,7 +79,7 @@ void UKulkiAttributesComponent::SetOwnerSize(UStaticMeshComponent* Mesh, UCapsul
 
 void UKulkiAttributesComponent::SetOwnerSpeed(float& OutMovementSpeed)
 {
-	const float NewValue = BaseMovementSpeed + (SpeedAttribute.Value * 10.f) - (StrengthAttribute.Value * 5.f);
+	const float NewValue = BaseMovementSpeed + (SpeedAttribute.Value * SpeedMultiplier) - (StrengthAttribute.Value * SpeedPenaltyMultiplier);
 	OutMovementSpeed = UKismetMathLibrary::Clamp(NewValue, MinMovementSpeed, MaxMovementSpeed);
 }
 

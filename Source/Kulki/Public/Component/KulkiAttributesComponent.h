@@ -6,7 +6,7 @@
 #include "Components/ActorComponent.h"
 #include "KulkiAttributesComponent.generated.h"
 
-USTRUCT(Blueprintable)
+USTRUCT(BlueprintType)
 struct FAttribute
 {
 	GENERATED_BODY()
@@ -61,6 +61,12 @@ public:
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	float CapsulePadding = 30.f;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	float SpeedMultiplier = 10.f;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	float SpeedPenaltyMultiplier = 5.f;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
     FAttribute StrengthAttribute;

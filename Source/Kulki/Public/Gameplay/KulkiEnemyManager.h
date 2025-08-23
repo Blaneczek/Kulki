@@ -3,22 +3,43 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Character/KulkiEnemyBaseCharacter.h"
 #include "GameFramework/Actor.h"
 #include "KulkiEnemyManager.generated.h"
 
-class AKulkiEnemyBaseCharacter;
-
-USTRUCT(Blueprintable)
-struct FSpawnDistanceThreshold
+USTRUCT(BlueprintType)
+struct FSpawnDistanceRange
 {
 	GENERATED_BODY()
 
-	FSpawnDistanceThreshold() {}
-	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FSpawnDistanceRange() {}
+
+	UPROPERTY(EditAnywhere)
 	float MinDistance = 0.f;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+
+	UPROPERTY(EditAnywhere)
 	float MaxDistance = 0.f;
+	
+	UPROPERTY(EditAnywhere)
+	int32 NumberToSpawn = 0.f;
+};
+
+
+USTRUCT(BlueprintType)
+struct FSpawnEnemyData
+{
+	GENERATED_BODY()
+
+	FSpawnEnemyData() {}
+	
+	UPROPERTY(EditAnywhere)
+	TArray<FSpawnDistanceRange> DistanceRanges;
+	
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<UCurveFloat> StrengthToDistanceCurve = nullptr;
+
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<UCurveFloat> SpeedToDistanceCurve = nullptr;
 };
 
 UCLASS()
@@ -28,17 +49,18 @@ class KULKI_API AKulkiEnemyManager : public AActor
 	
 public:	
 	AKulkiEnemyManager();
+	
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<AKulkiEnemyBaseCharacter> EnemyClass;
 
+	UPROPERTY(EditAnywhere)
+	TMap<EEnemyType, FSpawnEnemyData> SpawnData;
+	
 protected:
 	virtual void BeginPlay() override;
 
-public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TArray<FSpawnDistanceThreshold> SpawnDistanceThresholds;
-
-	UPROPERTY(EditAnywhere)
-	TSubclassOf<AKulkiEnemyBaseCharacter> EnemyClass;
-	
 private:
 	void SpawnEnemies();
+	
+	void SpawnEnemies_Debug();
 };
