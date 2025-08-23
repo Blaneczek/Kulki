@@ -19,11 +19,13 @@ void AKulkiHUD::InitOverlayWidget(AKulkiPlayerCharacter* PlayerCharacter)
 {
 	checkf(OverlayWidgetClass, TEXT("AKulkiHUD | OverlayWidgetClass is not set"));
 	checkf(WidgetControllerClass, TEXT("AKulkiHUD | WidgetControllerClass is not set"));
-
+	
 	OverlayWidget = CreateWidget<UKulkiOverlayWidget>(GetWorld(), OverlayWidgetClass);
-	OverlayWidget->SetWidgetController(GetWidgetController(PlayerCharacter));
+    OverlayWidget->SetWidgetController(GetWidgetController(PlayerCharacter));
+	
 	WidgetController->InitAttributesValue();
 	WidgetController->BindCallbacks();
+	
 	
 	OverlayWidget->AddToViewport();
 }

@@ -28,9 +28,23 @@ public:
 	FOnAttributeValueChangedSignature OnStrengthChanged;
 
 	UPROPERTY(BlueprintAssignable, Category = "Kulki|Attributes")
+	FOnAttributeValueChangedSignature OnMaxStrengthChanged;
+
+	UPROPERTY(BlueprintAssignable, Category = "Kulki|Attributes")
 	FOnAttributeValueChangedSignature OnSpeedChanged;
-	
+
+	UPROPERTY(BlueprintAssignable, Category = "Kulki|Attributes")
+	FOnAttributeValueChangedSignature OnMaxSpeedChanged;
+		
 protected:
 	UPROPERTY(BlueprintReadOnly, Category = "Kulki|WidgetController")
+	float MaxStrength;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Kulki|WidgetController")
+	float MaxSpeed;
+
+private:
+	UPROPERTY()
 	TObjectPtr<AKulkiPlayerCharacter> PlayerCharacter;
+	
 };
