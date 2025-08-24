@@ -4,6 +4,8 @@
 #include "Component/KulkiAttributesComponent.h"
 
 #include "Components/CapsuleComponent.h"
+#include "GameFramework/Character.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/KismetSystemLibrary.h"
 
 UKulkiAttributesComponent::UKulkiAttributesComponent()
@@ -45,8 +47,9 @@ void UKulkiAttributesComponent::SetSpeedAttribute(float NewSpeed, float& OutMove
 {
 	SpeedAttribute.Value = FMath::Clamp(NewSpeed, 0.f, SpeedAttribute.MaxValue);
 	SetOwnerSpeed(OutMovementSpeed);
-	OnSpeedChangedDelegate.Broadcast(SpeedAttribute.Value );
-	if (SpeedAttribute.Value  <= 0)
+	OnSpeedChangedDelegate.Broadcast(SpeedAttribute.Value);
+	
+	if (SpeedAttribute.Value <= 0)
 	{
 		OnAttributeReachedZero.ExecuteIfBound();
 	}
@@ -82,6 +85,12 @@ void UKulkiAttributesComponent::SetOwnerSpeed(float& OutMovementSpeed)
 {
 	const float NewValue = BaseMovementSpeed + (SpeedAttribute.Value * SpeedMultiplier) - (StrengthAttribute.Value * SpeedPenaltyMultiplier);
 	OutMovementSpeed = FMath::Clamp(NewValue, MinMovementSpeed, MaxMovementSpeed);
+
+	ACharacter* OwnerCharacter = Cast<ACharacter>(GetOwner());
+	if (OwnerCharacter && SpeedToBrakingDecelerationCurve)
+	{
+		OwnerCharacter->GetCharacterMovement()->BrakingDecelerationWalking = SpeedToBrakingDecelerationCurve->GetFloatValue(SpeedAttribute.Value);
+	}
 }
 
 

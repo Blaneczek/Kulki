@@ -63,7 +63,8 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta=(UIMin="5.0", ClampMin="5.0"), Category="Kulki|Attributes")
 	float BaseSpeedAttributeValue = 30.f;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta=(UIMin="0.0", ClampMin="0.0"), Category="Kulki|Movement") //TODO: UIMin/Clamp - minimum to move
+	/* Force used in AddForce movement, */
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta=(UIMin="350.0", ClampMin="350.0"), Category="Kulki|Movement")
 	float MovementForce = 3000.f;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, meta=(UIMin="0.1", ClampMin="0.1"), Category="Kulki|Immunity")

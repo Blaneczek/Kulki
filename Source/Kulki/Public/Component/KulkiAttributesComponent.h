@@ -15,7 +15,8 @@ struct FAttribute
 
 	FAttribute() {}
 	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(UIMin="5.0", ClampMin="5.0"))
+	/* No EditAnywhere because Value is setting in BeginPlay. Use "Base" variable from Character. */
+	UPROPERTY(BlueprintReadOnly)
 	float Value = 5.f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(UIMin="5.0", ClampMin="5.0"))
@@ -25,7 +26,7 @@ struct FAttribute
 	TObjectPtr<UCurveFloat> AddToValueCurve = nullptr;
 };
 
-DECLARE_MULTICAST_DELEGATE_OneParam(FOnAttributeChangedSignature, float /*NewValue*/);
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnAttributeChanged, float /*NewValue*/);
 DECLARE_DELEGATE(FOnAttributeReachedZero);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -48,36 +49,39 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void AddToSpeedAttribute(float EnemySpeed, float& OutMovementSpeed);
 
-	FOnAttributeChangedSignature OnStrengthChangedDelegate;
-	FOnAttributeChangedSignature OnSpeedChangedDelegate;
+	FOnAttributeChanged OnStrengthChangedDelegate;
+	FOnAttributeChanged OnSpeedChangedDelegate;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(UIMin="0.0", ClampMin="0.0"), Category = "Speed")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(UIMin="0.0", ClampMin="0.0"), Category="Kulki|Speed")
 	float BaseMovementSpeed = 500.f;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(UIMin="10.0", ClampMin="10.0"), Category = "Speed")	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(UIMin="10.0", ClampMin="10.0"), Category="Kulki|Speed")	
 	float MinMovementSpeed = 200.f;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(UIMin="10.0", ClampMin="10.0"), Category = "Speed")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(UIMin="10.0", ClampMin="10.0"), Category="Kulki|Speed")
 	float MaxMovementSpeed = 1500.f;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(UIMin="0.1", ClampMin="0.1"), Category = "Speed")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(UIMin="0.1", ClampMin="0.1"), Category="Kulki|Speed")
 	float SpeedMultiplier = 10.f;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(UIMin="0.1", ClampMin="0.1"), Category = "Speed")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(UIMin="0.1", ClampMin="0.1"), Category="Kulki|Speed")
 	float SpeedPenaltyMultiplier = 5.f;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(UIMin="0.01", ClampMin="0.01"), Category = "Strength")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(UIMin="0.01", ClampMin="0.01"), Category="Kulki|Strength")
 	float SizeMultiplier = 0.1f;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(UIMin="0.0", ClampMin="0.0"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(UIMin="0.0", ClampMin="0.0"), Category="Kulki")
     float CapsulePadding = 20.f;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Kulki")
     FAttribute StrengthAttribute;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Kulki")
     FAttribute SpeedAttribute;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Kulki")
+	TObjectPtr<UCurveFloat> SpeedToBrakingDecelerationCurve;
+ 
 	FOnAttributeReachedZero OnAttributeReachedZero;
 	
 protected:

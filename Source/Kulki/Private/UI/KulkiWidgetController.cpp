@@ -16,7 +16,7 @@ void UKulkiWidgetController::InitAttributesValue()
 		OnMaxStrengthChanged.Broadcast(PlayerCharacter->GetAttributesComponent()->StrengthAttribute.MaxValue);
      	OnMaxSpeedChanged.Broadcast(PlayerCharacter->GetAttributesComponent()->SpeedAttribute.MaxValue);
 		OnStrengthChanged.Broadcast(PlayerCharacter->GetAttributesComponent()->StrengthAttribute.Value);
-		OnSpeedChanged.Broadcast(PlayerCharacter->GetAttributesComponent()->StrengthAttribute.Value);		
+		OnSpeedChanged.Broadcast(PlayerCharacter->GetAttributesComponent()->SpeedAttribute.Value);		
 	}	
 }
 
