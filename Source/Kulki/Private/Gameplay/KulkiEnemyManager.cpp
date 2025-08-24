@@ -7,6 +7,7 @@
 #include "Character/KulkiEnemyBaseCharacter.h"
 #include "Character/KulkiPlayerCharacter.h"
 #include "GameMode/KulkiGameMode.h"
+#include "Gameplay/Data/KulkiEnemySpawnData.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
 
@@ -75,7 +76,7 @@ void AKulkiEnemyManager::SpawnEnemies()
 	NumberOfEatableEnemies = 0;
 	
 	AKulkiPlayerCharacter* Player = Cast<AKulkiPlayerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
-	if (!Player || !EnemyClass)
+	if (!Player || !EnemyClass || !SpawnDataAsset)
 	{
 		return;
 	}
@@ -83,7 +84,7 @@ void AKulkiEnemyManager::SpawnEnemies()
 
 	//TODO: Get level
 	
-	for (const auto& EnemyData : SpawnData)
+	for (const auto& EnemyData : SpawnDataAsset->SpawnData)
 	{
 		for (const auto& DistanceRange : EnemyData.Value.DistanceRanges)
 		{ 

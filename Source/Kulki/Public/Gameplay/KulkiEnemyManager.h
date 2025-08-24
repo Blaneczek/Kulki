@@ -7,39 +7,7 @@
 #include "GameFramework/Actor.h"
 #include "KulkiEnemyManager.generated.h"
 
-USTRUCT(BlueprintType)
-struct FSpawnDistanceRange
-{
-	GENERATED_BODY()
-
-	FSpawnDistanceRange() {}
-	
-	UPROPERTY(EditAnywhere, meta = (UIMin = "0.0", ClampMin = "0.0"))
-    float MinDistance = 0.f;
-	
-	UPROPERTY(EditAnywhere, meta = (UIMin = "0.0", ClampMin = "0.0"))
-	float MaxDistance = 0.f;
-	
-	UPROPERTY(EditAnywhere)
-	uint32 NumberToSpawn = 0.f;
-};
-
-USTRUCT(BlueprintType)
-struct FSpawnEnemyData
-{
-	GENERATED_BODY()
-
-	FSpawnEnemyData() {}
-	
-	UPROPERTY(EditAnywhere)
-	TArray<FSpawnDistanceRange> DistanceRanges;
-	
-	UPROPERTY(EditAnywhere)
-	TObjectPtr<UCurveFloat> StrengthToDistanceCurve = nullptr;
-
-	UPROPERTY(EditAnywhere)
-	TObjectPtr<UCurveFloat> SpeedToDistanceCurve = nullptr;
-};
+class UKulkiEnemySpawnData;
 
 UCLASS()
 class KULKI_API AKulkiEnemyManager : public AActor
@@ -48,19 +16,16 @@ class KULKI_API AKulkiEnemyManager : public AActor
 	
 public:	
 	AKulkiEnemyManager();
-
+	
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<AKulkiEnemyBaseCharacter> EnemyClass;
-
-	UPROPERTY(EditAnywhere)
-	TMap<EEnemyType, FSpawnEnemyData> SpawnData;
-
+	
+	UPROPERTY(EditAnywhere, Category = "Kulki")
+	TObjectPtr<UKulkiEnemySpawnData> SpawnDataAsset;
+	
 	UPROPERTY(EditAnywhere)
 	bool bNotSpawn_Debug;
 
-	UPROPERTY(EditAnywhere)
-	TMap<uint32, float> LevelScales;
-	
 protected:
 	virtual void BeginPlay() override;
 
