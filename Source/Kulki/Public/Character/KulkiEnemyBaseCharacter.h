@@ -35,18 +35,18 @@ class KULKI_API AKulkiEnemyBaseCharacter : public ACharacter
 public:
 	AKulkiEnemyBaseCharacter();
 	
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category="Kulki")
 	UKulkiAttributesComponent* GetAttributesComponent() const { return AttributesComponent; }
 	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	EEnemyType Type;
-
 	void SetAttributesValue(float Strength, float Speed);
 
-	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category="Kulki")
 	void SetState(EEnemyState NewState);
 	
-	UPROPERTY(BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Kulki")
+    EEnemyType Type;
+	
+	UPROPERTY(BlueprintReadOnly, Category="Kulki")
 	bool bCanChase = true;
 	
 protected:
@@ -54,19 +54,22 @@ protected:
 
 	void SetMeshColor();
 	
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
-	TObjectPtr<UStaticMeshComponent> SphereMesh;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-    TObjectPtr<UKulkiAttributesComponent> AttributesComponent;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	TObjectPtr<UCapsuleComponent> CapsuleCollision;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Kulki")
+	TObjectPtr<UStaticMeshComponent> KulkiMesh;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    float BaseStrength;
-    
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    float BaseSpeed;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Kulki")
+	TObjectPtr<UCapsuleComponent> AttackCapsuleCollision;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Kulki")
+	TObjectPtr<UCapsuleComponent> DefendCapsuleCollision;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Kulki")
+    TObjectPtr<UKulkiAttributesComponent> AttributesComponent;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Kulki")
+    float TempStrengthAttributeValue = 5.f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Kulki")
+    float TempSpeedAttributeValue = 5.f;
 
 };

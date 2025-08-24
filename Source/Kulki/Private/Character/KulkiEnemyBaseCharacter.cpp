@@ -13,32 +13,33 @@ AKulkiEnemyBaseCharacter::AKulkiEnemyBaseCharacter()
 
 	Type = EEnemyType::NONE;
 
-	SphereMesh = CreateDefaultSubobject<UStaticMeshComponent>("SphereMesh");
-	SphereMesh->SetupAttachment(RootComponent);
-	SphereMesh->CastShadow = false;
+	KulkiMesh = CreateDefaultSubobject<UStaticMeshComponent>("KulkiMesh");
+	KulkiMesh->SetupAttachment(RootComponent);
+	KulkiMesh->CastShadow = false;
 
-	CapsuleCollision = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Capsule"));
-	CapsuleCollision->SetupAttachment(RootComponent);
+	AttackCapsuleCollision = CreateDefaultSubobject<UCapsuleComponent>(TEXT("AttackCapsule"));
+	AttackCapsuleCollision->SetupAttachment(RootComponent);
+
+	DefendCapsuleCollision = CreateDefaultSubobject<UCapsuleComponent>(TEXT("DefendCapsule"));
+	DefendCapsuleCollision->SetupAttachment(RootComponent);
 	
 	AttributesComponent = CreateDefaultSubobject<UKulkiAttributesComponent>("AttributesComponent");
 }
-
-
 
 void AKulkiEnemyBaseCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
-	AttributesComponent->SetStrengthAttribute(BaseStrength, SphereMesh, CapsuleCollision, GetCharacterMovement()->MaxWalkSpeed);
-    AttributesComponent->SetSpeedAttribute(BaseSpeed,GetCharacterMovement()->MaxWalkSpeed);
+	AttributesComponent->SetStrengthAttribute(TempStrengthAttributeValue, KulkiMesh, AttackCapsuleCollision, GetCharacterMovement()->MaxWalkSpeed);
+    AttributesComponent->SetSpeedAttribute(TempSpeedAttributeValue,GetCharacterMovement()->MaxWalkSpeed);
 	
 	SetMeshColor();
 }
 
 void AKulkiEnemyBaseCharacter::SetAttributesValue(float Strength, float Speed)
 {
-	BaseStrength = Strength;
-	BaseSpeed = Speed;
+	TempStrengthAttributeValue = Strength;
+	TempSpeedAttributeValue = Speed;
 }
 
 void AKulkiEnemyBaseCharacter::SetMeshColor()
@@ -64,10 +65,10 @@ void AKulkiEnemyBaseCharacter::SetMeshColor()
 		default: break;
 	}
 
-	if (UMaterialInstanceDynamic* DynMaterial = UMaterialInstanceDynamic::Create(SphereMesh->GetMaterial(0), this))
+	if (UMaterialInstanceDynamic* DynMaterial = UMaterialInstanceDynamic::Create(KulkiMesh->GetMaterial(0), this))
 	{
 		DynMaterial->SetVectorParameterValue("MeshColor", Color);
-		SphereMesh->SetMaterial(0, DynMaterial);
+		KulkiMesh->SetMaterial(0, DynMaterial);
 	}
 }
 

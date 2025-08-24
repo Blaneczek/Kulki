@@ -4,7 +4,6 @@
 #include "Component/KulkiAttributesComponent.h"
 
 #include "Components/CapsuleComponent.h"
-#include "Kismet/KismetMathLibrary.h"
 #include "Kismet/KismetSystemLibrary.h"
 
 UKulkiAttributesComponent::UKulkiAttributesComponent()
@@ -19,10 +18,11 @@ void UKulkiAttributesComponent::BeginPlay()
 			
 }
 
-void UKulkiAttributesComponent::SetStrengthAttribute(float NewStrength, UStaticMeshComponent* Mesh, UCapsuleComponent* CapsuleCollision, float& OutMovementSpeed)
+void UKulkiAttributesComponent::SetStrengthAttribute(float NewStrength, UStaticMeshComponent* Mesh,
+													UCapsuleComponent* AttackCapsuleCollision, float& OutMovementSpeed)
 {
 	StrengthAttribute.Value = FMath::Clamp(NewStrength,0.f, StrengthAttribute.MaxValue);
-	SetOwnerSize(Mesh, CapsuleCollision);
+	SetOwnerSize(Mesh, AttackCapsuleCollision);
 	SetOwnerSpeed(OutMovementSpeed);
 	OnStrengthChangedDelegate.Broadcast(StrengthAttribute.Value);
 	if (StrengthAttribute.Value <= 0)
@@ -32,12 +32,12 @@ void UKulkiAttributesComponent::SetStrengthAttribute(float NewStrength, UStaticM
 }
 
 void UKulkiAttributesComponent::AddToStrengthAttribute(float EnemyStrength, UStaticMeshComponent* Mesh,
-                                                       UCapsuleComponent* CapsuleCollision, float& OutMovementSpeed)
+													UCapsuleComponent* AttackCapsuleCollision, float& OutMovementSpeed)
 {
 	if (StrengthAttribute.AddToValueCurve)
 	{
 		const float NewStrength = StrengthAttribute.Value + StrengthAttribute.AddToValueCurve->GetFloatValue(EnemyStrength);
-		SetStrengthAttribute(NewStrength, Mesh, CapsuleCollision, OutMovementSpeed);
+		SetStrengthAttribute(NewStrength, Mesh, AttackCapsuleCollision, OutMovementSpeed);
 	}
 }
 
@@ -61,20 +61,20 @@ void UKulkiAttributesComponent::AddToSpeedAttribute(float EnemyStrength, float& 
 	}
 }
 
-void UKulkiAttributesComponent::SetOwnerSize(UStaticMeshComponent* Mesh, UCapsuleComponent* CapsuleCollision)
+void UKulkiAttributesComponent::SetOwnerSize(UStaticMeshComponent* Mesh, UCapsuleComponent* AttackCapsuleCollision)
 {
-	if (CapsuleCollision && Mesh)
+	if (Mesh && AttackCapsuleCollision)
 	{
 		const float NewScale = FMath::Clamp((StrengthAttribute.Value * SizeMultiplier), 0.5f, 1000.f);
-		Mesh->SetWorldScale3D(FVector(NewScale, NewScale, 1.f));
+		Mesh->SetWorldScale3D(FVector(NewScale, NewScale, NewScale));
 
 		FVector Origin;
 		FVector Bounds;
 		float SphereRadius;
 		UKismetSystemLibrary::GetComponentBounds(Mesh, Origin, Bounds, SphereRadius);
 		const float FixedRadius = Bounds.X - CapsulePadding;
-		CapsuleCollision->SetCapsuleHalfHeight(FixedRadius * 2.f);
-		CapsuleCollision->SetCapsuleRadius(FixedRadius);		
+		AttackCapsuleCollision->SetCapsuleHalfHeight(FixedRadius * 2.f);
+		AttackCapsuleCollision->SetCapsuleRadius(FixedRadius);		
 	}
 }
 

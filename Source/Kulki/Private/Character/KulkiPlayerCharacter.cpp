@@ -17,12 +17,15 @@ AKulkiPlayerCharacter::AKulkiPlayerCharacter()
 {
 	PrimaryActorTick.bCanEverTick = false;
 
-	SphereMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("SphereMesh"));
-	SphereMesh->SetupAttachment(RootComponent);
-	SphereMesh->CastShadow = false;
+	KulkiMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("KulkiMesh"));
+	KulkiMesh->SetupAttachment(RootComponent);
+	KulkiMesh->CastShadow = false;
 
-	CapsuleCollision = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Capsule"));
-	CapsuleCollision->SetupAttachment(RootComponent);
+	AttackCapsuleCollision = CreateDefaultSubobject<UCapsuleComponent>(TEXT("AttackCapsule"));
+	AttackCapsuleCollision->SetupAttachment(RootComponent);
+
+	DefendCapsuleCollision = CreateDefaultSubobject<UCapsuleComponent>(TEXT("DefendCapsule"));
+	DefendCapsuleCollision->SetupAttachment(RootComponent);
 	
 	CameraArm = CreateDefaultSubobject<USpringArmComponent>("CameraArm");
 	CameraArm->SetupAttachment(RootComponent);
@@ -40,8 +43,8 @@ void AKulkiPlayerCharacter::BeginPlay()
 	Super::BeginPlay();
 
 	// Set default attributes
-	AttributesComponent->SetStrengthAttribute(DefaultStrengthAttribute, SphereMesh, CapsuleCollision, MovementSpeed);
-	AttributesComponent->SetSpeedAttribute(DefaultSpeedAttribute, MovementSpeed);
+	AttributesComponent->SetStrengthAttribute(BaseStrengthAttributeValue, KulkiMesh, AttackCapsuleCollision, MovementSpeed);
+	AttributesComponent->SetSpeedAttribute(BaseSpeedAttributeValue, MovementSpeed);
 
 	AttributesComponent->OnAttributeReachedZero.BindLambda([this]()
 		{
@@ -63,12 +66,13 @@ void AKulkiPlayerCharacter::BeginPlay()
 		}
 	}
 
-	CapsuleCollision->OnComponentBeginOverlap.AddDynamic(this, &AKulkiPlayerCharacter::OnOverlap);
+	AttackCapsuleCollision->OnComponentBeginOverlap.AddDynamic(this, &AKulkiPlayerCharacter::OnOverlapAttack);
+	DefendCapsuleCollision->OnComponentBeginOverlap.AddDynamic(this, &AKulkiPlayerCharacter::OnOverlapAttack);
 
-	DynamicMaterialInstance = UMaterialInstanceDynamic::Create(SphereMesh->GetMaterial(0), this);
+	DynamicMaterialInstance = UMaterialInstanceDynamic::Create(KulkiMesh->GetMaterial(0), this);
 }
 
-void AKulkiPlayerCharacter::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+void AKulkiPlayerCharacter::OnOverlapAttack(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	if (bIsImmune)
@@ -98,7 +102,7 @@ void AKulkiPlayerCharacter::OnOverlap(UPrimitiveComponent* OverlappedComponent, 
 		case EEnemyType::RED:
 		{
 			bEatable = true;
-			AttributesComponent->AddToStrengthAttribute(EnemyStrength , SphereMesh, CapsuleCollision, MovementSpeed);
+			AttributesComponent->AddToStrengthAttribute(EnemyStrength , KulkiMesh, AttackCapsuleCollision, MovementSpeed);
 			break;
 		}
 		case EEnemyType::YELLOW:
@@ -111,7 +115,7 @@ void AKulkiPlayerCharacter::OnOverlap(UPrimitiveComponent* OverlappedComponent, 
 		{
 			// Purple Enemy always subtracts player's attributes
 			bEatable = false;
-			AttributesComponent->AddToStrengthAttribute(FMath::Abs(EnemyStrength) * (-1.f), SphereMesh, CapsuleCollision, MovementSpeed);
+			AttributesComponent->AddToStrengthAttribute(FMath::Abs(EnemyStrength) * (-1.f), KulkiMesh, AttackCapsuleCollision, MovementSpeed);
 			AttributesComponent->AddToSpeedAttribute(FMath::Abs(EnemyStrength) * (-1.f), MovementSpeed);
 			break;
 		}
@@ -131,6 +135,12 @@ void AKulkiPlayerCharacter::OnOverlap(UPrimitiveComponent* OverlappedComponent, 
 	}
 }
 
+void AKulkiPlayerCharacter::OnOverlapDefend(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	
+}
+
 void AKulkiPlayerCharacter::ActivateImmunity()
 {
 	OnImmunityActivation.ExecuteIfBound();	
@@ -142,7 +152,7 @@ void AKulkiPlayerCharacter::ActivateImmunity()
 		FMaterialParameterInfo ParamInfo = FMaterialParameterInfo(TEXT("MeshColor"));
 		DynamicMaterialInstance->GetVectorParameterValue(ParamInfo, BaseColor);
 		DynamicMaterialInstance->SetVectorParameterValue("MeshColor", ImmunityColor);
-		SphereMesh->SetMaterial(0, DynamicMaterialInstance);
+		KulkiMesh->SetMaterial(0, DynamicMaterialInstance);
 	}
 	
 	FTimerHandle ImmunityTimer;
@@ -159,7 +169,7 @@ void AKulkiPlayerCharacter::DeactivateImmunity(FLinearColor Color)
 	if (IsValid(DynamicMaterialInstance))
 	{
 		DynamicMaterialInstance->SetVectorParameterValue("MeshColor", Color);
-		SphereMesh->SetMaterial(0, DynamicMaterialInstance);
+		KulkiMesh->SetMaterial(0, DynamicMaterialInstance);
 	}		
 }
 
