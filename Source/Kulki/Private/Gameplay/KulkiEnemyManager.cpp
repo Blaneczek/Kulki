@@ -6,6 +6,7 @@
 #include "NavigationSystem.h"
 #include "Character/KulkiEnemyBaseCharacter.h"
 #include "Character/KulkiPlayerCharacter.h"
+#include "GameInstance/KulkiGameInstance.h"
 #include "GameMode/KulkiGameMode.h"
 #include "Gameplay/Data/KulkiEnemySpawnData.h"
 #include "Kismet/GameplayStatics.h"
@@ -82,8 +83,18 @@ void AKulkiEnemyManager::SpawnEnemies()
 	}
 	const FVector PlayerLocation = Player->GetActorLocation();
 
-	//TODO: Get level
-	
+	// Gets chosen difficulty level
+	int32 Level = 1;
+	float LevelScale = 1.f;
+	if (UKulkiGameInstance* GameInstance = Cast<UKulkiGameInstance>(UGameplayStatics::GetGameInstance(GetWorld())))
+	{
+		Level = GameInstance->Level;
+	}
+	if (SpawnDataAsset->LevelScales.Contains(Level))
+	{
+		LevelScale = *SpawnDataAsset->LevelScales.Find(Level);
+	}
+		
 	for (const auto& EnemyData : SpawnDataAsset->SpawnData)
 	{
 		for (const auto& DistanceRange : EnemyData.Value.DistanceRanges)
@@ -113,8 +124,8 @@ void AKulkiEnemyManager::SpawnEnemies()
 					if (Enemy && EnemyData.Value.StrengthToDistanceCurve && EnemyData.Value.SpeedToDistanceCurve)
 					{
 						Enemy->Type = EnemyData.Key;
-						const float Strength = EnemyData.Value.StrengthToDistanceCurve->GetFloatValue(RandomDistance);
-						const float Speed = EnemyData.Value.SpeedToDistanceCurve->GetFloatValue(RandomDistance);
+						const float Strength = EnemyData.Value.StrengthToDistanceCurve->GetFloatValue(RandomDistance) * LevelScale;
+						const float Speed = EnemyData.Value.SpeedToDistanceCurve->GetFloatValue(RandomDistance) * LevelScale;
 						Enemy->SetAttributesValue(Strength, Speed);
 						UGameplayStatics::FinishSpawningActor(Enemy, SpawnTransform);
 						Enemies.Add(Enemy);

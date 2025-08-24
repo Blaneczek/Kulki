@@ -16,8 +16,7 @@ class KULKI_API AKulkiGameMode : public AGameModeBase
 
 public:
 	AKulkiGameMode();
-
-	void PauseGame(bool bPauseGame);
+	
 	void ResetGame();
 	void GameWon();
 

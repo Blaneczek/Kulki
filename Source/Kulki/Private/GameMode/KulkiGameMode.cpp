@@ -10,11 +10,6 @@ AKulkiGameMode::AKulkiGameMode()
 	
 }
 
-void AKulkiGameMode::PauseGame(bool bPauseGame)
-{
-	UGameplayStatics::SetGamePaused(this, bPauseGame);
-}
-
 void AKulkiGameMode::ResetGame()
 {
 	UGameplayStatics::GetPlayerCameraManager(this, 0)->StartCameraFade(0.f,
@@ -39,5 +34,5 @@ void AKulkiGameMode::GameWon()
 		WonGameWidget->AddToViewport();
 	}
 
-	PauseGame(true);
+	UGameplayStatics::SetGamePaused(this, true);
 }
