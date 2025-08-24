@@ -16,5 +16,5 @@ class KULKI_API UKulkiGameInstance : public UGameInstance
 
 public:
 	UPROPERTY(BlueprintReadWrite)
-	int32 Level;
+	int32 DifficultyLevel;
 };

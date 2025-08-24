@@ -84,15 +84,15 @@ void AKulkiEnemyManager::SpawnEnemies()
 	const FVector PlayerLocation = Player->GetActorLocation();
 
 	// Gets chosen difficulty level
-	int32 Level = 1;
-	float LevelScale = 1.f;
+	int32 DifficultyLevel = 1;
+	float DifficultyLevelScale = 1.f;
 	if (UKulkiGameInstance* GameInstance = Cast<UKulkiGameInstance>(UGameplayStatics::GetGameInstance(GetWorld())))
 	{
-		Level = GameInstance->Level;
+		DifficultyLevel = GameInstance->DifficultyLevel;
 	}
-	if (SpawnDataAsset->LevelScales.Contains(Level))
+	if (SpawnDataAsset->LevelScales.Contains(DifficultyLevel))
 	{
-		LevelScale = *SpawnDataAsset->LevelScales.Find(Level);
+		DifficultyLevelScale = *SpawnDataAsset->LevelScales.Find(DifficultyLevel);
 	}
 		
 	for (const auto& EnemyData : SpawnDataAsset->SpawnData)
@@ -124,8 +124,8 @@ void AKulkiEnemyManager::SpawnEnemies()
 					if (Enemy && EnemyData.Value.StrengthToDistanceCurve && EnemyData.Value.SpeedToDistanceCurve)
 					{
 						Enemy->Type = EnemyData.Key;
-						const float Strength = EnemyData.Value.StrengthToDistanceCurve->GetFloatValue(RandomDistance) * LevelScale;
-						const float Speed = EnemyData.Value.SpeedToDistanceCurve->GetFloatValue(RandomDistance) * LevelScale;
+						const float Strength = EnemyData.Value.StrengthToDistanceCurve->GetFloatValue(RandomDistance) * DifficultyLevelScale;
+						const float Speed = EnemyData.Value.SpeedToDistanceCurve->GetFloatValue(RandomDistance) * DifficultyLevelScale;
 						Enemy->SetAttributesValue(Strength, Speed);
 						UGameplayStatics::FinishSpawningActor(Enemy, SpawnTransform);
 						Enemies.Add(Enemy);
