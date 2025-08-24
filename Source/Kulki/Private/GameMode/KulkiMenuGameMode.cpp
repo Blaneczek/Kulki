@@ -10,7 +10,7 @@ void AKulkiMenuGameMode::BeginPlay()
 {
     AGameModeBase::BeginPlay();
 
-    check(MenuWidgetClass);
+    checkf(MenuWidgetClass, TEXT("AKulkiMenuGameMode | MenuWidgetClass is not set"));
     MenuWidget = CreateWidget<UKulkiMenuWidget>(GetWorld(), MenuWidgetClass);
 
     if (IsValid(MenuWidget))
@@ -31,8 +31,9 @@ void AKulkiMenuGameMode::BeginPlay()
 
 void AKulkiMenuGameMode::StartGame()
 {
-    if (Level01.IsPending())
+    if (!Level01.IsNull())
     {
+        UE_LOG(LogTemp, Warning, TEXT("TEXT"));
         UGameplayStatics::OpenLevelBySoftObjectPtr(GetWorld(), Level01);
     }
 }

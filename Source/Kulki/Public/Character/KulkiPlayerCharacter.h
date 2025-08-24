@@ -13,6 +13,7 @@ class UCameraComponent;
 
 DECLARE_DELEGATE(FOnImmunityActivation);
 DECLARE_DELEGATE(FOnImmunityDeactivation);
+DECLARE_DELEGATE(FOnEnemyKilled);
 
 UCLASS()
 class KULKI_API AKulkiPlayerCharacter : public ACharacter
@@ -32,6 +33,7 @@ public:
 
 	FOnImmunityActivation OnImmunityActivation;
 	FOnImmunityDeactivation OnImmunityDeactivation;
+	FOnEnemyKilled OnEnemyKilled;
 	
 protected:
 	virtual void BeginPlay() override;
@@ -73,7 +75,6 @@ private:
 
 	void ActivateImmunity();
 	
-	UFUNCTION()
 	void DeactivateImmunity(FLinearColor Color);
 
 	UPROPERTY()

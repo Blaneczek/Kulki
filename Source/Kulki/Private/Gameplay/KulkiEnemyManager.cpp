@@ -6,6 +6,7 @@
 #include "NavigationSystem.h"
 #include "Character/KulkiEnemyBaseCharacter.h"
 #include "Character/KulkiPlayerCharacter.h"
+#include "GameMode/KulkiGameMode.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
 
@@ -38,6 +39,18 @@ void AKulkiEnemyManager::SetCanChasePlayer()
 	}
 }
 
+void AKulkiEnemyManager::EatableEnemyKilled()
+{
+	NumberOfEatableEnemies--;
+	if (NumberOfEatableEnemies <= 0)
+	{
+		if (AKulkiGameMode* GameMode = Cast<AKulkiGameMode>(UGameplayStatics::GetGameMode(GetWorld())))
+		{
+			GameMode->GameWon();
+		}		
+	}
+}
+
 void AKulkiEnemyManager::BeginPlay()
 {
 	Super::BeginPlay();
@@ -53,11 +66,14 @@ void AKulkiEnemyManager::BeginPlay()
 	{
 		PlayerCharacter->OnImmunityActivation.BindUObject(this, &AKulkiEnemyManager::StopChasingPlayer);
 		PlayerCharacter->OnImmunityDeactivation.BindUObject(this, &AKulkiEnemyManager::SetCanChasePlayer);
+		PlayerCharacter->OnEnemyKilled.BindUObject(this, &AKulkiEnemyManager::EatableEnemyKilled);
 	}
 }
 
 void AKulkiEnemyManager::SpawnEnemies()
 {
+	NumberOfEatableEnemies = 0;
+	
 	AKulkiPlayerCharacter* Player = Cast<AKulkiPlayerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 	if (!Player || !EnemyClass)
 	{
@@ -65,14 +81,16 @@ void AKulkiEnemyManager::SpawnEnemies()
 	}
 	const FVector PlayerLocation = Player->GetActorLocation();
 
+	//TODO: Get level
+	
 	for (const auto& EnemyData : SpawnData)
 	{
 		for (const auto& DistanceRange : EnemyData.Value.DistanceRanges)
 		{ 
 			for (uint32 i = 0; i < DistanceRange.NumberToSpawn; ++i)
-			{
+			{			
 				const FVector RandomDirection = UKismetMathLibrary::RandomUnitVector().GetSafeNormal2D();
-				const float RandomDistance = UKismetMathLibrary::RandomFloatInRange(DistanceRange.MinDistance, DistanceRange.MaxDistance);
+				const float RandomDistance = FMath::RandRange(DistanceRange.MinDistance, DistanceRange.MaxDistance);
 				const FVector RandomLocationFromPlayer = PlayerLocation + FVector(
 					RandomDirection.X * RandomDistance,
 					RandomDirection.Y * RandomDistance,
@@ -99,6 +117,11 @@ void AKulkiEnemyManager::SpawnEnemies()
 						Enemy->SetAttributesValue(Strength, Speed);
 						UGameplayStatics::FinishSpawningActor(Enemy, SpawnTransform);
 						Enemies.Add(Enemy);
+
+						if (EnemyData.Key == EEnemyType::RED || EnemyData.Key == EEnemyType::YELLOW)
+						{
+							NumberOfEatableEnemies++;
+						}
 					}	
 				}			
 			}	

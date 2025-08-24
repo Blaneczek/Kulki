@@ -13,5 +13,14 @@ UCLASS()
 class KULKI_API AKulkiGameMode : public AGameModeBase
 {
 	GENERATED_BODY()
-	
+
+public:
+	AKulkiGameMode();
+
+	void PauseGame(bool bPauseGame);
+	void ResetGame();
+	void GameWon();
+
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<UUserWidget> WonGameWidgetClass;
 };

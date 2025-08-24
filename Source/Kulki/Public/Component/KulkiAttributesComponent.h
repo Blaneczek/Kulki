@@ -6,6 +6,8 @@
 #include "Components/ActorComponent.h"
 #include "KulkiAttributesComponent.generated.h"
 
+class UCapsuleComponent;
+
 USTRUCT(BlueprintType)
 struct FAttribute
 {
@@ -23,9 +25,8 @@ struct FAttribute
 	TObjectPtr<UCurveFloat> AddToValueCurve = nullptr;
 };
 
-class UCapsuleComponent;
-
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnAttributeChangedSignature, float /*NewValue*/);
+DECLARE_DELEGATE(FOnAttributeReachedZero);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class KULKI_API UKulkiAttributesComponent : public UActorComponent
@@ -50,29 +51,34 @@ public:
 	FOnAttributeChangedSignature OnStrengthChangedDelegate;
 	FOnAttributeChangedSignature OnSpeedChangedDelegate;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Speed")
 	float BaseMovementSpeed = 500.f;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Speed")	
 	float MinMovementSpeed = 200.f;
 	
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Speed")
 	float MaxMovementSpeed = 1500.f;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	float CapsulePadding = 30.f;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Speed")
 	float SpeedMultiplier = 10.f;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Speed")
 	float SpeedPenaltyMultiplier = 5.f;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Strength")
+	float SizeMultiplier = 0.1f;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
     FAttribute StrengthAttribute;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
     FAttribute SpeedAttribute;
+
+	FOnAttributeReachedZero OnAttributeReachedZero;
 	
 protected:
 	virtual void BeginPlay() override;
@@ -80,5 +86,5 @@ protected:
 private:
 	void SetOwnerSize(UStaticMeshComponent* Mesh, UCapsuleComponent* CapsuleCollision);
 	void SetOwnerSpeed(float& OutMovementSpeed);
-
+	
 };

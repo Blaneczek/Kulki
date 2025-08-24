@@ -13,17 +13,16 @@ struct FSpawnDistanceRange
 	GENERATED_BODY()
 
 	FSpawnDistanceRange() {}
-
-	UPROPERTY(EditAnywhere)
-	float MinDistance = 0.f;
-
-	UPROPERTY(EditAnywhere)
+	
+	UPROPERTY(EditAnywhere, meta = (UIMin = "0.0", ClampMin = "0.0"))
+    float MinDistance = 0.f;
+	
+	UPROPERTY(EditAnywhere, meta = (UIMin = "0.0", ClampMin = "0.0"))
 	float MaxDistance = 0.f;
 	
 	UPROPERTY(EditAnywhere)
 	uint32 NumberToSpawn = 0.f;
 };
-
 
 USTRUCT(BlueprintType)
 struct FSpawnEnemyData
@@ -58,6 +57,9 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	bool bNotSpawn_Debug;
+
+	UPROPERTY(EditAnywhere)
+	TMap<uint32, float> LevelScales;
 	
 protected:
 	virtual void BeginPlay() override;
@@ -66,9 +68,12 @@ private:
 	void SpawnEnemies();
 	
 	void StopChasingPlayer();
-
 	void SetCanChasePlayer();
+
+	void EatableEnemyKilled();
 	
 	UPROPERTY()
 	TArray<AKulkiEnemyBaseCharacter*> Enemies;
+
+	uint32 NumberOfEatableEnemies = 0;
 };

@@ -16,18 +16,18 @@ UKulkiAttributesComponent::UKulkiAttributesComponent()
 void UKulkiAttributesComponent::BeginPlay()
 {
 	Super::BeginPlay();
-
+			
 }
 
 void UKulkiAttributesComponent::SetStrengthAttribute(float NewStrength, UStaticMeshComponent* Mesh, UCapsuleComponent* CapsuleCollision, float& OutMovementSpeed)
 {
-	StrengthAttribute.Value = UKismetMathLibrary::Clamp(NewStrength,0.f, StrengthAttribute.MaxValue);
+	StrengthAttribute.Value = FMath::Clamp(NewStrength,0.f, StrengthAttribute.MaxValue);
 	SetOwnerSize(Mesh, CapsuleCollision);
 	SetOwnerSpeed(OutMovementSpeed);
 	OnStrengthChangedDelegate.Broadcast(StrengthAttribute.Value);
 	if (StrengthAttribute.Value <= 0)
 	{
-		// TODO: Game over
+		OnAttributeReachedZero.ExecuteIfBound();
 	}
 }
 
@@ -43,12 +43,12 @@ void UKulkiAttributesComponent::AddToStrengthAttribute(float EnemyStrength, USta
 
 void UKulkiAttributesComponent::SetSpeedAttribute(float NewSpeed, float& OutMovementSpeed)
 {
-	SpeedAttribute.Value = UKismetMathLibrary::Clamp(NewSpeed, 0.f, SpeedAttribute.MaxValue);
+	SpeedAttribute.Value = FMath::Clamp(NewSpeed, 0.f, SpeedAttribute.MaxValue);
 	SetOwnerSpeed(OutMovementSpeed);
 	OnSpeedChangedDelegate.Broadcast(SpeedAttribute.Value );
 	if (SpeedAttribute.Value  <= 0)
 	{
-		// TODO: Game over
+		OnAttributeReachedZero.ExecuteIfBound();
 	}
 }
 
@@ -65,8 +65,9 @@ void UKulkiAttributesComponent::SetOwnerSize(UStaticMeshComponent* Mesh, UCapsul
 {
 	if (CapsuleCollision && Mesh)
 	{
-		Mesh->SetWorldScale3D(FVector(StrengthAttribute.Value * 0.1f, StrengthAttribute.Value * 0.1f, 1.f));
-		
+		const float NewScale = FMath::Clamp((StrengthAttribute.Value * SizeMultiplier), 0.5f, 1000.f);
+		Mesh->SetWorldScale3D(FVector(NewScale, NewScale, 1.f));
+
 		FVector Origin;
 		FVector Bounds;
 		float SphereRadius;
@@ -80,7 +81,7 @@ void UKulkiAttributesComponent::SetOwnerSize(UStaticMeshComponent* Mesh, UCapsul
 void UKulkiAttributesComponent::SetOwnerSpeed(float& OutMovementSpeed)
 {
 	const float NewValue = BaseMovementSpeed + (SpeedAttribute.Value * SpeedMultiplier) - (StrengthAttribute.Value * SpeedPenaltyMultiplier);
-	OutMovementSpeed = UKismetMathLibrary::Clamp(NewValue, MinMovementSpeed, MaxMovementSpeed);
+	OutMovementSpeed = FMath::Clamp(NewValue, MinMovementSpeed, MaxMovementSpeed);
 }
 
 

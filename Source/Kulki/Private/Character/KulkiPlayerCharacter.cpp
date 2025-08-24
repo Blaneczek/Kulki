@@ -8,8 +8,8 @@
 #include "Component/KulkiAttributesComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "GameMode/KulkiGameMode.h"
 #include "Kismet/GameplayStatics.h"
-#include "Kismet/KismetMaterialLibrary.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "UI/KulkiHUD.h"
 
@@ -42,6 +42,17 @@ void AKulkiPlayerCharacter::BeginPlay()
 	// Set default attributes
 	AttributesComponent->SetStrengthAttribute(DefaultStrengthAttribute, SphereMesh, CapsuleCollision, MovementSpeed);
 	AttributesComponent->SetSpeedAttribute(DefaultSpeedAttribute, MovementSpeed);
+
+	AttributesComponent->OnAttributeReachedZero.BindLambda([this]()
+		{
+			bIsImmune = true;
+			MovementForce = 0.f;
+			GetWorldTimerManager().ClearAllTimersForObject(this);
+			if (AKulkiGameMode* GameMode = Cast<AKulkiGameMode>(UGameplayStatics::GetGameMode(this)))
+			{
+				GameMode->ResetGame();
+			}
+		});
 	
 	// Init Main widget with controller 
 	if (const APlayerController* PC = Cast<APlayerController>(GetController()))
@@ -80,24 +91,28 @@ void AKulkiPlayerCharacter::OnOverlap(UPrimitiveComponent* OverlappedComponent, 
 
 	// Added/subtracted value depends on Enemy size (Strength)
 	const float EnemyStrength = Enemy->GetAttributesComponent()->StrengthAttribute.Value * Helper;
+	bool bEatable = false;
 	
 	switch (Enemy->Type)
 	{
 		case EEnemyType::RED:
-		{		
+		{
+			bEatable = true;
 			AttributesComponent->AddToStrengthAttribute(EnemyStrength , SphereMesh, CapsuleCollision, MovementSpeed);
 			break;
 		}
 		case EEnemyType::YELLOW:
 		{
+			bEatable = true;
 			AttributesComponent->AddToSpeedAttribute(EnemyStrength, MovementSpeed);
 			break;
 		}
 		case EEnemyType::PURPLE:
 		{
 			// Purple Enemy always subtracts player's attributes
-			AttributesComponent->AddToStrengthAttribute(-UKismetMathLibrary::Abs(EnemyStrength), SphereMesh, CapsuleCollision, MovementSpeed);
-			AttributesComponent->AddToSpeedAttribute(-UKismetMathLibrary::Abs(EnemyStrength), MovementSpeed);
+			bEatable = false;
+			AttributesComponent->AddToStrengthAttribute(FMath::Abs(EnemyStrength) * (-1.f), SphereMesh, CapsuleCollision, MovementSpeed);
+			AttributesComponent->AddToSpeedAttribute(FMath::Abs(EnemyStrength) * (-1.f), MovementSpeed);
 			break;
 		}
 		default: break;
@@ -107,6 +122,7 @@ void AKulkiPlayerCharacter::OnOverlap(UPrimitiveComponent* OverlappedComponent, 
 	if (Helper > 0.f)
 	{
 		Enemy->Destroy();
+		if (bEatable) OnEnemyKilled.ExecuteIfBound();		
 	}
 	else
 	{
@@ -131,7 +147,7 @@ void AKulkiPlayerCharacter::ActivateImmunity()
 	
 	FTimerHandle ImmunityTimer;
 	FTimerDelegate ImmunityDelegate;
-	ImmunityDelegate.BindUFunction(this, FName("DeactivateImmunity"), BaseColor);
+	ImmunityDelegate.BindUObject(this, &AKulkiPlayerCharacter::DeactivateImmunity, BaseColor);
 	GetWorldTimerManager().SetTimer(ImmunityTimer, ImmunityDelegate, ImmunityTime, false);
 }
 

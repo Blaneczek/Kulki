@@ -7,7 +7,6 @@
 #include "EnhancedInputSubsystems.h"
 #include "Character/KulkiPlayerCharacter.h"
 #include "GameFramework/CharacterMovementComponent.h"
-#include "Math/UnitConversion.h"
 
 AKulkiPlayerController::AKulkiPlayerController()
 {
@@ -62,15 +61,10 @@ void AKulkiPlayerController::StartPlayerInput()
 void AKulkiPlayerController::StopPlayerInput()
 {
 	bIsMoving = false;	
-	if (AKulkiPlayerCharacter* PlayerCharacter = Cast<AKulkiPlayerCharacter>(GetCharacter()))
-	{
-		PlayerCharacter->GetMovementComponent()->StopMovementImmediately();
-	}
 }
 
 void AKulkiPlayerController::FollowMouseCursor()
 {
-	//TODO: maybe try something different 
 	AKulkiPlayerCharacter* PlayerCharacter = Cast<AKulkiPlayerCharacter>(GetCharacter());
 	if (!PlayerCharacter)
 	{
@@ -88,7 +82,6 @@ void AKulkiPlayerController::FollowMouseCursor()
 	{
 		const FVector HitDirection = (HitResult.ImpactPoint - PlayerCharacter->GetActorLocation()).GetSafeNormal();
 		const FVector Force = FVector(HitDirection.X * PlayerCharacter->GetMovementForce(), HitDirection.Y * PlayerCharacter->GetMovementForce(), 0.f);
-		PlayerCharacter->SetActorRotation(HitDirection.Rotation());
 		PlayerCharacter->GetCharacterMovement()->AddForce(Force);
 	}
 }
