@@ -11,6 +11,9 @@ class UKulkiAttributesComponent;
 class USpringArmComponent;
 class UCameraComponent;
 
+DECLARE_DELEGATE(FOnImmunityActivation);
+DECLARE_DELEGATE(FOnImmunityDeactivation);
+
 UCLASS()
 class KULKI_API AKulkiPlayerCharacter : public ACharacter
 {
@@ -26,6 +29,9 @@ public:
 	float GetMovementSpeed() const { return MovementSpeed; }
 
 	float GetMovementForce() const { return MovementForce; }
+
+	FOnImmunityActivation OnImmunityActivation;
+	FOnImmunityDeactivation OnImmunityDeactivation;
 	
 protected:
 	virtual void BeginPlay() override;
@@ -75,4 +81,5 @@ private:
 	
 	float MovementSpeed;
 	bool bIsImmune = false;
+
 };

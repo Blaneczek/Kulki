@@ -8,6 +8,7 @@
 #include "Component/KulkiAttributesComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMaterialLibrary.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "UI/KulkiHUD.h"
@@ -111,12 +112,12 @@ void AKulkiPlayerCharacter::OnOverlap(UPrimitiveComponent* OverlappedComponent, 
 	{
 		// Gives Player immunity after being caught 
 		ActivateImmunity();
-		Enemy->SetState(EEnemyState::IDLE);
 	}
 }
 
 void AKulkiPlayerCharacter::ActivateImmunity()
 {
+	OnImmunityActivation.ExecuteIfBound();	
 	bIsImmune = true;
 
 	FLinearColor BaseColor = FLinearColor::Green;
@@ -136,12 +137,14 @@ void AKulkiPlayerCharacter::ActivateImmunity()
 
 void AKulkiPlayerCharacter::DeactivateImmunity(FLinearColor Color)
 {
+	OnImmunityDeactivation.ExecuteIfBound();
+	bIsImmune = false;
+	
 	if (IsValid(DynamicMaterialInstance))
 	{
 		DynamicMaterialInstance->SetVectorParameterValue("MeshColor", Color);
 		SphereMesh->SetMaterial(0, DynamicMaterialInstance);
-	}
-	bIsImmune = false;
+	}		
 }
 
 

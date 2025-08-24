@@ -45,7 +45,10 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 	void SetState(EEnemyState NewState);
-
+	
+	UPROPERTY(BlueprintReadWrite)
+	bool bCanChase = true;
+	
 protected:
 	virtual void BeginPlay() override;
 
@@ -65,9 +68,5 @@ protected:
     
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float BaseSpeed;
-	
-private:
-	UPROPERTY()
-	FLinearColor MeshColor = FLinearColor::Gray;
 
 };

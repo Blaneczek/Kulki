@@ -15,6 +15,29 @@ AKulkiEnemyManager::AKulkiEnemyManager()
 
 }
 
+void AKulkiEnemyManager::StopChasingPlayer()
+{
+	for (auto Enemy : Enemies)
+	{
+		if (IsValid(Enemy))
+		{
+			Enemy->SetState(EEnemyState::IDLE);
+			Enemy->bCanChase = false;
+		}
+	}
+}
+
+void AKulkiEnemyManager::SetCanChasePlayer()
+{
+	for (auto Enemy : Enemies)
+	{
+		if (IsValid(Enemy))
+		{
+			Enemy->bCanChase = true;
+		}
+	}
+}
+
 void AKulkiEnemyManager::BeginPlay()
 {
 	Super::BeginPlay();
@@ -24,6 +47,13 @@ void AKulkiEnemyManager::BeginPlay()
 		return;
 	}
 	SpawnEnemies();
+
+	AKulkiPlayerCharacter* PlayerCharacter = Cast<AKulkiPlayerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+	if (PlayerCharacter)
+	{
+		PlayerCharacter->OnImmunityActivation.BindUObject(this, &AKulkiEnemyManager::StopChasingPlayer);
+		PlayerCharacter->OnImmunityDeactivation.BindUObject(this, &AKulkiEnemyManager::SetCanChasePlayer);
+	}
 }
 
 void AKulkiEnemyManager::SpawnEnemies()
@@ -67,7 +97,8 @@ void AKulkiEnemyManager::SpawnEnemies()
 						const float Strength = EnemyData.Value.StrengthToDistanceCurve->GetFloatValue(RandomDistance);
 						const float Speed = EnemyData.Value.SpeedToDistanceCurve->GetFloatValue(RandomDistance);
 						Enemy->SetAttributesValue(Strength, Speed);
-						UGameplayStatics::FinishSpawningActor(Enemy, SpawnTransform);			
+						UGameplayStatics::FinishSpawningActor(Enemy, SpawnTransform);
+						Enemies.Add(Enemy);
 					}	
 				}			
 			}	

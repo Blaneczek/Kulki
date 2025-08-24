@@ -49,7 +49,7 @@ class KULKI_API AKulkiEnemyManager : public AActor
 	
 public:	
 	AKulkiEnemyManager();
-	
+
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<AKulkiEnemyBaseCharacter> EnemyClass;
 
@@ -64,4 +64,11 @@ protected:
 
 private:
 	void SpawnEnemies();
+	
+	void StopChasingPlayer();
+
+	void SetCanChasePlayer();
+	
+	UPROPERTY()
+	TArray<AKulkiEnemyBaseCharacter*> Enemies;
 };
