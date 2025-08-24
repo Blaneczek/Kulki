@@ -18,6 +18,15 @@ enum class EEnemyType : uint8
 	PURPLE	UMETA(DisplayName = "PURPLE")
 };
 
+UENUM(BlueprintType, Blueprintable)
+enum class EEnemyState: uint8
+{
+	NONE	UMETA(DisplayName = "NONE"),
+	IDLE	UMETA(DisplayName = "IDLE"),
+	CHASE	UMETA(DisplayName = "CHASE"),
+	ESCAPE	UMETA(DisplayName = "ESCAPE")
+};
+
 UCLASS()
 class KULKI_API AKulkiEnemyBaseCharacter : public ACharacter
 {
@@ -33,7 +42,10 @@ public:
 	EEnemyType Type;
 
 	void SetAttributesValue(float Strength, float Speed);
-	
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	void SetState(EEnemyState NewState);
+
 protected:
 	virtual void BeginPlay() override;
 

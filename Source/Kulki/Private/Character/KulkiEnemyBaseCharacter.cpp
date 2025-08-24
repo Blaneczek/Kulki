@@ -40,6 +40,7 @@ void AKulkiEnemyBaseCharacter::SetAttributesValue(float Strength, float Speed)
 	BaseStrength = Strength;
 	BaseSpeed = Speed;
 }
+
 void AKulkiEnemyBaseCharacter::SetMeshColor()
 {
 	FLinearColor Color = FLinearColor::Gray;

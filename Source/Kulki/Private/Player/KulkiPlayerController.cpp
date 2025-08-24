@@ -88,6 +88,7 @@ void AKulkiPlayerController::FollowMouseCursor()
 	{
 		const FVector HitDirection = (HitResult.ImpactPoint - PlayerCharacter->GetActorLocation()).GetSafeNormal();
 		const FVector Force = FVector(HitDirection.X * PlayerCharacter->GetMovementForce(), HitDirection.Y * PlayerCharacter->GetMovementForce(), 0.f);
+		PlayerCharacter->SetActorRotation(HitDirection.Rotation());
 		PlayerCharacter->GetCharacterMovement()->AddForce(Force);
 	}
 }

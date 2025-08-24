@@ -111,7 +111,7 @@ void AKulkiPlayerCharacter::OnOverlap(UPrimitiveComponent* OverlappedComponent, 
 	{
 		// Gives Player immunity after being caught 
 		ActivateImmunity();
-		//TODO: Set Enemy AI to Idle State
+		Enemy->SetState(EEnemyState::IDLE);
 	}
 }
 
