@@ -51,25 +51,31 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Kulki")
     TObjectPtr<UKulkiAttributesComponent> AttributesComponent;
 
+	/* Capsule used to interact with enemy's DefendCapsule. Radius scales with mesh size. */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Kulki")
 	TObjectPtr<UCapsuleComponent> AttackCapsuleCollision;
-
+	
+	/* Capsule used to interact with enemy's AttackCapsule. Radius stays the same (very small in center of mesh). */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Kulki")
 	TObjectPtr<UCapsuleComponent> DefendCapsuleCollision;
 
+	/* Use this to set Player's Strength Attribute value that will be used at the start of the game. */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta=(UIMin="5.0", ClampMin="5.0"), Category="Kulki|Attributes")
 	float BaseStrengthAttributeValue = 30.f;
 	
+	/* Use this to set Player's Speed Attribute value that will be used at the start of the game. */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta=(UIMin="5.0", ClampMin="5.0"), Category="Kulki|Attributes")
 	float BaseSpeedAttributeValue = 30.f;
 
-	/* Force used in AddForce movement, */
+	/* Force used in AddForce. */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta=(UIMin="350.0", ClampMin="350.0"), Category="Kulki|Movement")
 	float MovementForce = 3000.f;
 
+	/* Time during which Player can't be hit. */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, meta=(UIMin="0.1", ClampMin="0.1"), Category="Kulki|Immunity")
 	float ImmunityTime = 2.f;
 
+	/* Mesh color during the immune state. */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Kulki|Immunity")
 	FLinearColor ImmunityColor;
 	
@@ -78,13 +84,9 @@ private:
 	void OnOverlapAttack(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
 		int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
-	UFUNCTION()
-	void OnOverlapDefend(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
-		int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
-
 	void ActivateImmunity();
 	
-	void DeactivateImmunity(FLinearColor Color);
+	void DeactivateImmunity(const FLinearColor Color);
 
 	UPROPERTY()
 	TObjectPtr<UMaterialInstanceDynamic> DynamicMaterialInstance;

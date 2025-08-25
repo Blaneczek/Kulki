@@ -27,6 +27,7 @@ void UKulkiAttributesComponent::SetStrengthAttribute(float NewStrength, UStaticM
 	SetOwnerSize(Mesh, AttackCapsuleCollision);
 	SetOwnerSpeed(OutMovementSpeed);
 	OnStrengthChangedDelegate.Broadcast(StrengthAttribute.Value);
+	
 	if (StrengthAttribute.Value <= 0)
 	{
 		OnAttributeReachedZero.ExecuteIfBound();
@@ -73,9 +74,11 @@ void UKulkiAttributesComponent::SetOwnerSize(UStaticMeshComponent* Mesh, UCapsul
 
 		FVector Origin;
 		FVector Bounds;
+		
 		float SphereRadius;
 		UKismetSystemLibrary::GetComponentBounds(Mesh, Origin, Bounds, SphereRadius);
 		const float FixedRadius = Bounds.X - CapsulePadding;
+		// Height must be larger than radius to keep the shape of capsule
 		AttackCapsuleCollision->SetCapsuleHalfHeight(FixedRadius * 2.f);
 		AttackCapsuleCollision->SetCapsuleRadius(FixedRadius);		
 	}

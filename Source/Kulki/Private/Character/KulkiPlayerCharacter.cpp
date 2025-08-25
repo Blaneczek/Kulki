@@ -45,6 +45,7 @@ void AKulkiPlayerCharacter::BeginPlay()
 	AttributesComponent->SetStrengthAttribute(BaseStrengthAttributeValue, KulkiMesh, AttackCapsuleCollision, MovementSpeed);
 	AttributesComponent->SetSpeedAttribute(BaseSpeedAttributeValue, MovementSpeed);
 
+	// Player lost
 	AttributesComponent->OnAttributeReachedZero.BindLambda([this]()
 		{
 			bIsImmune = true;
@@ -94,6 +95,7 @@ void AKulkiPlayerCharacter::OnOverlapAttack(UPrimitiveComponent* OverlappedCompo
 
 	// Added/subtracted value depends on Enemy size (Strength)
 	const float EnemyStrength = Enemy->GetAttributesComponent()->StrengthAttribute.Value * Helper;
+	
 	bool bEatable = false;
 	
 	switch (Enemy->Type)
@@ -112,7 +114,7 @@ void AKulkiPlayerCharacter::OnOverlapAttack(UPrimitiveComponent* OverlappedCompo
 		}
 		case EEnemyType::PURPLE:
 		{
-			// Purple Enemy always subtracts player's attributes
+			// Purple Enemy always subtracts Player's attributes
 			bEatable = false;
 			AttributesComponent->AddToStrengthAttribute(FMath::Abs(EnemyStrength) * (-1.f), KulkiMesh, AttackCapsuleCollision, MovementSpeed);
 			AttributesComponent->AddToSpeedAttribute(FMath::Abs(EnemyStrength) * (-1.f), MovementSpeed);
@@ -121,7 +123,7 @@ void AKulkiPlayerCharacter::OnOverlapAttack(UPrimitiveComponent* OverlappedCompo
 		default: break;
 	}
 
-	// Destroys Enemy if it is smaller 
+	// Destroy Enemy if it is smaller 
 	if (Helper > 0.f)
 	{
 		Enemy->Destroy();
@@ -129,15 +131,9 @@ void AKulkiPlayerCharacter::OnOverlapAttack(UPrimitiveComponent* OverlappedCompo
 	}
 	else
 	{
-		// Gives Player immunity after being caught 
+		// Give Player immunity after being caught 
 		ActivateImmunity();
 	}
-}
-
-void AKulkiPlayerCharacter::OnOverlapDefend(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
-	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
-{
-	
 }
 
 void AKulkiPlayerCharacter::ActivateImmunity()
@@ -160,7 +156,7 @@ void AKulkiPlayerCharacter::ActivateImmunity()
 	GetWorldTimerManager().SetTimer(ImmunityTimer, ImmunityDelegate, ImmunityTime, false);
 }
 
-void AKulkiPlayerCharacter::DeactivateImmunity(FLinearColor Color)
+void AKulkiPlayerCharacter::DeactivateImmunity(const FLinearColor Color)
 {
 	OnImmunityDeactivation.ExecuteIfBound();
 	bIsImmune = false;

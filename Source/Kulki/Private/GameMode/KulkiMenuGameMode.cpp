@@ -33,7 +33,6 @@ void AKulkiMenuGameMode::StartGame()
 {
     if (!Level01.IsNull())
     {
-        UE_LOG(LogTemp, Warning, TEXT("TEXT"));
         UGameplayStatics::OpenLevelBySoftObjectPtr(GetWorld(), Level01);
     }
 }

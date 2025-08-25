@@ -7,6 +7,7 @@
 
 UKulkiWidgetController* AKulkiHUD::GetWidgetController(AKulkiPlayerCharacter* PlayerCharacter)
 {
+	// Create if it is first time
 	if (!WidgetController)
 	{
 		WidgetController = NewObject<UKulkiWidgetController>(this, WidgetControllerClass);
@@ -23,9 +24,8 @@ void AKulkiHUD::InitOverlayWidget(AKulkiPlayerCharacter* PlayerCharacter)
 	OverlayWidget = CreateWidget<UKulkiOverlayWidget>(GetWorld(), OverlayWidgetClass);
     OverlayWidget->SetWidgetController(GetWidgetController(PlayerCharacter));
 	
-	WidgetController->InitAttributesValue();
-	WidgetController->BindCallbacks();
-	
-	
+	GetWidgetController(PlayerCharacter)->InitAttributesValue();
+	GetWidgetController(PlayerCharacter)->BindCallbacks();
+		
 	OverlayWidget->AddToViewport();
 }

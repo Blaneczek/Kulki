@@ -19,9 +19,11 @@ struct FAttribute
 	UPROPERTY(BlueprintReadOnly)
 	float Value = 5.f;
 
+	/* Max value of attribute that can be possessed. */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(UIMin="5.0", ClampMin="5.0"))
 	float MaxValue = 100.f;
 
+	/* Curve to set how much value add to Attribute based on eaten Enemy's Attribute value. */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TObjectPtr<UCurveFloat> AddToValueCurve = nullptr;
 };
@@ -37,39 +39,52 @@ class KULKI_API UKulkiAttributesComponent : public UActorComponent
 public:	
 	UKulkiAttributesComponent();
 	
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category="Kulki")
 	void SetStrengthAttribute(float NewStrength, UStaticMeshComponent* Mesh, UCapsuleComponent* AttackCapsuleCollision, float& OutMovementSpeed);
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category="Kulki")
 	void AddToStrengthAttribute(float EnemyStrength, UStaticMeshComponent* Mesh, UCapsuleComponent* AttackCapsuleCollision, float& OutMovementSpeed);
 		
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category="Kulki")
 	void SetSpeedAttribute(float NewSpeed, float& OutMovementSpeed);
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category="Kulki")
 	void AddToSpeedAttribute(float EnemySpeed, float& OutMovementSpeed);
 
 	FOnAttributeChanged OnStrengthChangedDelegate;
 	FOnAttributeChanged OnSpeedChangedDelegate;
 
+	/* Base value from which character's movement speed is calculated. */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(UIMin="0.0", ClampMin="0.0"), Category="Kulki|Speed")
 	float BaseMovementSpeed = 500.f;
 
+	/* Character's movement speed can't go below this value. */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(UIMin="10.0", ClampMin="10.0"), Category="Kulki|Speed")	
 	float MinMovementSpeed = 200.f;
 	
+	/* Character's movement speed can't surpass this value */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(UIMin="10.0", ClampMin="10.0"), Category="Kulki|Speed")
 	float MaxMovementSpeed = 1500.f;
-	
+
+	/* Used to multiply Speed Attribute value. Increases Movement speed.
+	 * Movement speed = BaseMovementSpeed + (SpeedAttribute * SpeedMultiplier) - (StrengthAttribute * SpeedPenaltyMultiplier) 
+	 */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(UIMin="0.1", ClampMin="0.1"), Category="Kulki|Speed")
 	float SpeedMultiplier = 10.f;
 
+	/* Used to multiply Strength Attribute value. Decreases Movement speed.
+	 * Movement speed = BaseMovementSpeed + (SpeedAttribute * SpeedMultiplier) - (StrengthAttribute * SpeedPenaltyMultiplier) 
+	 */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(UIMin="0.1", ClampMin="0.1"), Category="Kulki|Speed")
 	float SpeedPenaltyMultiplier = 5.f;
 
+	/* Used to multiply Strength Attribute value. Increases scale of the mesh.
+	 * NewScale = StrengthAttribute * SizeMultiplier
+	 */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(UIMin="0.01", ClampMin="0.01"), Category="Kulki|Strength")
 	float SizeMultiplier = 0.1f;
-	
+
+	/* Attack Capsule padding, from edge of the mesh to center. */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(UIMin="0.0", ClampMin="0.0"), Category="Kulki")
     float CapsulePadding = 20.f;
 	
@@ -79,6 +94,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Kulki")
     FAttribute SpeedAttribute;
 
+	/* Curve used to set BrakingDecelerationWalking in movement component based on current Speed Attribute Value.
+	 * The higher the value, the less Player slides.
+	 */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Kulki")
 	TObjectPtr<UCurveFloat> SpeedToBrakingDecelerationCurve;
  

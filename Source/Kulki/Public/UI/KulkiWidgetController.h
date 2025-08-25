@@ -8,7 +8,8 @@
 
 class AKulkiPlayerCharacter;
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAttributeValueChangedSignature, float, NewValue);
+/* Delegate for communication with the widget. */
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAttributeValueChanged, float, NewValue);
 
 /**
  * 
@@ -25,16 +26,16 @@ public:
 	void BindCallbacks();
 	
 	UPROPERTY(BlueprintAssignable, Category = "Kulki|Attributes")
-	FOnAttributeValueChangedSignature OnStrengthChanged;
+	FOnAttributeValueChanged OnStrengthChanged;
 
 	UPROPERTY(BlueprintAssignable, Category = "Kulki|Attributes")
-	FOnAttributeValueChangedSignature OnMaxStrengthChanged;
+	FOnAttributeValueChanged OnMaxStrengthChanged;
 
 	UPROPERTY(BlueprintAssignable, Category = "Kulki|Attributes")
-	FOnAttributeValueChangedSignature OnSpeedChanged;
+	FOnAttributeValueChanged OnSpeedChanged;
 
 	UPROPERTY(BlueprintAssignable, Category = "Kulki|Attributes")
-	FOnAttributeValueChangedSignature OnMaxSpeedChanged;
+	FOnAttributeValueChanged OnMaxSpeedChanged;
 		
 protected:
 	UPROPERTY(BlueprintReadOnly, Category = "Kulki|WidgetController")

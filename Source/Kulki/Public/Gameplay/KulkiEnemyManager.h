@@ -17,24 +17,30 @@ class KULKI_API AKulkiEnemyManager : public AActor
 public:	
 	AKulkiEnemyManager();
 	
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category="Kulki")
 	TSubclassOf<AKulkiEnemyBaseCharacter> EnemyClass;
 	
-	UPROPERTY(EditAnywhere, Category = "Kulki")
+	UPROPERTY(EditAnywhere, Category="Kulki")
 	TObjectPtr<UKulkiEnemySpawnData> SpawnDataAsset;
 	
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category="Kulki")
 	bool bNotSpawn_Debug;
 
 protected:
 	virtual void BeginPlay() override;
 
 private:
-	void SpawnEnemies();
+	void BindDelegatesFromPlayer();
 	
+	void SpawnEnemies();
+
+	/* Sets Enemies' State to IDLE and disables ability to chase the Player. */
 	void StopChasingPlayer();
+
+	/* Enables Enemies' ability to chase the Player. */
 	void SetCanChasePlayer();
 
+	/* Decrements number of eatable enemies and checks if it was the last one. */
 	void EatableEnemyKilled();
 	
 	UPROPERTY()

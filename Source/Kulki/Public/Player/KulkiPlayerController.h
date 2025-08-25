@@ -6,6 +6,7 @@
 #include "GameFramework/PlayerController.h"
 #include "KulkiPlayerController.generated.h"
 
+class AKulkiPlayerCharacter;
 class UInputAction;
 class UInputMappingContext;
 /**
@@ -23,7 +24,10 @@ public:
 	
 protected:
 	virtual void BeginPlay() override;
+	
 	virtual void SetupInputComponent() override;
+
+	virtual void OnPossess(APawn* InPawn) override;
 	
 private:
 	void StartPlayerInput();
@@ -31,11 +35,14 @@ private:
 
 	void FollowMouseCursor();
 	
-	UPROPERTY(EditAnywhere, Category = "Input")
+	UPROPERTY(EditAnywhere, Category="Kulki|Input")
 	TObjectPtr<UInputMappingContext> KulkiContext;
 
-	UPROPERTY(EditAnywhere, Category = "Input")
+	UPROPERTY(EditAnywhere, Category="Kulki|Input")
 	TObjectPtr<UInputAction> MoveAction;
 
-	bool bIsMoving;
+	UPROPERTY()
+	TObjectPtr<AKulkiPlayerCharacter> PlayerCharacter;
+	
+	bool bCanMove;
 };

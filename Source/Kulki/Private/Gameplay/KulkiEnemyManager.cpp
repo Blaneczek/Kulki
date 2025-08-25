@@ -57,14 +57,14 @@ void AKulkiEnemyManager::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if (bNotSpawn_Debug)
-	{
-		return;
-	}
 	SpawnEnemies();
 
-	AKulkiPlayerCharacter* PlayerCharacter = Cast<AKulkiPlayerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
-	if (PlayerCharacter)
+	BindDelegatesFromPlayer();
+}
+
+void AKulkiEnemyManager::BindDelegatesFromPlayer()
+{
+	if (AKulkiPlayerCharacter* PlayerCharacter = Cast<AKulkiPlayerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0)))
 	{
 		PlayerCharacter->OnImmunityActivation.BindUObject(this, &AKulkiEnemyManager::StopChasingPlayer);
 		PlayerCharacter->OnImmunityDeactivation.BindUObject(this, &AKulkiEnemyManager::SetCanChasePlayer);
@@ -74,6 +74,13 @@ void AKulkiEnemyManager::BeginPlay()
 
 void AKulkiEnemyManager::SpawnEnemies()
 {
+#if WITH_EDITOR
+	if (bNotSpawn_Debug)
+	{
+		return;
+	}
+#endif
+	
 	NumberOfEatableEnemies = 0;
 	
 	AKulkiPlayerCharacter* Player = Cast<AKulkiPlayerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
@@ -81,9 +88,10 @@ void AKulkiEnemyManager::SpawnEnemies()
 	{
 		return;
 	}
+	
 	const FVector PlayerLocation = Player->GetActorLocation();
 
-	// Gets chosen difficulty level
+	// Get chosen difficulty level
 	int32 DifficultyLevel = 1;
 	float DifficultyLevelScale = 1.f;
 	if (UKulkiGameInstance* GameInstance = Cast<UKulkiGameInstance>(UGameplayStatics::GetGameInstance(GetWorld())))
@@ -103,10 +111,8 @@ void AKulkiEnemyManager::SpawnEnemies()
 			{			
 				const FVector RandomDirection = UKismetMathLibrary::RandomUnitVector().GetSafeNormal2D();
 				const float RandomDistance = FMath::RandRange(DistanceRange.MinDistance, DistanceRange.MaxDistance);
-				const FVector RandomLocationFromPlayer = PlayerLocation + FVector(
-					RandomDirection.X * RandomDistance,
-					RandomDirection.Y * RandomDistance,
-					85.f);
+				const FVector RandomLocationFromPlayer = PlayerLocation +
+					FVector(RandomDirection.X * RandomDistance,RandomDirection.Y * RandomDistance,85.f);
 				
 				FNavLocation SpawnNavLocation;
 				UNavigationSystemV1* NavSystem = UNavigationSystemV1::GetCurrent(GetWorld());

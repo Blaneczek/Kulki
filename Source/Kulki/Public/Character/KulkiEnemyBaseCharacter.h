@@ -56,19 +56,23 @@ protected:
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Kulki")
 	TObjectPtr<UStaticMeshComponent> KulkiMesh;
-	
+
+	/* Capsule used to interact with Player's DefendCapsule. Radius scales with mesh size. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Kulki")
 	TObjectPtr<UCapsuleComponent> AttackCapsuleCollision;
 
+	/* Capsule used to interact with Player's AttackCapsule. Radius stays the same (very small in center of mesh). */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Kulki")
 	TObjectPtr<UCapsuleComponent> DefendCapsuleCollision;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Kulki")
     TObjectPtr<UKulkiAttributesComponent> AttributesComponent;
-	
+
+	/* If Enemy is not spawn by manager, we can set Strength Attribute value here. */ 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Kulki")
     float TempStrengthAttributeValue = 5.f;
-
+	
+	/* If Enemy is not spawn by manager, we can set Speed Attribute value here. */ 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Kulki")
     float TempSpeedAttributeValue = 5.f;
 
