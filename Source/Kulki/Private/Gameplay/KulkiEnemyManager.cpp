@@ -112,7 +112,7 @@ void AKulkiEnemyManager::SpawnEnemies()
 				const FVector RandomDirection = UKismetMathLibrary::RandomUnitVector().GetSafeNormal2D();
 				const float RandomDistance = FMath::RandRange(DistanceRange.MinDistance, DistanceRange.MaxDistance);
 				const FVector RandomLocationFromPlayer = PlayerLocation +
-					FVector(RandomDirection.X * RandomDistance,RandomDirection.Y * RandomDistance,85.f);
+					FVector(RandomDirection.X * RandomDistance,RandomDirection.Y * RandomDistance,92.f);
 				
 				FNavLocation SpawnNavLocation;
 				UNavigationSystemV1* NavSystem = UNavigationSystemV1::GetCurrent(GetWorld());
