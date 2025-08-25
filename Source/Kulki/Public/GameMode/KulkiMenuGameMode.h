@@ -17,7 +17,7 @@ class KULKI_API AKulkiMenuGameMode : public AGameModeBase
 	GENERATED_BODY()
 
 protected:
-	void BeginPlay() override;
+	virtual void BeginPlay() override;
 
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<UKulkiMenuWidget> MenuWidgetClass;
