@@ -12,7 +12,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="afbf4fc1-8513-469a-b1a5-ac1f5cec4871" name="Changes" comment="" />
+    <list default="true" id="afbf4fc1-8513-469a-b1a5-ac1f5cec4871" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.Kulki/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Kulki/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/Kulki/Private/Component/KulkiAttributesComponent.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Kulki/Private/Component/KulkiAttributesComponent.cpp" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -25,7 +28,7 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="cidr-memory-view://2" root0="FORCE_HIGHLIGHTING" />
+    <setting file="cidr-memory-view://0" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.42.34433/include/atomic" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../ActionRPG/Source/ActionRPG/Private/RPGPlayerControllerBase.cpp" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../Aura/Source/Aura/Private/AbilitySystem/Abilities/AuraGameplayAbility.cpp" root0="SKIP_HIGHLIGHTING" />
@@ -288,6 +291,7 @@
       <workItem from="1756067769823" duration="3000" />
       <workItem from="1756099822920" duration="9608000" />
       <workItem from="1756116819018" duration="6625000" />
+      <workItem from="1756126118591" duration="636000" />
     </task>
     <servers />
   </component>

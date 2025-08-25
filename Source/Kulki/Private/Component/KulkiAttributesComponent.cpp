@@ -72,7 +72,7 @@ void UKulkiAttributesComponent::SetOwnerSize(UStaticMeshComponent* Mesh, UCapsul
 		const float NewScale = FMath::Clamp((StrengthAttribute.Value * SizeMultiplier), 0.5f, 1000.f);
 		Mesh->SetWorldScale3D(FVector(NewScale, NewScale, NewScale));
 		// Lower the mesh
-		Mesh->SetWorldLocation(FVector(Mesh->GetComponentLocation().X, Mesh->GetComponentLocation().Y, Mesh->GetComponentLocation().Z - StrengthAttribute.Value));
+		Mesh->SetWorldLocation(FVector(Mesh->GetComponentLocation().X, Mesh->GetComponentLocation().Y, Mesh->GetComponentLocation().Z - (StrengthAttribute.Value * 0.5)));
 
 		FVector Origin;
 		FVector Bounds;
