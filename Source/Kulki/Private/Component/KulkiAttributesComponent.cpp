@@ -70,13 +70,10 @@ void UKulkiAttributesComponent::SetOwnerSize(UStaticMeshComponent* Mesh, UCapsul
 	if (Mesh && AttackCapsuleCollision)
 	{
 		const float NewScale = FMath::Clamp((StrengthAttribute.Value * SizeMultiplier), 0.5f, 1000.f);
-		Mesh->SetWorldScale3D(FVector(NewScale, NewScale, NewScale));
-		// Lower the mesh
-		Mesh->SetWorldLocation(FVector(Mesh->GetComponentLocation().X, Mesh->GetComponentLocation().Y, Mesh->GetComponentLocation().Z - (StrengthAttribute.Value * 0.5)));
-
-		FVector Origin;
-		FVector Bounds;
+		Mesh->SetWorldScale3D(FVector(NewScale, NewScale, NewScale * 0.5));
 		
+		FVector Origin;
+		FVector Bounds;	
 		float SphereRadius;
 		UKismetSystemLibrary::GetComponentBounds(Mesh, Origin, Bounds, SphereRadius);
 		const float FixedRadius = Bounds.X - CapsulePadding;

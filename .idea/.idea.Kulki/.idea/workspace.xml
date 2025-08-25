@@ -14,6 +14,10 @@
   <component name="ChangeListManager">
     <list default="true" id="afbf4fc1-8513-469a-b1a5-ac1f5cec4871" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Kulki/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Kulki/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Blueprints/Character/Enemy/BP_Enemy.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/Character/Enemy/BP_Enemy.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Blueprints/Character/Player/BP_PlayerCharacter.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/Character/Player/BP_PlayerCharacter.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Blueprints/Player/BP_PlayerController.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/Player/BP_PlayerController.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Maps/Menu_Map.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Maps/Menu_Map.umap" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/Kulki/Private/Component/KulkiAttributesComponent.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Kulki/Private/Component/KulkiAttributesComponent.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -291,7 +295,8 @@
       <workItem from="1756067769823" duration="3000" />
       <workItem from="1756099822920" duration="9608000" />
       <workItem from="1756116819018" duration="6625000" />
-      <workItem from="1756126118591" duration="636000" />
+      <workItem from="1756126118591" duration="773000" />
+      <workItem from="1756127062923" duration="566000" />
     </task>
     <servers />
   </component>
