@@ -6,6 +6,7 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "Character/KulkiPlayerCharacter.h"
+#include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
 AKulkiPlayerController::AKulkiPlayerController()
@@ -14,10 +15,10 @@ AKulkiPlayerController::AKulkiPlayerController()
 	PlayerCharacter = nullptr;
 }
 
-void AKulkiPlayerController::PlayerTick(float DeltaTime)
+void AKulkiPlayerController::Tick(float DeltaTime)
 {
-	Super::PlayerTick(DeltaTime);
-
+	Super::Tick(DeltaTime);
+	
 	if (bCanMove)
 	{
 		FollowMouseCursor();

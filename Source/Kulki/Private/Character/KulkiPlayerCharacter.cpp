@@ -45,17 +45,7 @@ void AKulkiPlayerCharacter::BeginPlay()
 	AttributesComponent->SetStrengthAttribute(BaseStrengthAttributeValue, KulkiMesh, AttackCapsuleCollision, MovementSpeed);
 	AttributesComponent->SetSpeedAttribute(BaseSpeedAttributeValue, MovementSpeed);
 
-	// Player lost
-	AttributesComponent->OnAttributeReachedZero.BindLambda([this]()
-		{
-			bIsImmune = true;
-			MovementForce = 0.f;
-			GetWorldTimerManager().ClearAllTimersForObject(this);
-			if (AKulkiGameMode* GameMode = Cast<AKulkiGameMode>(UGameplayStatics::GetGameMode(this)))
-			{
-				GameMode->ResetGame();
-			}
-		});
+	AttributesComponent->OnAttributeReachedZero.BindUObject(this, &AKulkiPlayerCharacter::OnPlayerLost);
 	
 	// Init Main widget with controller 
 	if (const APlayerController* PC = Cast<APlayerController>(GetController()))
@@ -86,7 +76,7 @@ void AKulkiPlayerCharacter::OnOverlapAttack(UPrimitiveComponent* OverlappedCompo
 		return;
 	}
 
-	// If Enemy is bigger than Player, we want negative number 
+	// If Enemy is bigger than Player, we want negative number to subtract Attribute value 
 	float Helper = -1.f;
 	if (AttributesComponent->StrengthAttribute.Value >= Enemy->GetAttributesComponent()->StrengthAttribute.Value)
 	{
@@ -133,6 +123,17 @@ void AKulkiPlayerCharacter::OnOverlapAttack(UPrimitiveComponent* OverlappedCompo
 	{
 		// Give Player immunity after being caught 
 		ActivateImmunity();
+	}
+}
+
+void AKulkiPlayerCharacter::OnPlayerLost()
+{
+	bIsImmune = true;
+	MovementForce = 0.f;
+	GetWorldTimerManager().ClearAllTimersForObject(this);
+	if (AKulkiGameMode* GameMode = Cast<AKulkiGameMode>(UGameplayStatics::GetGameMode(this)))
+	{
+		GameMode->ResetGame();
 	}
 }
 

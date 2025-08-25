@@ -20,7 +20,7 @@ class KULKI_API AKulkiPlayerController : public APlayerController
 public:
 	AKulkiPlayerController();
 
-	virtual void PlayerTick(float DeltaTime) override;
+	virtual void Tick(float DeltaTime) override;
 	
 protected:
 	virtual void BeginPlay() override;
