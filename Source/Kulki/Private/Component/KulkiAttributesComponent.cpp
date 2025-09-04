@@ -17,7 +17,8 @@ UKulkiAttributesComponent::UKulkiAttributesComponent()
 void UKulkiAttributesComponent::BeginPlay()
 {
 	Super::BeginPlay();
-			
+
+	
 }
 
 void UKulkiAttributesComponent::SetStrengthAttribute(float NewStrength, UStaticMeshComponent* Mesh,

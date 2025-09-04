@@ -3,11 +3,13 @@
 
 #include "GameMode/KulkiGameMode.h"
 #include "Blueprint/UserWidget.h"
+#include "Component/KulkiAttributesComponent.h"
+#include "Component/KulkiEnemyComponent.h"
 #include "Kismet/GameplayStatics.h"
 
 AKulkiGameMode::AKulkiGameMode()
 {
-	
+	EnemyManager = CreateDefaultSubobject<UKulkiEnemyComponent>("EnemyManager");
 }
 
 void AKulkiGameMode::ResetGame()
@@ -35,4 +37,12 @@ void AKulkiGameMode::GameWon()
 	}
 
 	UGameplayStatics::SetGamePaused(this, true);
+}
+
+void AKulkiGameMode::BeginPlay()
+{
+	Super::BeginPlay();
+
+	EnemyManager->OnAllEatableEnemyKilled.AddUObject(this, &AKulkiGameMode::GameWon);
+	EnemyManager->SpawnEnemies();
 }

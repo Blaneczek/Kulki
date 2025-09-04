@@ -6,6 +6,7 @@
 #include "GameFramework/GameModeBase.h"
 #include "KulkiGameMode.generated.h"
 
+class UKulkiEnemyComponent;
 /**
  * 
  */
@@ -22,4 +23,10 @@ public:
 
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<UUserWidget> WonGameWidgetClass;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	TObjectPtr<UKulkiEnemyComponent> EnemyManager;
+
+protected:
+	virtual void BeginPlay() override;
 };

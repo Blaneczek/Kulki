@@ -1,59 +1,24 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Gameplay/KulkiEnemyManager.h"
+#include "Component/KulkiEnemyComponent.h"
 
 #include "NavigationSystem.h"
 #include "Character/KulkiEnemyBaseCharacter.h"
 #include "Character/KulkiPlayerCharacter.h"
 #include "GameInstance/KulkiGameInstance.h"
-#include "GameMode/KulkiGameMode.h"
 #include "Gameplay/Data/KulkiEnemySpawnData.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
 
-AKulkiEnemyManager::AKulkiEnemyManager()
+UKulkiEnemyComponent::UKulkiEnemyComponent()
 {
-	PrimaryActorTick.bCanEverTick = false;
+	PrimaryComponentTick.bCanEverTick = false;
 
 }
 
-void AKulkiEnemyManager::StopChasingPlayer()
-{
-	for (auto Enemy : Enemies)
-	{
-		if (IsValid(Enemy))
-		{
-			Enemy->SetState(EEnemyState::IDLE);
-			Enemy->bCanChase = false;
-		}
-	}
-}
 
-void AKulkiEnemyManager::SetCanChasePlayer()
-{
-	for (auto Enemy : Enemies)
-	{
-		if (IsValid(Enemy))
-		{
-			Enemy->bCanChase = true;
-		}
-	}
-}
-
-void AKulkiEnemyManager::EatableEnemyKilled()
-{
-	NumberOfEatableEnemies--;
-	if (NumberOfEatableEnemies <= 0)
-	{
-		if (AKulkiGameMode* GameMode = Cast<AKulkiGameMode>(UGameplayStatics::GetGameMode(GetWorld())))
-		{
-			GameMode->GameWon();
-		}		
-	}
-}
-
-void AKulkiEnemyManager::BeginPlay()
+void UKulkiEnemyComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
@@ -62,19 +27,19 @@ void AKulkiEnemyManager::BeginPlay()
 	BindDelegatesFromPlayer();
 }
 
-void AKulkiEnemyManager::BindDelegatesFromPlayer()
+void UKulkiEnemyComponent::BindDelegatesFromPlayer()
 {
 	if (AKulkiPlayerCharacter* PlayerCharacter = Cast<AKulkiPlayerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0)))
 	{
-		PlayerCharacter->OnImmunityActivation.BindUObject(this, &AKulkiEnemyManager::StopChasingPlayer);
-		PlayerCharacter->OnImmunityDeactivation.BindUObject(this, &AKulkiEnemyManager::SetCanChasePlayer);
-		PlayerCharacter->OnEnemyKilled.BindUObject(this, &AKulkiEnemyManager::EatableEnemyKilled);
+		PlayerCharacter->OnImmunityActivation.BindUObject(this, &UKulkiEnemyComponent::StopChasingPlayer);
+		PlayerCharacter->OnImmunityDeactivation.BindUObject(this, &UKulkiEnemyComponent::SetCanChasePlayer);
+		PlayerCharacter->OnEnemyKilled.BindUObject(this, &UKulkiEnemyComponent::EatableEnemyKilled);
 	}
 }
 
-void AKulkiEnemyManager::SpawnEnemies()
+void UKulkiEnemyComponent::SpawnEnemies()
 {
-#if WITH_EDITOR
+	#if WITH_EDITOR
 	if (bNotSpawn_Debug)
 	{
 		return;
@@ -123,7 +88,7 @@ void AKulkiEnemyManager::SpawnEnemies()
 					AKulkiEnemyBaseCharacter* Enemy = GetWorld()->SpawnActorDeferred<AKulkiEnemyBaseCharacter>(
 						EnemyClass,
 						SpawnTransform,
-						this,
+						GetOwner(),
 						nullptr,
 						ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn);
 				
@@ -147,6 +112,36 @@ void AKulkiEnemyManager::SpawnEnemies()
 	}
 }
 
+void UKulkiEnemyComponent::StopChasingPlayer()
+{
+	for (AKulkiEnemyBaseCharacter* Enemy : Enemies)
+	{
+		if (IsValid(Enemy))
+		{
+			Enemy->SetState(EEnemyState::IDLE);
+			Enemy->bCanChase = false;
+		}
+	}
+}
 
+void UKulkiEnemyComponent::SetCanChasePlayer()
+{
+	for (AKulkiEnemyBaseCharacter* Enemy : Enemies)
+	{
+		if (IsValid(Enemy))
+		{
+			Enemy->bCanChase = true;
+		}
+	}
+}
+
+void UKulkiEnemyComponent::EatableEnemyKilled()
+{
+	NumberOfEatableEnemies--;
+	if (NumberOfEatableEnemies <= 0)
+	{
+		OnAllEatableEnemyKilled.Broadcast();		
+	}
+}
 
 
