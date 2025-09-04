@@ -94,12 +94,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Kulki")
     FAttribute SpeedAttribute;
 
-	/* Curve used to set BrakingDecelerationWalking in movement component based on current Speed Attribute Value.
-	 * The higher the value, the less Player slides.
-	 */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Kulki")
-	TObjectPtr<UCurveFloat> SpeedToBrakingDecelerationCurve;
- 
 	FOnAttributeReachedZero OnAttributeReachedZero;
 	
 protected:

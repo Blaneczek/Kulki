@@ -88,12 +88,6 @@ void UKulkiAttributesComponent::SetOwnerSpeed(float& OutMovementSpeed)
 {
 	const float NewValue = BaseMovementSpeed + (SpeedAttribute.Value * SpeedMultiplier) - (StrengthAttribute.Value * SpeedPenaltyMultiplier);
 	OutMovementSpeed = FMath::Clamp(NewValue, MinMovementSpeed, MaxMovementSpeed);
-
-	ACharacter* OwnerCharacter = Cast<ACharacter>(GetOwner());
-	if (OwnerCharacter && SpeedToBrakingDecelerationCurve)
-	{
-		OwnerCharacter->GetCharacterMovement()->BrakingDecelerationWalking = SpeedToBrakingDecelerationCurve->GetFloatValue(SpeedAttribute.Value);
-	}
 }
 
 
