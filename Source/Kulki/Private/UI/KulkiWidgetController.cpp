@@ -2,35 +2,36 @@
 
 
 #include "UI/KulkiWidgetController.h"
-#include "Character/KulkiPlayerCharacter.h"
+#include "Character/KulkiPlayerPawn.h"
 
-void UKulkiWidgetController::SetWidgetControllerParams(AKulkiPlayerCharacter* InPlayerCharacter)
+
+void UKulkiWidgetController::SetWidgetControllerParams(AKulkiPlayerPawn* InPlayerPawn)
 {
-	PlayerCharacter = InPlayerCharacter;
+	PlayerPawn = InPlayerPawn;
 }
 
 void UKulkiWidgetController::InitAttributesValue()
 {
-	if (IsValid(PlayerCharacter))
+	if (IsValid(PlayerPawn))
 	{
-		OnMaxStrengthChanged.Broadcast(PlayerCharacter->GetAttributesComponent()->StrengthAttribute.MaxValue);
-     	OnMaxSpeedChanged.Broadcast(PlayerCharacter->GetAttributesComponent()->SpeedAttribute.MaxValue);
-		OnStrengthChanged.Broadcast(PlayerCharacter->GetAttributesComponent()->StrengthAttribute.Value);
-		OnSpeedChanged.Broadcast(PlayerCharacter->GetAttributesComponent()->SpeedAttribute.Value);		
+		OnMaxStrengthChanged.Broadcast(PlayerPawn->GetAttributesComponent()->StrengthAttribute.MaxValue);
+     	OnMaxSpeedChanged.Broadcast(PlayerPawn->GetAttributesComponent()->SpeedAttribute.MaxValue);
+		OnStrengthChanged.Broadcast(PlayerPawn->GetAttributesComponent()->StrengthAttribute.Value);
+		OnSpeedChanged.Broadcast(PlayerPawn->GetAttributesComponent()->SpeedAttribute.Value);		
 	}	
 }
 
 void UKulkiWidgetController::BindCallbacks()
 {
-	if (IsValid(PlayerCharacter))
+	if (IsValid(PlayerPawn))
 	{
-		PlayerCharacter->GetAttributesComponent()->OnStrengthChangedDelegate.AddLambda(
+		PlayerPawn->GetAttributesComponent()->OnStrengthChangedDelegate.AddLambda(
 			[this](float NewStrength)
 		{
 			OnStrengthChanged.Broadcast(NewStrength);
 		});
 
-		PlayerCharacter->GetAttributesComponent()->OnSpeedChangedDelegate.AddLambda(
+		PlayerPawn->GetAttributesComponent()->OnSpeedChangedDelegate.AddLambda(
 			[this](float NewSpeed)
 		{
 			OnSpeedChanged.Broadcast(NewSpeed);

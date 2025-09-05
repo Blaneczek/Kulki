@@ -6,7 +6,7 @@
 #include "GameFramework/PlayerController.h"
 #include "KulkiPlayerController.generated.h"
 
-class AKulkiPlayerCharacter;
+class AKulkiPlayerPawn;
 class UInputAction;
 class UInputMappingContext;
 /**
@@ -42,7 +42,7 @@ private:
 	TObjectPtr<UInputAction> MoveAction;
 
 	UPROPERTY()
-	TObjectPtr<AKulkiPlayerCharacter> PlayerCharacter;
+	TObjectPtr<AKulkiPlayerPawn> PlayerPawn;
 	
 	bool bCanMove;
 };

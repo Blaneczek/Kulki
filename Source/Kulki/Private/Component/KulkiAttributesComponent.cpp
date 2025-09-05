@@ -2,10 +2,7 @@
 
 
 #include "Component/KulkiAttributesComponent.h"
-
-#include "Components/CapsuleComponent.h"
-#include "GameFramework/Character.h"
-#include "GameFramework/CharacterMovementComponent.h"
+#include "Components/SphereComponent.h"
 #include "Kismet/KismetSystemLibrary.h"
 
 UKulkiAttributesComponent::UKulkiAttributesComponent()
@@ -22,10 +19,10 @@ void UKulkiAttributesComponent::BeginPlay()
 }
 
 void UKulkiAttributesComponent::SetStrengthAttribute(float NewStrength, UStaticMeshComponent* Mesh,
-													UCapsuleComponent* AttackCapsuleCollision, float& OutMovementSpeed)
+													USphereComponent* AttackSphereCollision, float& OutMovementSpeed)
 {
 	StrengthAttribute.Value = FMath::Clamp(NewStrength,0.f, StrengthAttribute.MaxValue);
-	SetOwnerSize(Mesh, AttackCapsuleCollision);
+	SetOwnerSize(Mesh, AttackSphereCollision);
 	SetOwnerSpeed(OutMovementSpeed);
 	OnStrengthChangedDelegate.Broadcast(StrengthAttribute.Value);
 	
@@ -36,12 +33,12 @@ void UKulkiAttributesComponent::SetStrengthAttribute(float NewStrength, UStaticM
 }
 
 void UKulkiAttributesComponent::AddToStrengthAttribute(float EnemyStrength, UStaticMeshComponent* Mesh,
-													UCapsuleComponent* AttackCapsuleCollision, float& OutMovementSpeed)
+													USphereComponent* AttackSphereCollision, float& OutMovementSpeed)
 {
 	if (StrengthAttribute.AddToValueCurve)
 	{
 		const float NewStrength = StrengthAttribute.Value + StrengthAttribute.AddToValueCurve->GetFloatValue(EnemyStrength);
-		SetStrengthAttribute(NewStrength, Mesh, AttackCapsuleCollision, OutMovementSpeed);
+		SetStrengthAttribute(NewStrength, Mesh, AttackSphereCollision, OutMovementSpeed);
 	}
 }
 
@@ -66,21 +63,13 @@ void UKulkiAttributesComponent::AddToSpeedAttribute(float EnemyStrength, float& 
 	}
 }
 
-void UKulkiAttributesComponent::SetOwnerSize(UStaticMeshComponent* Mesh, UCapsuleComponent* AttackCapsuleCollision)
+void UKulkiAttributesComponent::SetOwnerSize(UStaticMeshComponent* Mesh, USphereComponent* AttackSphereCollision)
 {
-	if (Mesh && AttackCapsuleCollision)
+	if (Mesh && AttackSphereCollision)
 	{
 		const float NewScale = FMath::Clamp((StrengthAttribute.Value * SizeMultiplier), 0.5f, 1000.f);
-		Mesh->SetWorldScale3D(FVector(NewScale, NewScale, NewScale * 0.5));
-		
-		FVector Origin;
-		FVector Bounds;	
-		float SphereRadius;
-		UKismetSystemLibrary::GetComponentBounds(Mesh, Origin, Bounds, SphereRadius);
-		const float FixedRadius = Bounds.X - CapsulePadding;
-		// Height must be larger than radius to keep the shape of capsule
-		AttackCapsuleCollision->SetCapsuleHalfHeight(FixedRadius * 2.f);
-		AttackCapsuleCollision->SetCapsuleRadius(FixedRadius);		
+		GetOwner()->SetActorScale3D(FVector(NewScale, NewScale, NewScale * 0.5));
+		AttackSphereCollision->SetSphereRadius(100.f);
 	}
 }
 

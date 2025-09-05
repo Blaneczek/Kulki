@@ -6,7 +6,7 @@
 #include "Components/ActorComponent.h"
 #include "KulkiAttributesComponent.generated.h"
 
-class UCapsuleComponent;
+class USphereComponent;
 
 USTRUCT(BlueprintType)
 struct FAttribute
@@ -40,10 +40,10 @@ public:
 	UKulkiAttributesComponent();
 	
 	UFUNCTION(BlueprintCallable, Category="Kulki")
-	void SetStrengthAttribute(float NewStrength, UStaticMeshComponent* Mesh, UCapsuleComponent* AttackCapsuleCollision, float& OutMovementSpeed);
+	void SetStrengthAttribute(float NewStrength, UStaticMeshComponent* Mesh, USphereComponent* AttackSphereCollision, float& OutMovementSpeed);
 
 	UFUNCTION(BlueprintCallable, Category="Kulki")
-	void AddToStrengthAttribute(float EnemyStrength, UStaticMeshComponent* Mesh, UCapsuleComponent* AttackCapsuleCollision, float& OutMovementSpeed);
+	void AddToStrengthAttribute(float EnemyStrength, UStaticMeshComponent* Mesh, USphereComponent* AttackSphereCollision, float& OutMovementSpeed);
 		
 	UFUNCTION(BlueprintCallable, Category="Kulki")
 	void SetSpeedAttribute(float NewSpeed, float& OutMovementSpeed);
@@ -83,10 +83,6 @@ public:
 	 */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(UIMin="0.01", ClampMin="0.01"), Category="Kulki|Strength")
 	float SizeMultiplier = 0.1f;
-
-	/* Attack Capsule padding, from edge of the mesh to center. */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(UIMin="0.0", ClampMin="0.0"), Category="Kulki")
-    float CapsulePadding = 20.f;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Kulki")
     FAttribute StrengthAttribute;
@@ -100,7 +96,7 @@ protected:
 	virtual void BeginPlay() override;
 	
 private:
-	void SetOwnerSize(UStaticMeshComponent* Mesh, UCapsuleComponent* CapsuleCollision);
+	void SetOwnerSize(UStaticMeshComponent* Mesh, USphereComponent* AttackSphereCollision);
 	void SetOwnerSpeed(float& OutMovementSpeed);
 	
 };

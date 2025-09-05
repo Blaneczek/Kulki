@@ -2,17 +2,14 @@
 
 
 #include "Player/KulkiPlayerController.h"
-
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
-#include "Character/KulkiPlayerCharacter.h"
-#include "Components/CapsuleComponent.h"
-#include "GameFramework/CharacterMovementComponent.h"
+#include "Character/KulkiPlayerPawn.h"
 
 AKulkiPlayerController::AKulkiPlayerController()
 {
 	bCanMove = false;
-	PlayerCharacter = nullptr;
+	PlayerPawn = nullptr;
 }
 
 void AKulkiPlayerController::Tick(float DeltaTime)
@@ -58,7 +55,7 @@ void AKulkiPlayerController::OnPossess(APawn* InPawn)
 {
 	Super::OnPossess(InPawn);
 
-	PlayerCharacter = CastChecked<AKulkiPlayerCharacter>(InPawn);
+	PlayerPawn = CastChecked<AKulkiPlayerPawn>(InPawn);
 }
 
 void AKulkiPlayerController::StartPlayerInput()
@@ -73,13 +70,7 @@ void AKulkiPlayerController::StopPlayerInput()
 
 void AKulkiPlayerController::FollowMouseCursor()
 {
-	if (!IsValid(PlayerCharacter))
-	{
-		return;
-	}
-
-	// If current velocity is greater than MovementSpeed, stop adding force.
-	if (PlayerCharacter->GetMovementComponent()->Velocity.Length() >= PlayerCharacter->GetMovementSpeed())
+	if (!IsValid(PlayerPawn))
 	{
 		return;
 	}
@@ -88,11 +79,9 @@ void AKulkiPlayerController::FollowMouseCursor()
 	// ECC_GameTraceChannel1 - Floor
 	GetHitResultUnderCursor(ECollisionChannel::ECC_GameTraceChannel1, false, HitResult);	
 	if (HitResult.bBlockingHit)
-	{
-		const float MovementForce = PlayerCharacter->GetMovementForce();
-		const FVector HitDirection = (HitResult.ImpactPoint - PlayerCharacter->GetActorLocation()).GetSafeNormal();
-		const FVector Force = FVector(HitDirection.X * MovementForce, HitDirection.Y * MovementForce, 0.f);
-		PlayerCharacter->GetCharacterMovement()->AddForce(Force);
+	{		
+		const FVector HitDirection = (HitResult.ImpactPoint - PlayerPawn->GetActorLocation()).GetSafeNormal();
+		PlayerPawn->AddMovementInput(FVector(HitDirection.X, HitDirection.Y,0.f));
 	}
 }
 

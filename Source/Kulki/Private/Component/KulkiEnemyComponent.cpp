@@ -2,10 +2,8 @@
 
 
 #include "Component/KulkiEnemyComponent.h"
-
 #include "NavigationSystem.h"
-#include "Character/KulkiEnemyBaseCharacter.h"
-#include "Character/KulkiPlayerCharacter.h"
+#include "Character/KulkiPlayerPawn.h"
 #include "GameInstance/KulkiGameInstance.h"
 #include "Gameplay/Data/KulkiEnemySpawnData.h"
 #include "Kismet/GameplayStatics.h"
@@ -14,7 +12,7 @@
 UKulkiEnemyComponent::UKulkiEnemyComponent()
 {
 	PrimaryComponentTick.bCanEverTick = false;
-
+	bNotSpawn_Debug = false;
 }
 
 
@@ -29,11 +27,11 @@ void UKulkiEnemyComponent::BeginPlay()
 
 void UKulkiEnemyComponent::BindDelegatesFromPlayer()
 {
-	if (AKulkiPlayerCharacter* PlayerCharacter = Cast<AKulkiPlayerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0)))
+	if (AKulkiPlayerPawn* PlayerPawn = Cast<AKulkiPlayerPawn>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0)))
 	{
-		PlayerCharacter->OnImmunityActivation.BindUObject(this, &UKulkiEnemyComponent::StopChasingPlayer);
-		PlayerCharacter->OnImmunityDeactivation.BindUObject(this, &UKulkiEnemyComponent::SetCanChasePlayer);
-		PlayerCharacter->OnEnemyKilled.BindUObject(this, &UKulkiEnemyComponent::EatableEnemyKilled);
+		PlayerPawn->OnImmunityActivation.BindUObject(this, &UKulkiEnemyComponent::StopChasingPlayer);
+		PlayerPawn->OnImmunityDeactivation.BindUObject(this, &UKulkiEnemyComponent::SetCanChasePlayer);
+		PlayerPawn->OnEnemyKilled.BindUObject(this, &UKulkiEnemyComponent::EatableEnemyKilled);
 	}
 }
 
@@ -48,7 +46,7 @@ void UKulkiEnemyComponent::SpawnEnemies()
 	
 	NumberOfEatableEnemies = 0;
 	
-	AKulkiPlayerCharacter* Player = Cast<AKulkiPlayerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+	AKulkiPlayerPawn* Player = Cast<AKulkiPlayerPawn>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
 	if (!Player || !EnemyClass || !SpawnDataAsset)
 	{
 		return;
@@ -84,13 +82,13 @@ void UKulkiEnemyComponent::SpawnEnemies()
 				if (NavSystem && NavSystem->ProjectPointToNavigation(RandomLocationFromPlayer, SpawnNavLocation))
 				{
 					FTransform SpawnTransform;
-					SpawnTransform.SetLocation(RandomLocationFromPlayer);
-					AKulkiEnemyBaseCharacter* Enemy = GetWorld()->SpawnActorDeferred<AKulkiEnemyBaseCharacter>(
+					SpawnTransform.SetLocation(FVector(RandomLocationFromPlayer.X, RandomLocationFromPlayer.Y, 92.f));
+					AKulkiEnemyPawn* Enemy = GetWorld()->SpawnActorDeferred<AKulkiEnemyPawn>(
 						EnemyClass,
 						SpawnTransform,
 						GetOwner(),
 						nullptr,
-						ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn);
+						ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
 				
 					if (Enemy && EnemyData.Value.StrengthToDistanceCurve && EnemyData.Value.SpeedToDistanceCurve)
 					{
@@ -114,7 +112,7 @@ void UKulkiEnemyComponent::SpawnEnemies()
 
 void UKulkiEnemyComponent::StopChasingPlayer()
 {
-	for (AKulkiEnemyBaseCharacter* Enemy : Enemies)
+	for (AKulkiEnemyPawn* Enemy : Enemies)
 	{
 		if (IsValid(Enemy))
 		{
@@ -126,7 +124,7 @@ void UKulkiEnemyComponent::StopChasingPlayer()
 
 void UKulkiEnemyComponent::SetCanChasePlayer()
 {
-	for (AKulkiEnemyBaseCharacter* Enemy : Enemies)
+	for (AKulkiEnemyPawn* Enemy : Enemies)
 	{
 		if (IsValid(Enemy))
 		{

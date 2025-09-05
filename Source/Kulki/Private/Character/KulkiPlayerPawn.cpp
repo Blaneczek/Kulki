@@ -1,31 +1,19 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Character/KulkiPlayerCharacter.h"
-
+#include "Character/KulkiPlayerPawn.h"
 #include "Camera/CameraComponent.h"
-#include "Character/KulkiEnemyBaseCharacter.h"
+#include "Character/KulkiEnemyPawn.h"
 #include "Component/KulkiAttributesComponent.h"
-#include "Components/CapsuleComponent.h"
+#include "Components/SphereComponent.h"
+#include "GameFramework/FloatingPawnMovement.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GameMode/KulkiGameMode.h"
 #include "Kismet/GameplayStatics.h"
 #include "UI/KulkiHUD.h"
 
-AKulkiPlayerCharacter::AKulkiPlayerCharacter()
+AKulkiPlayerPawn::AKulkiPlayerPawn()
 {
-	PrimaryActorTick.bCanEverTick = false;
-
-	KulkiMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("KulkiMesh"));
-	KulkiMesh->SetupAttachment(RootComponent);
-	KulkiMesh->CastShadow = false;
-
-	AttackCapsuleCollision = CreateDefaultSubobject<UCapsuleComponent>(TEXT("AttackCapsule"));
-	AttackCapsuleCollision->SetupAttachment(RootComponent);
-
-	DefendCapsuleCollision = CreateDefaultSubobject<UCapsuleComponent>(TEXT("DefendCapsule"));
-	DefendCapsuleCollision->SetupAttachment(RootComponent);
-	
 	CameraArm = CreateDefaultSubobject<USpringArmComponent>("CameraArm");
 	CameraArm->SetupAttachment(RootComponent);
 	CameraArm->SetRelativeRotation(FRotator(-90.f, 0.0f, 0.0f));
@@ -33,44 +21,42 @@ AKulkiPlayerCharacter::AKulkiPlayerCharacter()
 	Camera = CreateDefaultSubobject<UCameraComponent>("Camera");
 	Camera->SetupAttachment(CameraArm);
 	Camera->ProjectionMode = ECameraProjectionMode::Orthographic;
-
-	AttributesComponent = CreateDefaultSubobject<UKulkiAttributesComponent>("AttributesComponent");
 }
 
-void AKulkiPlayerCharacter::BeginPlay()
+void AKulkiPlayerPawn::BeginPlay()
 {
 	Super::BeginPlay();
-
+	
 	// Set default attributes
-	AttributesComponent->SetStrengthAttribute(BaseStrengthAttributeValue, KulkiMesh, AttackCapsuleCollision, MovementSpeed);
-	AttributesComponent->SetSpeedAttribute(BaseSpeedAttributeValue, MovementSpeed);
+	GetAttributesComponent()->SetStrengthAttribute(BaseStrengthAttributeValue, KulkiMesh, AttackSphereCollision, FloatingPawnMovement->MaxSpeed);
+	GetAttributesComponent()->SetSpeedAttribute(BaseSpeedAttributeValue, FloatingPawnMovement->MaxSpeed);
 
-	AttributesComponent->OnAttributeReachedZero.BindUObject(this, &AKulkiPlayerCharacter::OnPlayerLost);
+	AttributesComponent->OnAttributeReachedZero.BindUObject(this, &AKulkiPlayerPawn::OnPlayerLost);
 	
 	// Init Main widget with controller 
 	if (const APlayerController* PC = Cast<APlayerController>(GetController()))
 	{
 		if (AKulkiHUD* KulkiHUD = Cast<AKulkiHUD>(PC->GetHUD()))
 		{
-			KulkiHUD->InitOverlayWidget(this);
+			//KulkiHUD->InitOverlayWidget(this);
 		}
 	}
 
-	AttackCapsuleCollision->OnComponentBeginOverlap.AddDynamic(this, &AKulkiPlayerCharacter::OnOverlapAttack);
-	DefendCapsuleCollision->OnComponentBeginOverlap.AddDynamic(this, &AKulkiPlayerCharacter::OnOverlapAttack);
+	AttackSphereCollision->OnComponentBeginOverlap.AddDynamic(this, &AKulkiPlayerPawn::OnOverlapAttack);
+	DefendSphereCollision->OnComponentBeginOverlap.AddDynamic(this, &AKulkiPlayerPawn::OnOverlapAttack);
 
 	DynamicMaterialInstance = UMaterialInstanceDynamic::Create(KulkiMesh->GetMaterial(0), this);
 }
 
-void AKulkiPlayerCharacter::OnOverlapAttack(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+void AKulkiPlayerPawn::OnOverlapAttack(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	if (bIsImmune)
 	{
 		return;
 	}
-	
-	AKulkiEnemyBaseCharacter* Enemy = Cast<AKulkiEnemyBaseCharacter>(OtherActor);
+
+	AKulkiEnemyPawn* Enemy = Cast<AKulkiEnemyPawn>(OtherActor);
 	if (!Enemy)
 	{
 		return;
@@ -78,7 +64,7 @@ void AKulkiPlayerCharacter::OnOverlapAttack(UPrimitiveComponent* OverlappedCompo
 
 	// If Enemy is bigger than Player, we want negative number to subtract Attribute value 
 	float Helper = -1.f;
-	if (AttributesComponent->StrengthAttribute.Value >= Enemy->GetAttributesComponent()->StrengthAttribute.Value)
+	if (GetAttributesComponent()->StrengthAttribute.Value >= Enemy->GetAttributesComponent()->StrengthAttribute.Value)
 	{
 		Helper = 1.f;
 	}
@@ -93,21 +79,21 @@ void AKulkiPlayerCharacter::OnOverlapAttack(UPrimitiveComponent* OverlappedCompo
 		case EEnemyType::RED:
 		{
 			bEatable = true;
-			AttributesComponent->AddToStrengthAttribute(EnemyStrength , KulkiMesh, AttackCapsuleCollision, MovementSpeed);
+			AttributesComponent->AddToStrengthAttribute(EnemyStrength , KulkiMesh, AttackSphereCollision, FloatingPawnMovement->MaxSpeed);
 			break;
 		}
 		case EEnemyType::YELLOW:
 		{
 			bEatable = true;
-			AttributesComponent->AddToSpeedAttribute(EnemyStrength, MovementSpeed);
+			AttributesComponent->AddToSpeedAttribute(EnemyStrength, FloatingPawnMovement->MaxSpeed);
 			break;
 		}
 		case EEnemyType::PURPLE:
 		{
 			// Purple Enemy always subtracts Player's attributes
 			bEatable = false;
-			AttributesComponent->AddToStrengthAttribute(FMath::Abs(EnemyStrength) * (-1.f), KulkiMesh, AttackCapsuleCollision, MovementSpeed);
-			AttributesComponent->AddToSpeedAttribute(FMath::Abs(EnemyStrength) * (-1.f), MovementSpeed);
+			AttributesComponent->AddToStrengthAttribute(FMath::Abs(EnemyStrength) * (-1.f), KulkiMesh, AttackSphereCollision, FloatingPawnMovement->MaxSpeed);
+			AttributesComponent->AddToSpeedAttribute(FMath::Abs(EnemyStrength) * (-1.f), FloatingPawnMovement->MaxSpeed);
 			break;
 		}
 		default: break;
@@ -126,10 +112,9 @@ void AKulkiPlayerCharacter::OnOverlapAttack(UPrimitiveComponent* OverlappedCompo
 	}
 }
 
-void AKulkiPlayerCharacter::OnPlayerLost()
+void AKulkiPlayerPawn::OnPlayerLost()
 {
 	bIsImmune = true;
-	MovementForce = 0.f;
 	GetWorldTimerManager().ClearAllTimersForObject(this);
 	if (AKulkiGameMode* GameMode = Cast<AKulkiGameMode>(UGameplayStatics::GetGameMode(this)))
 	{
@@ -137,7 +122,7 @@ void AKulkiPlayerCharacter::OnPlayerLost()
 	}
 }
 
-void AKulkiPlayerCharacter::ActivateImmunity()
+void AKulkiPlayerPawn::ActivateImmunity()
 {
 	OnImmunityActivation.ExecuteIfBound();	
 	bIsImmune = true;
@@ -153,11 +138,11 @@ void AKulkiPlayerCharacter::ActivateImmunity()
 	
 	FTimerHandle ImmunityTimer;
 	FTimerDelegate ImmunityDelegate;
-	ImmunityDelegate.BindUObject(this, &AKulkiPlayerCharacter::DeactivateImmunity, BaseColor);
+	ImmunityDelegate.BindUObject(this, &AKulkiPlayerPawn::DeactivateImmunity, BaseColor);
 	GetWorldTimerManager().SetTimer(ImmunityTimer, ImmunityDelegate, ImmunityTime, false);
 }
 
-void AKulkiPlayerCharacter::DeactivateImmunity(const FLinearColor Color)
+void AKulkiPlayerPawn::DeactivateImmunity(const FLinearColor Color)
 {
 	OnImmunityDeactivation.ExecuteIfBound();
 	bIsImmune = false;
@@ -168,7 +153,3 @@ void AKulkiPlayerCharacter::DeactivateImmunity(const FLinearColor Color)
 		KulkiMesh->SetMaterial(0, DynamicMaterialInstance);
 	}		
 }
-
-
-
-

@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Character/KulkiEnemyBaseCharacter.h"
+#include "Character/KulkiEnemyPawn.h"
 #include "Engine/DataAsset.h"
 #include "KulkiEnemySpawnData.generated.h"
 

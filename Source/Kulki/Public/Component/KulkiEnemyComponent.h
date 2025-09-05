@@ -6,9 +6,8 @@
 #include "Components/ActorComponent.h"
 #include "KulkiEnemyComponent.generated.h"
 
-
 class UKulkiEnemySpawnData;
-class AKulkiEnemyBaseCharacter;
+class AKulkiEnemyPawn;
 
 DECLARE_MULTICAST_DELEGATE(FOnAllEatableEnemyKilled);
 
@@ -32,7 +31,7 @@ public:
     void EatableEnemyKilled();
 	
 	UPROPERTY(EditAnywhere, Category="Kulki")
-	TSubclassOf<AKulkiEnemyBaseCharacter> EnemyClass;
+	TSubclassOf<AKulkiEnemyPawn> EnemyClass;
 	
 	UPROPERTY(EditAnywhere, Category="Kulki")
 	TObjectPtr<UKulkiEnemySpawnData> SpawnDataAsset;
@@ -49,7 +48,7 @@ private:
 	void BindDelegatesFromPlayer();
 	
 	UPROPERTY()
-	TArray<AKulkiEnemyBaseCharacter*> Enemies;
+	TArray<AKulkiEnemyPawn*> Enemies;
 
 	uint32 NumberOfEatableEnemies = 0;
 };

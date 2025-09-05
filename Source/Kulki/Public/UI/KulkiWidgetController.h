@@ -6,7 +6,7 @@
 #include "UObject/NoExportTypes.h"
 #include "KulkiWidgetController.generated.h"
 
-class AKulkiPlayerCharacter;
+class AKulkiPlayerPawn;
 
 /* Delegate for communication with the widget. */
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAttributeValueChanged, float, NewValue);
@@ -20,7 +20,7 @@ class KULKI_API UKulkiWidgetController : public UObject
 	GENERATED_BODY()
 
 public:
-	void SetWidgetControllerParams(AKulkiPlayerCharacter* InPlayerCharacter);
+	void SetWidgetControllerParams(AKulkiPlayerPawn* InPlayerPawn);
 
 	void InitAttributesValue();
 	void BindCallbacks();
@@ -46,6 +46,6 @@ protected:
 
 private:
 	UPROPERTY()
-	TObjectPtr<AKulkiPlayerCharacter> PlayerCharacter;
+	TObjectPtr<AKulkiPlayerPawn> PlayerPawn;
 	
 };
