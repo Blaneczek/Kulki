@@ -5,7 +5,6 @@
 #include "NavigationSystem.h"
 #include "Character/KulkiPlayerPawn.h"
 #include "GameInstance/KulkiGameInstance.h"
-#include "Gameplay/Data/KulkiEnemySpawnData.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
 
@@ -15,13 +14,11 @@ UKulkiEnemyComponent::UKulkiEnemyComponent()
 	bNotSpawn_Debug = false;
 }
 
-
 void UKulkiEnemyComponent::BeginPlay()
 {
 	Super::BeginPlay();
-
+	
 	SpawnEnemies();
-
 	BindDelegatesFromPlayer();
 }
 
@@ -37,7 +34,7 @@ void UKulkiEnemyComponent::BindDelegatesFromPlayer()
 
 void UKulkiEnemyComponent::SpawnEnemies()
 {
-	#if WITH_EDITOR
+#if WITH_EDITOR
 	if (bNotSpawn_Debug)
 	{
 		return;
@@ -52,8 +49,6 @@ void UKulkiEnemyComponent::SpawnEnemies()
 		return;
 	}
 	
-	const FVector PlayerLocation = Player->GetActorLocation();
-
 	// Get chosen difficulty level
 	int32 DifficultyLevel = 1;
 	float DifficultyLevelScale = 1.f;
@@ -65,49 +60,69 @@ void UKulkiEnemyComponent::SpawnEnemies()
 	{
 		DifficultyLevelScale = *SpawnDataAsset->LevelScales.Find(DifficultyLevel);
 	}
-		
+
+	bool bFoundValidLocation = false;
+	float RandomDistance = 0.f;
+	const FVector PlayerLocation = Player->GetActorLocation();
+	
 	for (const auto& EnemyData : SpawnDataAsset->SpawnData)
 	{
 		for (const auto& DistanceRange : EnemyData.Value.DistanceRanges)
 		{ 
 			for (uint32 i = 0; i < DistanceRange.NumberToSpawn; ++i)
-			{			
-				const FVector RandomDirection = UKismetMathLibrary::RandomUnitVector().GetSafeNormal2D();
-				const float RandomDistance = FMath::RandRange(DistanceRange.MinDistance, DistanceRange.MaxDistance);
-				const FVector RandomLocationFromPlayer = PlayerLocation +
-					FVector(RandomDirection.X * RandomDistance,RandomDirection.Y * RandomDistance,92.f);
-				
-				FNavLocation SpawnNavLocation;
-				UNavigationSystemV1* NavSystem = UNavigationSystemV1::GetCurrent(GetWorld());
-				if (NavSystem && NavSystem->ProjectPointToNavigation(RandomLocationFromPlayer, SpawnNavLocation))
+			{
+				const FVector SpawnLocation = CalculateValidRandomLocation(PlayerLocation, DistanceRange, RandomDistance, bFoundValidLocation);
+				if (bFoundValidLocation)
 				{
-					FTransform SpawnTransform;
-					SpawnTransform.SetLocation(FVector(RandomLocationFromPlayer.X, RandomLocationFromPlayer.Y, 92.f));
-					AKulkiEnemyPawn* Enemy = GetWorld()->SpawnActorDeferred<AKulkiEnemyPawn>(
-						EnemyClass,
-						SpawnTransform,
-						GetOwner(),
-						nullptr,
-						ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
-				
-					if (Enemy && EnemyData.Value.StrengthToDistanceCurve && EnemyData.Value.SpeedToDistanceCurve)
-					{
-						Enemy->Type = EnemyData.Key;
-						const float Strength = EnemyData.Value.StrengthToDistanceCurve->GetFloatValue(RandomDistance) * DifficultyLevelScale;
-						const float Speed = EnemyData.Value.SpeedToDistanceCurve->GetFloatValue(RandomDistance) * DifficultyLevelScale;
-						Enemy->SetAttributesValue(Strength, Speed);
-						UGameplayStatics::FinishSpawningActor(Enemy, SpawnTransform);
-						Enemies.Add(Enemy);
-
-						if (EnemyData.Key == EEnemyType::RED || EnemyData.Key == EEnemyType::YELLOW)
-						{
-							NumberOfEatableEnemies++;
-						}
-					}	
-				}			
+					SpawnEnemy(SpawnLocation, EnemyData, RandomDistance, DifficultyLevelScale);	
+				}					
 			}	
 		}	
 	}
+}
+
+FVector UKulkiEnemyComponent::CalculateValidRandomLocation(const FVector& PlayerLocation, const FSpawnDistanceRange& DistanceRange, float& OutRandomDistance, bool& OutFoundValidLocation)
+{
+	const FVector RandomDirection = UKismetMathLibrary::RandomUnitVector().GetSafeNormal2D();	
+	OutRandomDistance = FMath::RandRange(DistanceRange.MinDistance, DistanceRange.MaxDistance);
+	
+	const FVector RandomLocationFromPlayer =
+		PlayerLocation + FVector(RandomDirection.X * OutRandomDistance,RandomDirection.Y * OutRandomDistance,92.f);
+
+	if (UNavigationSystemV1* NavSystem = UNavigationSystemV1::GetCurrent(GetWorld()))
+	{
+		FNavLocation SpawnNavLocation;
+		NavSystem->ProjectPointToNavigation(RandomLocationFromPlayer, SpawnNavLocation) ? OutFoundValidLocation = true : OutFoundValidLocation = false;
+	}
+
+	return FVector(RandomLocationFromPlayer.X, RandomLocationFromPlayer.Y, 92.f);
+}
+
+void UKulkiEnemyComponent::SpawnEnemy(const FVector& SpawnLocation, const TPair<EEnemyType, FSpawnEnemyData>& EnemyData, float RandomDistance, float DifficultyLevelScale)
+{
+	FTransform SpawnTransform;
+	SpawnTransform.SetLocation(SpawnLocation);
+	AKulkiEnemyPawn* Enemy = GetWorld()->SpawnActorDeferred<AKulkiEnemyPawn>(
+		EnemyClass,
+		SpawnTransform,
+		GetOwner(),
+		nullptr,
+		ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
+                    				
+	if (Enemy && EnemyData.Value.StrengthToDistanceCurve && EnemyData.Value.SpeedToDistanceCurve)
+	{
+		Enemy->Type = EnemyData.Key;
+		const float Strength = EnemyData.Value.StrengthToDistanceCurve->GetFloatValue(RandomDistance) * DifficultyLevelScale;
+		const float Speed = EnemyData.Value.SpeedToDistanceCurve->GetFloatValue(RandomDistance) * DifficultyLevelScale;
+		Enemy->SetAttributesValue(Strength, Speed);
+		UGameplayStatics::FinishSpawningActor(Enemy, SpawnTransform);
+		Enemies.Add(Enemy);
+                    
+		if (EnemyData.Key == EEnemyType::RED || EnemyData.Key == EEnemyType::YELLOW)
+		{
+			NumberOfEatableEnemies++;
+		}
+	}				
 }
 
 void UKulkiEnemyComponent::StopChasingPlayer()

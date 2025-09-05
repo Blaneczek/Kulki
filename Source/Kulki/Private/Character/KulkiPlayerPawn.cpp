@@ -28,7 +28,7 @@ void AKulkiPlayerPawn::BeginPlay()
 	Super::BeginPlay();
 	
 	// Set default attributes
-	GetAttributesComponent()->SetStrengthAttribute(BaseStrengthAttributeValue, KulkiMesh, AttackSphereCollision, FloatingPawnMovement->MaxSpeed);
+	GetAttributesComponent()->SetStrengthAttribute(BaseStrengthAttributeValue, FloatingPawnMovement->MaxSpeed);
 	GetAttributesComponent()->SetSpeedAttribute(BaseSpeedAttributeValue, FloatingPawnMovement->MaxSpeed);
 
 	AttributesComponent->OnAttributeReachedZero.BindUObject(this, &AKulkiPlayerPawn::OnPlayerLost);
@@ -79,7 +79,7 @@ void AKulkiPlayerPawn::OnOverlapAttack(UPrimitiveComponent* OverlappedComponent,
 		case EEnemyType::RED:
 		{
 			bEatable = true;
-			AttributesComponent->AddToStrengthAttribute(EnemyStrength , KulkiMesh, AttackSphereCollision, FloatingPawnMovement->MaxSpeed);
+			AttributesComponent->AddToStrengthAttribute(EnemyStrength , FloatingPawnMovement->MaxSpeed);
 			break;
 		}
 		case EEnemyType::YELLOW:
@@ -92,7 +92,7 @@ void AKulkiPlayerPawn::OnOverlapAttack(UPrimitiveComponent* OverlappedComponent,
 		{
 			// Purple Enemy always subtracts Player's attributes
 			bEatable = false;
-			AttributesComponent->AddToStrengthAttribute(FMath::Abs(EnemyStrength) * (-1.f), KulkiMesh, AttackSphereCollision, FloatingPawnMovement->MaxSpeed);
+			AttributesComponent->AddToStrengthAttribute(FMath::Abs(EnemyStrength) * (-1.f), FloatingPawnMovement->MaxSpeed);
 			AttributesComponent->AddToSpeedAttribute(FMath::Abs(EnemyStrength) * (-1.f), FloatingPawnMovement->MaxSpeed);
 			break;
 		}

@@ -4,9 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "Gameplay/Data/KulkiEnemySpawnData.h"
 #include "KulkiEnemyComponent.generated.h"
 
-class UKulkiEnemySpawnData;
 class AKulkiEnemyPawn;
 
 DECLARE_MULTICAST_DELEGATE(FOnAllEatableEnemyKilled);
@@ -46,6 +46,10 @@ protected:
 
 private:
 	void BindDelegatesFromPlayer();
+
+	FVector CalculateValidRandomLocation(const FVector& PlayerLocation, const FSpawnDistanceRange& DistanceRange, float& OutRandomDistance, bool& OutFoundValidLocation);
+
+	void SpawnEnemy(const FVector& SpawnLocation, const TPair<EEnemyType, FSpawnEnemyData>& EnemyData, float RandomDistance, float DifficultyLevelScale);
 	
 	UPROPERTY()
 	TArray<AKulkiEnemyPawn*> Enemies;

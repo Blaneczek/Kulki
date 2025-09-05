@@ -14,9 +14,11 @@ AKulkiBasePawn::AKulkiBasePawn()
 
 	AttackSphereCollision = CreateDefaultSubobject<USphereComponent>(TEXT("AttackSphere"));
 	AttackSphereCollision->SetupAttachment(RootComponent);
+	AttackSphereCollision->SetSphereRadius(100.f);
 
 	DefendSphereCollision = CreateDefaultSubobject<USphereComponent>(TEXT("DefendSphere"));
 	DefendSphereCollision->SetupAttachment(RootComponent);
+	DefendSphereCollision->SetSphereRadius(5.f);
 	
 	AttributesComponent = CreateDefaultSubobject<UKulkiAttributesComponent>("AttributesComponent");
 	FloatingPawnMovement = CreateDefaultSubobject<UFloatingPawnMovement>("FloatingPawnMovement");

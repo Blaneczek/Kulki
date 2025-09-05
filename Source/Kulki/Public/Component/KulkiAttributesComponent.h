@@ -40,10 +40,10 @@ public:
 	UKulkiAttributesComponent();
 	
 	UFUNCTION(BlueprintCallable, Category="Kulki")
-	void SetStrengthAttribute(float NewStrength, UStaticMeshComponent* Mesh, USphereComponent* AttackSphereCollision, float& OutMovementSpeed);
+	void SetStrengthAttribute(float NewStrength, float& OutMovementSpeed);
 
 	UFUNCTION(BlueprintCallable, Category="Kulki")
-	void AddToStrengthAttribute(float EnemyStrength, UStaticMeshComponent* Mesh, USphereComponent* AttackSphereCollision, float& OutMovementSpeed);
+	void AddToStrengthAttribute(float EnemyStrength, float& OutMovementSpeed);
 		
 	UFUNCTION(BlueprintCallable, Category="Kulki")
 	void SetSpeedAttribute(float NewSpeed, float& OutMovementSpeed);
@@ -96,7 +96,7 @@ protected:
 	virtual void BeginPlay() override;
 	
 private:
-	void SetOwnerSize(UStaticMeshComponent* Mesh, USphereComponent* AttackSphereCollision);
+	void SetOwnerSize();
 	void SetOwnerSpeed(float& OutMovementSpeed);
 	
 };

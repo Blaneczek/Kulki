@@ -14,15 +14,13 @@ UKulkiAttributesComponent::UKulkiAttributesComponent()
 void UKulkiAttributesComponent::BeginPlay()
 {
 	Super::BeginPlay();
-
 	
 }
 
-void UKulkiAttributesComponent::SetStrengthAttribute(float NewStrength, UStaticMeshComponent* Mesh,
-													USphereComponent* AttackSphereCollision, float& OutMovementSpeed)
+void UKulkiAttributesComponent::SetStrengthAttribute(float NewStrength, float& OutMovementSpeed)
 {
 	StrengthAttribute.Value = FMath::Clamp(NewStrength,0.f, StrengthAttribute.MaxValue);
-	SetOwnerSize(Mesh, AttackSphereCollision);
+	SetOwnerSize();
 	SetOwnerSpeed(OutMovementSpeed);
 	OnStrengthChangedDelegate.Broadcast(StrengthAttribute.Value);
 	
@@ -32,13 +30,12 @@ void UKulkiAttributesComponent::SetStrengthAttribute(float NewStrength, UStaticM
 	}
 }
 
-void UKulkiAttributesComponent::AddToStrengthAttribute(float EnemyStrength, UStaticMeshComponent* Mesh,
-													USphereComponent* AttackSphereCollision, float& OutMovementSpeed)
+void UKulkiAttributesComponent::AddToStrengthAttribute(float EnemyStrength, float& OutMovementSpeed)
 {
 	if (StrengthAttribute.AddToValueCurve)
 	{
 		const float NewStrength = StrengthAttribute.Value + StrengthAttribute.AddToValueCurve->GetFloatValue(EnemyStrength);
-		SetStrengthAttribute(NewStrength, Mesh, AttackSphereCollision, OutMovementSpeed);
+		SetStrengthAttribute(NewStrength, OutMovementSpeed);
 	}
 }
 
@@ -63,14 +60,10 @@ void UKulkiAttributesComponent::AddToSpeedAttribute(float EnemyStrength, float& 
 	}
 }
 
-void UKulkiAttributesComponent::SetOwnerSize(UStaticMeshComponent* Mesh, USphereComponent* AttackSphereCollision)
+void UKulkiAttributesComponent::SetOwnerSize()
 {
-	if (Mesh && AttackSphereCollision)
-	{
-		const float NewScale = FMath::Clamp((StrengthAttribute.Value * SizeMultiplier), 0.5f, 1000.f);
-		GetOwner()->SetActorScale3D(FVector(NewScale, NewScale, NewScale * 0.5));
-		AttackSphereCollision->SetSphereRadius(100.f);
-	}
+	const float NewScale = FMath::Clamp((StrengthAttribute.Value * SizeMultiplier), 0.5f, 1000.f);
+	GetOwner()->SetActorScale3D(FVector(NewScale, NewScale, NewScale * 0.5));
 }
 
 void UKulkiAttributesComponent::SetOwnerSpeed(float& OutMovementSpeed)

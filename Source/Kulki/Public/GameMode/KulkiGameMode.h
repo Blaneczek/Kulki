@@ -31,4 +31,7 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
     TObjectPtr<UKulkiEnemyComponent> EnemyManager;
+
+private:
+	void FadeInCamera(float FadeOutTime);
 };

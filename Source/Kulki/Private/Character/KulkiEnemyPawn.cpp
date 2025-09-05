@@ -14,7 +14,7 @@ void AKulkiEnemyPawn::BeginPlay()
 {
 	Super::BeginPlay();
 
-	GetAttributesComponent()->SetStrengthAttribute(TempStrengthAttributeValue, KulkiMesh, AttackSphereCollision, FloatingPawnMovement->MaxSpeed);
+	GetAttributesComponent()->SetStrengthAttribute(TempStrengthAttributeValue, FloatingPawnMovement->MaxSpeed);
 	GetAttributesComponent()->SetSpeedAttribute(TempSpeedAttributeValue, FloatingPawnMovement->MaxSpeed);
 	
 	SetMeshColor();
