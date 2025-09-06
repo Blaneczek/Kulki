@@ -17,8 +17,7 @@ UKulkiEnemyComponent::UKulkiEnemyComponent()
 void UKulkiEnemyComponent::BeginPlay()
 {
 	Super::BeginPlay();
-	
-	SpawnEnemies();
+
 	BindDelegatesFromPlayer();
 }
 
@@ -121,6 +120,7 @@ void UKulkiEnemyComponent::SpawnEnemy(const FVector& SpawnLocation, const TPair<
 		if (EnemyData.Key == EEnemyType::RED || EnemyData.Key == EEnemyType::YELLOW)
 		{
 			NumberOfEatableEnemies++;
+			UE_LOG(LogTemp, Warning, TEXT("Number: %u"), NumberOfEatableEnemies);
 		}
 	}				
 }
