@@ -3,28 +3,17 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameplayTagContainer.h"
-
-
+#include "NativeGameplayTags.h"
+ 
 /**
  * KulkiGameplayTags
  *
- * Singleton containing native Gameplay Tags
  */
-struct FKulkiGameplayTags
+namespace KulkiGameplayTags
 {
-public:
-	static const FKulkiGameplayTags& Get() { return GameplayTags; }
-	
-	static void InitializeNativeGameplayTags();
-
-	FGameplayTag Attribute_Strength;
-	FGameplayTag Attribute_MaxStrength;
-	
-	FGameplayTag Attribute_Speed;
-	FGameplayTag Attribute_MaxSpeed;
-	
-private:
-	static FKulkiGameplayTags GameplayTags;
+	KULKI_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attribute_Strength);
+	KULKI_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attribute_MaxStrength);
+	KULKI_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attribute_Speed);
+	KULKI_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attribute_MaxSpeed);
 };
 

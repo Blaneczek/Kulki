@@ -7,27 +7,30 @@
 #include "UI/KulkiOverlayWidget.h"
 #include "UI/KulkiWidgetController.h"
 
-UKulkiWidgetController* AKulkiHUD::GetWidgetController(AKulkiPlayerPawn* PlayerPawn)
+UKulkiWidgetController* AKulkiHUD::GetWidgetController(const FWidgetControllerParams& WCParams)
 {
 	// Create if it is first time
 	if (!WidgetController)
 	{
 		WidgetController = NewObject<UKulkiWidgetController>(this, WidgetControllerClass);
-		WidgetController->SetWidgetControllerParams(PlayerPawn);
+		WidgetController->SetWidgetControllerParams(WCParams);
+		WidgetController->BindCallbacks();
 	}
 	return WidgetController;
 }
 
-void AKulkiHUD::InitOverlayWidget(AKulkiPlayerPawn* PlayerPawn)
+void AKulkiHUD::InitOverlayWidget(APlayerController* PlayerController, AKulkiPlayerPawn* PlayerPawn, UAbilitySystemComponent* ASC, UAttributeSet* AS)
 {
 	checkf(OverlayWidgetClass, TEXT("AKulkiHUD | OverlayWidgetClass is not set"));
 	checkf(WidgetControllerClass, TEXT("AKulkiHUD | WidgetControllerClass is not set"));
 	
 	OverlayWidget = CreateWidget<UKulkiOverlayWidget>(GetWorld(), OverlayWidgetClass);
-    OverlayWidget->SetWidgetController(GetWidgetController(PlayerPawn));
+
+	const FWidgetControllerParams WidgetControllerParams(PlayerController, PlayerPawn, ASC, AS);
+	UKulkiWidgetController* Controller = GetWidgetController(WidgetControllerParams);
 	
-	GetWidgetController(PlayerPawn)->InitAttributesValue();
-	GetWidgetController(PlayerPawn)->BindCallbacks();
+    OverlayWidget->SetWidgetController(Controller);
+	Controller->BroadcastInitialValues();
 		
 	OverlayWidget->AddToViewport();
 }

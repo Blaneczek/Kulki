@@ -1,30 +1,11 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "Gameplay/KulkiGameplayTags.h"
-#include "GameplayTagsManager.h"
 
-FKulkiGameplayTags FKulkiGameplayTags::GameplayTags;
-
-void FKulkiGameplayTags::InitializeNativeGameplayTags()
+namespace KulkiGameplayTags
 {
-	GameplayTags.Attribute_Strength = UGameplayTagsManager::Get().AddNativeGameplayTag(
-		FName("Attributes.Strength"),
-			FString("Increases size.")
-		);
-
-	GameplayTags.Attribute_MaxStrength = UGameplayTagsManager::Get().AddNativeGameplayTag(
-		FName("Attributes.MaxStrength"),
-			FString("Max value of Strength.")
-		);
-
-	GameplayTags.Attribute_Speed = UGameplayTagsManager::Get().AddNativeGameplayTag(
-		FName("Attributes.Speed"),
-		FString("Increases movement speed.")
-		);
-
-	GameplayTags.Attribute_MaxSpeed = UGameplayTagsManager::Get().AddNativeGameplayTag(
-		FName("Attributes.MaxSpeed"),
-		FString("Max value of Speed.")
-		);
+ 	KULKI_API UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attribute_Strength, "Attribute.Strength", "Increases size.");
+ 	KULKI_API UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attribute_MaxStrength, "Attribute.MaxStrength", "Max value of Strength.");
+	KULKI_API UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attribute_Speed, "Attribute.Speed", "Increases movement speed.");
+	KULKI_API UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attribute_MaxSpeed, "Attribute.MaxSpeed", "Max value of Speed.");
 }

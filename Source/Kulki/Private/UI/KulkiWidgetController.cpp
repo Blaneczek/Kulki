@@ -2,39 +2,42 @@
 
 
 #include "UI/KulkiWidgetController.h"
-#include "Character/KulkiPlayerPawn.h"
+#include "AbilitySystem/KulkiAttributeSet.h"
 
 
-void UKulkiWidgetController::SetWidgetControllerParams(AKulkiPlayerPawn* InPlayerPawn)
+void UKulkiWidgetController::SetWidgetControllerParams(const FWidgetControllerParams& WCParams)
 {
-	PlayerPawn = InPlayerPawn;
+	PlayerController = WCParams.PlayerController;
+	PlayerPawn = WCParams.PlayerPawn;
+	AbilitySystemComponent = WCParams.AbilitySystemComponent;
+	AttributeSet = WCParams.AttributeSet;
 }
 
-void UKulkiWidgetController::InitAttributesValue()
+void UKulkiWidgetController::BroadcastInitialValues()
 {
-	if (IsValid(PlayerPawn))
-	{
-		OnMaxStrengthChanged.Broadcast(PlayerPawn->GetAttributesComponent()->StrengthAttribute.MaxValue);
-     	OnMaxSpeedChanged.Broadcast(PlayerPawn->GetAttributesComponent()->SpeedAttribute.MaxValue);
-		OnStrengthChanged.Broadcast(PlayerPawn->GetAttributesComponent()->StrengthAttribute.Value);
-		OnSpeedChanged.Broadcast(PlayerPawn->GetAttributesComponent()->SpeedAttribute.Value);		
-	}	
+	const UKulkiAttributeSet* KulkiAttributeSet = CastChecked<UKulkiAttributeSet>(AttributeSet);
+	
+	OnMaxStrengthChanged.Broadcast(KulkiAttributeSet->GetMaxStrength());
+    OnMaxSpeedChanged.Broadcast(KulkiAttributeSet->GetMaxSpeed());
+	OnStrengthChanged.Broadcast(KulkiAttributeSet->GetStrength());
+	OnSpeedChanged.Broadcast(KulkiAttributeSet->GetSpeed());		
 }
 
 void UKulkiWidgetController::BindCallbacks()
 {
-	if (IsValid(PlayerPawn))
-	{
-		PlayerPawn->GetAttributesComponent()->OnStrengthChangedDelegate.AddLambda(
-			[this](float NewStrength)
+	const UKulkiAttributeSet* KulkiAttributeSet = CastChecked<UKulkiAttributeSet>(AttributeSet);
+	
+	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(
+		KulkiAttributeSet->GetStrengthAttribute()).AddLambda(
+		[this](const FOnAttributeChangeData& Data)
 		{
-			OnStrengthChanged.Broadcast(NewStrength);
+			OnStrengthChanged.Broadcast(Data.NewValue);
 		});
 
-		PlayerPawn->GetAttributesComponent()->OnSpeedChangedDelegate.AddLambda(
-			[this](float NewSpeed)
+	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(
+		KulkiAttributeSet->GetSpeedAttribute()).AddLambda(
+		[this](const FOnAttributeChangeData& Data)
 		{
-			OnSpeedChanged.Broadcast(NewSpeed);
+			OnSpeedChanged.Broadcast(Data.NewValue);
 		});
-	}
 }

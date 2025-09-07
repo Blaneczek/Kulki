@@ -6,6 +6,9 @@
 #include "GameFramework/HUD.h"
 #include "KulkiHUD.generated.h"
 
+class UAttributeSet;
+class UAbilitySystemComponent;
+struct FWidgetControllerParams;
 class AKulkiPlayerPawn;
 class UKulkiWidgetController;
 class UKulkiOverlayWidget;
@@ -19,9 +22,9 @@ class KULKI_API AKulkiHUD : public AHUD
 	GENERATED_BODY()
 
 public:
-	UKulkiWidgetController* GetWidgetController(AKulkiPlayerPawn* PlayerPawn);
+	UKulkiWidgetController* GetWidgetController(const FWidgetControllerParams& WCParams);
 	
-	void InitOverlayWidget(AKulkiPlayerPawn* PlayerPawn);
+	void InitOverlayWidget(APlayerController* PlayerController, AKulkiPlayerPawn* PlayerPawn, UAbilitySystemComponent* ASC, UAttributeSet* AS);
 	
 private:
 	UPROPERTY()

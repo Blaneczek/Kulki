@@ -35,27 +35,23 @@ class KULKI_API AKulkiEnemyPawn : public AKulkiBasePawn
 public:
 	AKulkiEnemyPawn();
 
-	void SetAttributesValue(float Strength, float Speed);
+	void SetSpawnAttributesValue(float Strength, float Speed);
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category="Kulki")
 	void SetState(EEnemyState NewState);
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Kulki")
-	EEnemyType Type;
+	EEnemyType Type = EEnemyType::NONE;
 	
 	UPROPERTY(BlueprintReadOnly, Category="Kulki")
 	bool bCanChase = true;
 	
-protected:
+protected:	
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category="Kulki|Attributes")
+	TSubclassOf<UGameplayEffect> SpawnAttributes;
+	
 	virtual void BeginPlay() override;
 
 	void SetMeshColor();
 	
-	/* If Enemy is not spawn by manager, we can set Strength Attribute value here. */ 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Kulki")
-	float TempStrengthAttributeValue = 5.f;
-	
-	/* If Enemy is not spawn by manager, we can set Speed Attribute value here. */ 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Kulki")
-	float TempSpeedAttributeValue = 5.f;
 };

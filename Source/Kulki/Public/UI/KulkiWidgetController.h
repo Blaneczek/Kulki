@@ -6,7 +6,33 @@
 #include "UObject/NoExportTypes.h"
 #include "KulkiWidgetController.generated.h"
 
+class UAttributeSet;
+class UAbilitySystemComponent;
 class AKulkiPlayerPawn;
+
+USTRUCT(BlueprintType)
+struct FWidgetControllerParams
+{
+	GENERATED_BODY()
+
+	FWidgetControllerParams() {}
+
+	FWidgetControllerParams(APlayerController* PC, APawn* PS, UAbilitySystemComponent* ASC, UAttributeSet* AS)
+		:PlayerController(PC), PlayerPawn(PS), AbilitySystemComponent(ASC), AttributeSet(AS)
+	{}
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TObjectPtr<APlayerController> PlayerController = nullptr;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TObjectPtr<APawn> PlayerPawn = nullptr;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent = nullptr;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TObjectPtr<UAttributeSet> AttributeSet = nullptr;
+};
 
 /* Delegate for communication with the widget. */
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAttributeValueChanged, float, NewValue);
@@ -20,9 +46,9 @@ class KULKI_API UKulkiWidgetController : public UObject
 	GENERATED_BODY()
 
 public:
-	void SetWidgetControllerParams(AKulkiPlayerPawn* InPlayerPawn);
+	void SetWidgetControllerParams(const FWidgetControllerParams& WCParams);
 
-	void InitAttributesValue();
+	void BroadcastInitialValues();
 	void BindCallbacks();
 	
 	UPROPERTY(BlueprintAssignable, Category = "Kulki|Attributes")
@@ -46,6 +72,14 @@ protected:
 
 private:
 	UPROPERTY()
-	TObjectPtr<AKulkiPlayerPawn> PlayerPawn;
+	TObjectPtr<APlayerController> PlayerController;
 	
+	UPROPERTY()
+	TObjectPtr<APawn> PlayerPawn;
+
+	UPROPERTY()
+	TObjectPtr<UAbilitySystemComponent>AbilitySystemComponent;
+
+	UPROPERTY()
+	TObjectPtr<UAttributeSet> AttributeSet;
 };

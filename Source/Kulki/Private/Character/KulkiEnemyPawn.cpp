@@ -2,28 +2,35 @@
 
 
 #include "Character/KulkiEnemyPawn.h"
-#include "Component/KulkiAttributesComponent.h"
-#include "GameFramework/FloatingPawnMovement.h"
+
+#include "AbilitySystemBlueprintLibrary.h"
+#include "AbilitySystemComponent.h"
+#include "Gameplay/KulkiGameplayTags.h"
 
 AKulkiEnemyPawn::AKulkiEnemyPawn()
 {
-	Type = EEnemyType::NONE;
 }
 
 void AKulkiEnemyPawn::BeginPlay()
 {
 	Super::BeginPlay();
 
-	GetAttributesComponent()->SetStrengthAttribute(TempStrengthAttributeValue, FloatingPawnMovement->MaxSpeed);
-	GetAttributesComponent()->SetSpeedAttribute(TempSpeedAttributeValue, FloatingPawnMovement->MaxSpeed);
-	
 	SetMeshColor();
+
 }
 
-void AKulkiEnemyPawn::SetAttributesValue(float Strength, float Speed)
+void AKulkiEnemyPawn::SetSpawnAttributesValue(float Strength, float Speed)
 {
-	TempStrengthAttributeValue = Strength;
-	TempSpeedAttributeValue = Speed;
+	checkf(IsValid(GetAbilitySystemComponent()), TEXT("AKulkiEnemyPawn::SpawnApplyEffectToSelf | AbilitySystemComponent is null"));
+	checkf(SpawnAttributes, TEXT("AKulkiEnemyPawn::SpawnApplyEffectToSelf | SpawnAttributes is null"));
+
+	FGameplayEffectContextHandle ContextHandle = GetAbilitySystemComponent()->MakeEffectContext();
+	ContextHandle.AddSourceObject(this);
+	const FGameplayEffectSpecHandle GameplayEffectSpec = GetAbilitySystemComponent()->MakeOutgoingSpec(SpawnAttributes, 1.f, ContextHandle);
+	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(GameplayEffectSpec, KulkiGameplayTags::Attribute_Strength.GetTag(), Strength);
+	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(GameplayEffectSpec, KulkiGameplayTags::Attribute_Speed.GetTag(), Speed);
+	
+	GetAbilitySystemComponent()->ApplyGameplayEffectSpecToTarget(*GameplayEffectSpec.Data.Get(), GetAbilitySystemComponent());
 }
 
 void AKulkiEnemyPawn::SetMeshColor()
@@ -55,3 +62,4 @@ void AKulkiEnemyPawn::SetMeshColor()
 		KulkiMesh->SetMaterial(0, DynMaterial);
 	}
 }
+

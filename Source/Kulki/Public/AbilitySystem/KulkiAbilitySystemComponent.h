@@ -15,7 +15,9 @@ class KULKI_API UKulkiAbilitySystemComponent : public UAbilitySystemComponent
 public:
 	UKulkiAbilitySystemComponent();
 
-	void AbilityActorInfoSet();
+	void AddCharactersAbilities(const TArray<TSubclassOf<UGameplayAbility>>& StartupAbilities);
+
+	void AbilityInputTagHeld(const FGameplayTag& InputTag);
 	
 protected:
 	virtual void BeginPlay() override;

@@ -2,14 +2,14 @@
 
 
 #include "Character/KulkiPlayerPawn.h"
+#include "AbilitySystem/KulkiAttributeSet.h"
 #include "Camera/CameraComponent.h"
 #include "Character/KulkiEnemyPawn.h"
-#include "Component/KulkiAttributesComponent.h"
 #include "Components/SphereComponent.h"
-#include "GameFramework/FloatingPawnMovement.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GameMode/KulkiGameMode.h"
 #include "Kismet/GameplayStatics.h"
+#include "Player/KulkiPlayerController.h"
 #include "UI/KulkiHUD.h"
 
 AKulkiPlayerPawn::AKulkiPlayerPawn()
@@ -27,31 +27,29 @@ void AKulkiPlayerPawn::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	// Set default attributes
-	GetAttributesComponent()->SetStrengthAttribute(BaseStrengthAttributeValue, FloatingPawnMovement->MaxSpeed);
-	GetAttributesComponent()->SetSpeedAttribute(BaseSpeedAttributeValue, FloatingPawnMovement->MaxSpeed);
-
-	AttributesComponent->OnAttributeReachedZero.BindUObject(this, &AKulkiPlayerPawn::OnPlayerLost);
-	
-	// Init Main widget with controller 
-	if (const APlayerController* PC = Cast<APlayerController>(GetController()))
-	{
-		if (AKulkiHUD* KulkiHUD = Cast<AKulkiHUD>(PC->GetHUD()))
-		{
-			//KulkiHUD->InitOverlayWidget(this);
-		}
-	}
-
 	AttackSphereCollision->OnComponentBeginOverlap.AddDynamic(this, &AKulkiPlayerPawn::OnOverlapAttack);
 	DefendSphereCollision->OnComponentBeginOverlap.AddDynamic(this, &AKulkiPlayerPawn::OnOverlapAttack);
 
 	DynamicMaterialInstance = UMaterialInstanceDynamic::Create(KulkiMesh->GetMaterial(0), this);
 }
 
-void AKulkiPlayerPawn::OnOverlapAttack(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
-	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+void AKulkiPlayerPawn::InitAbilityActorInfo()
 {
-	if (bIsImmune)
+	Super::InitAbilityActorInfo();
+
+	if (AKulkiPlayerController* KulkiPC = Cast<AKulkiPlayerController>(GetController()))
+	{
+		if (AKulkiHUD* KulkiHUD = Cast<AKulkiHUD>(KulkiPC->GetHUD()))
+		{
+			KulkiHUD->InitOverlayWidget(KulkiPC, this, GetAbilitySystemComponent(), GetAttributeSet());
+		}
+	}	
+}
+
+void AKulkiPlayerPawn::OnOverlapAttack(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+                                       UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	/*if (bIsImmune)
 	{
 		return;
 	}
@@ -109,7 +107,7 @@ void AKulkiPlayerPawn::OnOverlapAttack(UPrimitiveComponent* OverlappedComponent,
 	{
 		// Give Player immunity after being caught 
 		ActivateImmunity();
-	}
+	}*/
 }
 
 void AKulkiPlayerPawn::OnPlayerLost()

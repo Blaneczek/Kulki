@@ -112,11 +112,11 @@ void UKulkiEnemyComponent::SpawnEnemy(const FVector& SpawnLocation, const TPair<
 	{
 		Enemy->Type = EnemyData.Key;
 		const float Strength = EnemyData.Value.StrengthToDistanceCurve->GetFloatValue(RandomDistance) * DifficultyLevelScale;
-		const float Speed = EnemyData.Value.SpeedToDistanceCurve->GetFloatValue(RandomDistance) * DifficultyLevelScale;
-		Enemy->SetAttributesValue(Strength, Speed);
+		const float Speed = EnemyData.Value.SpeedToDistanceCurve->GetFloatValue(RandomDistance) * DifficultyLevelScale;	
 		UGameplayStatics::FinishSpawningActor(Enemy, SpawnTransform);
+		Enemy->SetSpawnAttributesValue(Strength, Speed);
 		Enemies.Add(Enemy);
-                    
+		
 		if (EnemyData.Key == EEnemyType::RED || EnemyData.Key == EEnemyType::YELLOW)
 		{
 			NumberOfEatableEnemies++;

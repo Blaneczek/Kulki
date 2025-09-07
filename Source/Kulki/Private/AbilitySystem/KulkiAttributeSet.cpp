@@ -1,19 +1,31 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "AbilitySystem/KulkiAttributeSet.h"
-
 #include "AbilitySystemBlueprintLibrary.h"
 #include "GameplayEffectExtension.h"
 #include "Gameplay/KulkiGameplayTags.h"
 
 UKulkiAttributeSet::UKulkiAttributeSet()
 {
-	const FKulkiGameplayTags& GameplayTags = FKulkiGameplayTags::Get();
+	TagsToAttributes.Add(KulkiGameplayTags::Attribute_Strength.GetTag(), GetStrengthAttribute);
+	TagsToAttributes.Add(KulkiGameplayTags::Attribute_MaxStrength.GetTag(), GetMaxStrengthAttribute);
+	TagsToAttributes.Add(KulkiGameplayTags::Attribute_Speed.GetTag(), GetSpeedAttribute);
+	TagsToAttributes.Add(KulkiGameplayTags::Attribute_MaxSpeed.GetTag(), GetMaxSpeedAttribute);
+}
 
-	TagsToAttributes.Add(GameplayTags.Attribute_Strength, GetStrengthAttribute);
-	TagsToAttributes.Add(GameplayTags.Attribute_MaxStrength, GetMaxStrengthAttribute);
-	TagsToAttributes.Add(GameplayTags.Attribute_Speed, GetSpeedAttribute);
-	TagsToAttributes.Add(GameplayTags.Attribute_MaxSpeed, GetMaxSpeedAttribute);
+void UKulkiAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
+{		
+	if (Attribute == GetStrengthAttribute())
+	{
+		NewValue = FMath::Clamp(NewValue, 0.0f, GetMaxStrength());
+		UE_LOG(LogTemp, Warning, TEXT("clamp strength"));
+	}
+	if (Attribute == GetSpeedAttribute())
+	{
+		NewValue = FMath::Clamp(NewValue, 0.0f, GetMaxSpeed());
+	}
+	
+	Super::PreAttributeChange(Attribute, NewValue);
 }
 
 void UKulkiAttributeSet::SetEffectProperties(const FGameplayEffectModCallbackData& Data, FEffectProperties& OutProps) const
@@ -44,23 +56,6 @@ void UKulkiAttributeSet::SetEffectProperties(const FGameplayEffectModCallbackDat
 		OutProps.TargetController = Data.Target.AbilityActorInfo->PlayerController.Get();
 		OutProps.TargetPawn = Cast<APawn>(OutProps.TargetAvatarActor);
 		OutProps.TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(OutProps.TargetAvatarActor);
-	}
-}
-
-void UKulkiAttributeSet::PostGameplayEffectExecute(const struct FGameplayEffectModCallbackData& Data)
-{
-	Super::PostGameplayEffectExecute(Data);
-
-	FEffectProperties Props;
-	SetEffectProperties(Data, Props);
-	
-	if (Data.EvaluatedData.Attribute == GetStrengthAttribute())
-	{
-		SetStrength(FMath::Clamp(GetStrength(), 0.0f, GetMaxStrength()));
-	}
-	if (Data.EvaluatedData.Attribute == GetSpeedAttribute())
-	{
-		SetSpeed(FMath::Clamp(GetSpeed(), 0.0f, GetMaxSpeed()));
 	}
 }
 
