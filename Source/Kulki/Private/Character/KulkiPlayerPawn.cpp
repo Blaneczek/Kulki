@@ -8,6 +8,8 @@
 #include "Components/SphereComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GameMode/KulkiGameMode.h"
+#include "Gameplay/KulkiCombatInterface.h"
+#include "Gameplay/KulkiGameplayTags.h"
 #include "Kismet/GameplayStatics.h"
 #include "Player/KulkiPlayerController.h"
 #include "UI/KulkiHUD.h"
@@ -49,7 +51,7 @@ void AKulkiPlayerPawn::InitAbilityActorInfo()
 void AKulkiPlayerPawn::OnOverlapAttack(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
                                        UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	/*if (bIsImmune)
+	if (bIsImmune)
 	{
 		return;
 	}
@@ -60,54 +62,45 @@ void AKulkiPlayerPawn::OnOverlapAttack(UPrimitiveComponent* OverlappedComponent,
 		return;
 	}
 
-	// If Enemy is bigger than Player, we want negative number to subtract Attribute value 
-	float Helper = -1.f;
-	if (GetAttributesComponent()->StrengthAttribute.Value >= Enemy->GetAttributesComponent()->StrengthAttribute.Value)
+	float Coefficient = -1.f;
+	if (AttributeSet->GetStrength() >= Enemy->GetAttributeSet()->GetStrength())
 	{
-		Helper = 1.f;
+		Coefficient = 1.f;
 	}
 
-	// Added/subtracted value depends on Enemy size (Strength)
-	const float EnemyStrength = Enemy->GetAttributesComponent()->StrengthAttribute.Value * Helper;
-	
 	bool bEatable = false;
-	
 	switch (Enemy->Type)
 	{
 		case EEnemyType::RED:
 		{
-			bEatable = true;
-			AttributesComponent->AddToStrengthAttribute(EnemyStrength , FloatingPawnMovement->MaxSpeed);
+			EnemyHitApplyEffectToSelf(Enemy, REDGameplayEffectClass, 1.f, Coefficient);
+			bEatable = true;	
 			break;
 		}
 		case EEnemyType::YELLOW:
 		{
+			EnemyHitApplyEffectToSelf(Enemy, YELLOWGameplayEffectClass, 1.f, Coefficient);
 			bEatable = true;
-			AttributesComponent->AddToSpeedAttribute(EnemyStrength, FloatingPawnMovement->MaxSpeed);
 			break;
 		}
 		case EEnemyType::PURPLE:
 		{
 			// Purple Enemy always subtracts Player's attributes
-			bEatable = false;
-			AttributesComponent->AddToStrengthAttribute(FMath::Abs(EnemyStrength) * (-1.f), FloatingPawnMovement->MaxSpeed);
-			AttributesComponent->AddToSpeedAttribute(FMath::Abs(EnemyStrength) * (-1.f), FloatingPawnMovement->MaxSpeed);
+			EnemyHitApplyEffectToSelf(Enemy, PURPLEGameplayEffectClass, 1.f, -1.f);
 			break;
 		}
 		default: break;
 	}
 
-	// Destroy Enemy if it is smaller 
-	if (Helper > 0.f)
+	if (Coefficient > 0.f)
 	{
 		Enemy->Destroy();
-		if (bEatable) OnEnemyKilled.ExecuteIfBound();		
+		if (bEatable) OnEatableEnemyKilled.ExecuteIfBound();
 	}
 	else
 	{
-		// Give Player immunity after being caught 
 		ActivateImmunity();
-	}*/
+	}
 }
 
 void AKulkiPlayerPawn::OnPlayerLost()
@@ -150,4 +143,20 @@ void AKulkiPlayerPawn::DeactivateImmunity(const FLinearColor Color)
 		DynamicMaterialInstance->SetVectorParameterValue("MeshColor", Color);
 		KulkiMesh->SetMaterial(0, DynamicMaterialInstance);
 	}		
+}
+
+void AKulkiPlayerPawn::EnemyHitApplyEffectToSelf(APawn* Enemy, TSubclassOf<UGameplayEffect> GameplayEffectClass, float Level, float Coefficient)
+{
+	if (!GameplayEffectClass)
+	{
+		return;
+	}
+	
+	FGameplayEffectContextHandle ContextHandle = GetAbilitySystemComponent()->MakeEffectContext();
+	ContextHandle.AddSourceObject(this);
+	ContextHandle.AddInstigator(Enemy, Enemy);
+	const FGameplayEffectSpecHandle GameplayEffectSpec = GetAbilitySystemComponent()->MakeOutgoingSpec(GameplayEffectClass, Level, ContextHandle);
+	GameplayEffectSpec.Data->SetSetByCallerMagnitude(KulkiGameplayTags::GameplayEffect_Coefficient.GetTag(), Coefficient);
+	
+	GetAbilitySystemComponent()->ApplyGameplayEffectSpecToTarget(*GameplayEffectSpec.Data.Get(), GetAbilitySystemComponent());
 }

@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Character/KulkiBasePawn.h"
+#include "Gameplay/KulkiCombatInterface.h"
 #include "KulkiEnemyPawn.generated.h"
 
 UENUM(BlueprintType)
@@ -28,7 +29,7 @@ enum class EEnemyState: uint8
  * 
  */
 UCLASS()
-class KULKI_API AKulkiEnemyPawn : public AKulkiBasePawn
+class KULKI_API AKulkiEnemyPawn : public AKulkiBasePawn, public IKulkiCombatInterface
 {
 	GENERATED_BODY()
 
@@ -39,6 +40,8 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category="Kulki")
 	void SetState(EEnemyState NewState);
+
+	virtual void ApplyEffectToTarget(UAbilitySystemComponent* TargetASC, bool bIsPlayerBigger) override;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Kulki")
 	EEnemyType Type = EEnemyType::NONE;
@@ -47,11 +50,14 @@ public:
 	bool bCanChase = true;
 	
 protected:	
-	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category="Kulki|Attributes")
-	TSubclassOf<UGameplayEffect> SpawnAttributes;
-	
 	virtual void BeginPlay() override;
 
-	void SetMeshColor();
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category="Kulki|Attributes")
+    TSubclassOf<UGameplayEffect> SpawnAttributes;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Kulki")
+	TSubclassOf<UGameplayEffect> DamageEffectClass;
 	
+private:
+	void SetMeshColor();
 };

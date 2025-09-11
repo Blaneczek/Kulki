@@ -15,5 +15,7 @@ namespace KulkiGameplayTags
 	KULKI_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attribute_MaxStrength);
 	KULKI_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attribute_Speed);
 	KULKI_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attribute_MaxSpeed);
+
+	KULKI_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayEffect_Coefficient);
 };
 

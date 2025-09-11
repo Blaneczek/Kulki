@@ -13,7 +13,7 @@ UKulkiAttributeSet::UKulkiAttributeSet()
 	TagsToAttributes.Add(KulkiGameplayTags::Attribute_MaxSpeed.GetTag(), GetMaxSpeedAttribute);
 }
 
-void UKulkiAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
+void UKulkiAttributeSet::PreAttributeBaseChange(const FGameplayAttribute& Attribute, float& NewValue) const
 {		
 	if (Attribute == GetStrengthAttribute())
 	{
@@ -25,8 +25,10 @@ void UKulkiAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute,
 		NewValue = FMath::Clamp(NewValue, 0.0f, GetMaxSpeed());
 	}
 	
-	Super::PreAttributeChange(Attribute, NewValue);
+	Super::PreAttributeBaseChange(Attribute, NewValue);
 }
+
+
 
 void UKulkiAttributeSet::SetEffectProperties(const FGameplayEffectModCallbackData& Data, FEffectProperties& OutProps) const
 {

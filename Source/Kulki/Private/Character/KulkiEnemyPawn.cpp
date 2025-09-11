@@ -2,9 +2,9 @@
 
 
 #include "Character/KulkiEnemyPawn.h"
-
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
+#include "AbilitySystem/KulkiAttributeSet.h"
 #include "Gameplay/KulkiGameplayTags.h"
 
 AKulkiEnemyPawn::AKulkiEnemyPawn()
@@ -27,10 +27,35 @@ void AKulkiEnemyPawn::SetSpawnAttributesValue(float Strength, float Speed)
 	FGameplayEffectContextHandle ContextHandle = GetAbilitySystemComponent()->MakeEffectContext();
 	ContextHandle.AddSourceObject(this);
 	const FGameplayEffectSpecHandle GameplayEffectSpec = GetAbilitySystemComponent()->MakeOutgoingSpec(SpawnAttributes, 1.f, ContextHandle);
-	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(GameplayEffectSpec, KulkiGameplayTags::Attribute_Strength.GetTag(), Strength);
-	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(GameplayEffectSpec, KulkiGameplayTags::Attribute_Speed.GetTag(), Speed);
-	
+	GameplayEffectSpec.Data->SetSetByCallerMagnitude(KulkiGameplayTags::Attribute_Strength.GetTag(), Strength);
+	GameplayEffectSpec.Data->SetSetByCallerMagnitude(KulkiGameplayTags::Attribute_Speed.GetTag(), Speed);
+
 	GetAbilitySystemComponent()->ApplyGameplayEffectSpecToTarget(*GameplayEffectSpec.Data.Get(), GetAbilitySystemComponent());
+}
+
+void AKulkiEnemyPawn::ApplyEffectToTarget(UAbilitySystemComponent* TargetASC, bool bIsPlayerBigger)
+{
+	if (!TargetASC || !GetAbilitySystemComponent())
+	{
+		return;
+	}
+
+	FGameplayEffectContextHandle ContextHandle = GetAbilitySystemComponent()->MakeEffectContext();
+	ContextHandle.AddSourceObject(this);
+	const FGameplayEffectSpecHandle GameplayEffectSpec = GetAbilitySystemComponent()->MakeOutgoingSpec(DamageEffectClass, 1.f, ContextHandle);
+
+	if (!bIsPlayerBigger)
+	{
+		for (auto& ModInfo : GameplayEffectSpec.Data->Modifiers)
+		{
+			//GameplayEffectSpec.Data.Get()->Def.Get()->Modifiers[0].ModifierMagnitude.
+			//FAttributeBasedFloat& AttrBased = GameplayEffectSpec.Data.Get()->Def->Modifiers[0].ModifierMagnitude.
+		}
+
+	}
+	
+	UE_LOG(LogTemp, Warning, TEXT("Enemy strength: %f"), AttributeSet->GetStrength());
+	GetAbilitySystemComponent()->ApplyGameplayEffectSpecToTarget(*GameplayEffectSpec.Data.Get(), TargetASC);			
 }
 
 void AKulkiEnemyPawn::SetMeshColor()

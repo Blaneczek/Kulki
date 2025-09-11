@@ -11,7 +11,7 @@ class UCameraComponent;
 
 DECLARE_DELEGATE(FOnImmunityActivation);
 DECLARE_DELEGATE(FOnImmunityDeactivation);
-DECLARE_DELEGATE(FOnEnemyKilled);
+DECLARE_DELEGATE(FOnEatableEnemyKilled);
 
 /**
  * 
@@ -26,7 +26,7 @@ public:
 	
 	FOnImmunityActivation OnImmunityActivation;
 	FOnImmunityDeactivation OnImmunityDeactivation;
-	FOnEnemyKilled OnEnemyKilled;
+	FOnEatableEnemyKilled OnEatableEnemyKilled;
 	
 protected:
 	virtual void BeginPlay() override;
@@ -39,14 +39,6 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Kulki")
 	TObjectPtr<USpringArmComponent> CameraArm;
 
-	/* Use this to set Player's Strength Attribute value that will be used at the start of the game. */
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta=(UIMin="5.0", ClampMin="5.0"), Category="Kulki|Attributes")
-	float BaseStrengthAttributeValue = 30.f;
-	
-	/* Use this to set Player's Speed Attribute value that will be used at the start of the game. */
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta=(UIMin="5.0", ClampMin="5.0"), Category="Kulki|Attributes")
-	float BaseSpeedAttributeValue = 30.f;
-
 	/* Time during which Player can't be hit. */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, meta=(UIMin="0.1", ClampMin="0.1"), Category="Kulki|Immunity")
 	float ImmunityTime = 2.f;
@@ -54,6 +46,15 @@ protected:
 	/* Mesh color during the immune state. */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Kulki|Immunity")
 	FLinearColor ImmunityColor;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Kulki|Gameplay")
+	TSubclassOf<UGameplayEffect> REDGameplayEffectClass;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Kulki|Gameplay")
+	TSubclassOf<UGameplayEffect> YELLOWGameplayEffectClass;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Kulki|Gameplay")
+	TSubclassOf<UGameplayEffect> PURPLEGameplayEffectClass;
 	
 private:
 	UFUNCTION()
@@ -66,6 +67,8 @@ private:
 	
 	void DeactivateImmunity(const FLinearColor Color);
 
+	void EnemyHitApplyEffectToSelf(APawn* Enemy, TSubclassOf<UGameplayEffect> GameplayEffectClass, float Level, float Coefficient);
+	
 	UPROPERTY()
 	TObjectPtr<UMaterialInstanceDynamic> DynamicMaterialInstance;
 	

@@ -61,8 +61,8 @@ class KULKI_API UKulkiAttributeSet : public UAttributeSet
 public:
 	UKulkiAttributeSet();
 
-	virtual void PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue) override;
-
+	virtual void PreAttributeBaseChange(const FGameplayAttribute& Attribute, float& NewValue) const override;
+	
 	TMap<FGameplayTag, TStaticFuncPtr<FGameplayAttribute()>> TagsToAttributes;
 
 	UPROPERTY(BlueprintReadOnly, Category = "Attributes")

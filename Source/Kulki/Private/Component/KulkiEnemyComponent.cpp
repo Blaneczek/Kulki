@@ -27,7 +27,7 @@ void UKulkiEnemyComponent::BindDelegatesFromPlayer()
 	{
 		PlayerPawn->OnImmunityActivation.BindUObject(this, &UKulkiEnemyComponent::StopChasingPlayer);
 		PlayerPawn->OnImmunityDeactivation.BindUObject(this, &UKulkiEnemyComponent::SetCanChasePlayer);
-		PlayerPawn->OnEnemyKilled.BindUObject(this, &UKulkiEnemyComponent::EatableEnemyKilled);
+		PlayerPawn->OnEatableEnemyKilled.BindUObject(this, &UKulkiEnemyComponent::EatableEnemyKilled);
 	}
 }
 
@@ -41,7 +41,6 @@ void UKulkiEnemyComponent::SpawnEnemies()
 #endif
 	
 	NumberOfEatableEnemies = 0;
-	
 	AKulkiPlayerPawn* Player = Cast<AKulkiPlayerPawn>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
 	if (!Player || !EnemyClass || !SpawnDataAsset)
 	{
@@ -120,7 +119,6 @@ void UKulkiEnemyComponent::SpawnEnemy(const FVector& SpawnLocation, const TPair<
 		if (EnemyData.Key == EEnemyType::RED || EnemyData.Key == EEnemyType::YELLOW)
 		{
 			NumberOfEatableEnemies++;
-			UE_LOG(LogTemp, Warning, TEXT("Number: %u"), NumberOfEatableEnemies);
 		}
 	}				
 }
