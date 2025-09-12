@@ -37,11 +37,12 @@ public:
 	AKulkiEnemyPawn();
 
 	void SetSpawnAttributesValue(float Strength, float Speed);
-
+	void SetSpawnOverlapGameplayEffectClass(TSubclassOf<UGameplayEffect> GameplayEffectClass);
+	
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category="Kulki")
 	void SetState(EEnemyState NewState);
 
-	virtual void ApplyEffectToTarget(UAbilitySystemComponent* TargetASC, bool bIsPlayerBigger) override;
+	virtual void ApplyOverlapEffect(UAbilitySystemComponent* TargetASC, float Coefficient, bool& OutIsEatableEnemy) override;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Kulki")
 	EEnemyType Type = EEnemyType::NONE;
@@ -56,7 +57,8 @@ protected:
     TSubclassOf<UGameplayEffect> SpawnAttributes;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Kulki")
-	TSubclassOf<UGameplayEffect> DamageEffectClass;
+	TSubclassOf<UGameplayEffect> OverlapGameplayEffectClass;
+
 	
 private:
 	void SetMeshColor();

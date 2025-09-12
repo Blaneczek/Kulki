@@ -35,6 +35,9 @@ public:
 	
 	UPROPERTY(EditAnywhere, Category="Kulki")
 	TObjectPtr<UKulkiEnemySpawnData> SpawnDataAsset;
+
+	UPROPERTY(EditAnywhere, Category="Kulki")
+	TMap<EEnemyType, TSubclassOf<UGameplayEffect>> OverlapGameplayEffectClasses;
 	
 	UPROPERTY(EditAnywhere, Category="Kulki")
 	bool bNotSpawn_Debug;
@@ -50,7 +53,7 @@ private:
 	FVector CalculateValidRandomLocation(const FVector& PlayerLocation, const FSpawnDistanceRange& DistanceRange, float& OutRandomDistance, bool& OutFoundValidLocation);
 
 	void SpawnEnemy(const FVector& SpawnLocation, const TPair<EEnemyType, FSpawnEnemyData>& EnemyData, float RandomDistance, float DifficultyLevelScale);
-	
+
 	UPROPERTY()
 	TArray<AKulkiEnemyPawn*> Enemies;
 

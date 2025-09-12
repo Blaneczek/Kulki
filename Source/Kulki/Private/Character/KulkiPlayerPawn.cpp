@@ -2,10 +2,12 @@
 
 
 #include "Character/KulkiPlayerPawn.h"
+#include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystem/KulkiAttributeSet.h"
 #include "Camera/CameraComponent.h"
 #include "Character/KulkiEnemyPawn.h"
 #include "Components/SphereComponent.h"
+#include "GameFramework/FloatingPawnMovement.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GameMode/KulkiGameMode.h"
 #include "Gameplay/KulkiCombatInterface.h"
@@ -39,6 +41,8 @@ void AKulkiPlayerPawn::InitAbilityActorInfo()
 {
 	Super::InitAbilityActorInfo();
 
+	AttributeSet->OnAttributeReachedZero.AddUObject(this, &AKulkiPlayerPawn::OnPlayerLost);
+	
 	if (AKulkiPlayerController* KulkiPC = Cast<AKulkiPlayerController>(GetController()))
 	{
 		if (AKulkiHUD* KulkiHUD = Cast<AKulkiHUD>(KulkiPC->GetHUD()))
@@ -55,57 +59,39 @@ void AKulkiPlayerPawn::OnOverlapAttack(UPrimitiveComponent* OverlappedComponent,
 	{
 		return;
 	}
-
-	AKulkiEnemyPawn* Enemy = Cast<AKulkiEnemyPawn>(OtherActor);
-	if (!Enemy)
+	
+	IKulkiCombatInterface* CombatInterface = Cast<IKulkiCombatInterface>(OtherActor);
+	if (!CombatInterface)
 	{
 		return;
 	}
-
-	float Coefficient = -1.f;
-	if (AttributeSet->GetStrength() >= Enemy->GetAttributeSet()->GetStrength())
+	
+	bool bFoundStrengthAttribute = false;
+	const float EnemyStrength = UAbilitySystemBlueprintLibrary::GetFloatAttribute(OtherActor, UKulkiAttributeSet::GetStrengthAttribute(), bFoundStrengthAttribute);
+	if (bFoundStrengthAttribute)
 	{
-		Coefficient = 1.f;
-	}
-
-	bool bEatable = false;
-	switch (Enemy->Type)
-	{
-		case EEnemyType::RED:
+		float Coefficient = -1.f;
+        if (AttributeSet->GetStrength() >= EnemyStrength)
+        {
+        	Coefficient = 1.f;
+        }
+		bool bEatableEnemy = false;
+		CombatInterface->ApplyOverlapEffect(GetAbilitySystemComponent(), Coefficient, bEatableEnemy);
+		if (Coefficient > 0.f)
 		{
-			EnemyHitApplyEffectToSelf(Enemy, REDGameplayEffectClass, 1.f, Coefficient);
-			bEatable = true;	
-			break;
+			if (bEatableEnemy) OnEatableEnemyKilled.ExecuteIfBound();
 		}
-		case EEnemyType::YELLOW:
+		else
 		{
-			EnemyHitApplyEffectToSelf(Enemy, YELLOWGameplayEffectClass, 1.f, Coefficient);
-			bEatable = true;
-			break;
+			ActivateImmunity();
 		}
-		case EEnemyType::PURPLE:
-		{
-			// Purple Enemy always subtracts Player's attributes
-			EnemyHitApplyEffectToSelf(Enemy, PURPLEGameplayEffectClass, 1.f, -1.f);
-			break;
-		}
-		default: break;
-	}
-
-	if (Coefficient > 0.f)
-	{
-		Enemy->Destroy();
-		if (bEatable) OnEatableEnemyKilled.ExecuteIfBound();
-	}
-	else
-	{
-		ActivateImmunity();
 	}
 }
 
 void AKulkiPlayerPawn::OnPlayerLost()
 {
 	bIsImmune = true;
+	FloatingPawnMovement->Deactivate();
 	GetWorldTimerManager().ClearAllTimersForObject(this);
 	if (AKulkiGameMode* GameMode = Cast<AKulkiGameMode>(UGameplayStatics::GetGameMode(this)))
 	{

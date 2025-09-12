@@ -17,18 +17,20 @@ void UKulkiAttributeSet::PreAttributeBaseChange(const FGameplayAttribute& Attrib
 {		
 	if (Attribute == GetStrengthAttribute())
 	{
-		NewValue = FMath::Clamp(NewValue, 0.0f, GetMaxStrength());
-		UE_LOG(LogTemp, Warning, TEXT("clamp strength"));
+		NewValue = FMath::Clamp(NewValue, 0.0f, GetMaxStrength());	
 	}
 	if (Attribute == GetSpeedAttribute())
 	{
 		NewValue = FMath::Clamp(NewValue, 0.0f, GetMaxSpeed());
 	}
 	
+	if (NewValue <= 0.f)
+    {
+    	OnAttributeReachedZero.Broadcast();
+    }
+	
 	Super::PreAttributeBaseChange(Attribute, NewValue);
 }
-
-
 
 void UKulkiAttributeSet::SetEffectProperties(const FGameplayEffectModCallbackData& Data, FEffectProperties& OutProps) const
 {

@@ -2,9 +2,7 @@
 
 
 #include "Character/KulkiEnemyPawn.h"
-#include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
-#include "AbilitySystem/KulkiAttributeSet.h"
 #include "Gameplay/KulkiGameplayTags.h"
 
 AKulkiEnemyPawn::AKulkiEnemyPawn()
@@ -33,29 +31,32 @@ void AKulkiEnemyPawn::SetSpawnAttributesValue(float Strength, float Speed)
 	GetAbilitySystemComponent()->ApplyGameplayEffectSpecToTarget(*GameplayEffectSpec.Data.Get(), GetAbilitySystemComponent());
 }
 
-void AKulkiEnemyPawn::ApplyEffectToTarget(UAbilitySystemComponent* TargetASC, bool bIsPlayerBigger)
+void AKulkiEnemyPawn::SetSpawnOverlapGameplayEffectClass(TSubclassOf<UGameplayEffect> GameplayEffectClass)
 {
-	if (!TargetASC || !GetAbilitySystemComponent())
+	OverlapGameplayEffectClass = GameplayEffectClass;
+}
+
+void AKulkiEnemyPawn::ApplyOverlapEffect(UAbilitySystemComponent* TargetASC, float Coefficient, bool& OutIsEatableEnemy)
+{
+	if (!TargetASC || !GetAbilitySystemComponent() || !OverlapGameplayEffectClass)
 	{
 		return;
 	}
 
+	OutIsEatableEnemy = Type == EEnemyType::RED || Type == EEnemyType::YELLOW;
+	Coefficient = OutIsEatableEnemy ? Coefficient : -1.f;
+	
 	FGameplayEffectContextHandle ContextHandle = GetAbilitySystemComponent()->MakeEffectContext();
 	ContextHandle.AddSourceObject(this);
-	const FGameplayEffectSpecHandle GameplayEffectSpec = GetAbilitySystemComponent()->MakeOutgoingSpec(DamageEffectClass, 1.f, ContextHandle);
-
-	if (!bIsPlayerBigger)
-	{
-		for (auto& ModInfo : GameplayEffectSpec.Data->Modifiers)
-		{
-			//GameplayEffectSpec.Data.Get()->Def.Get()->Modifiers[0].ModifierMagnitude.
-			//FAttributeBasedFloat& AttrBased = GameplayEffectSpec.Data.Get()->Def->Modifiers[0].ModifierMagnitude.
-		}
-
-	}
+	const FGameplayEffectSpecHandle GameplayEffectSpec = GetAbilitySystemComponent()->MakeOutgoingSpec(OverlapGameplayEffectClass, 1.f, ContextHandle);
+	GameplayEffectSpec.Data->SetSetByCallerMagnitude(KulkiGameplayTags::GameplayEffect_Coefficient.GetTag(), Coefficient);
 	
-	UE_LOG(LogTemp, Warning, TEXT("Enemy strength: %f"), AttributeSet->GetStrength());
-	GetAbilitySystemComponent()->ApplyGameplayEffectSpecToTarget(*GameplayEffectSpec.Data.Get(), TargetASC);			
+	GetAbilitySystemComponent()->ApplyGameplayEffectSpecToTarget(*GameplayEffectSpec.Data.Get(), TargetASC);
+
+	if (Coefficient > 0.f)
+	{
+		Destroy();
+	}
 }
 
 void AKulkiEnemyPawn::SetMeshColor()

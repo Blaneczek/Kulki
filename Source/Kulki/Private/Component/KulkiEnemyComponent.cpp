@@ -110,10 +110,12 @@ void UKulkiEnemyComponent::SpawnEnemy(const FVector& SpawnLocation, const TPair<
 	if (Enemy && EnemyData.Value.StrengthToDistanceCurve && EnemyData.Value.SpeedToDistanceCurve)
 	{
 		Enemy->Type = EnemyData.Key;
+		Enemy->SetSpawnOverlapGameplayEffectClass(*OverlapGameplayEffectClasses.Find(EnemyData.Key));
 		const float Strength = EnemyData.Value.StrengthToDistanceCurve->GetFloatValue(RandomDistance) * DifficultyLevelScale;
 		const float Speed = EnemyData.Value.SpeedToDistanceCurve->GetFloatValue(RandomDistance) * DifficultyLevelScale;	
 		UGameplayStatics::FinishSpawningActor(Enemy, SpawnTransform);
 		Enemy->SetSpawnAttributesValue(Strength, Speed);
+		
 		Enemies.Add(Enemy);
 		
 		if (EnemyData.Key == EEnemyType::RED || EnemyData.Key == EEnemyType::YELLOW)

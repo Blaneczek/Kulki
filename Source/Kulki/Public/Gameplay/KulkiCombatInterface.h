@@ -23,5 +23,5 @@ class KULKI_API IKulkiCombatInterface
 
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
-	virtual void ApplyEffectToTarget(UAbilitySystemComponent* TargetASC, bool bIsPlayerBigger) {};
+	virtual void ApplyOverlapEffect(UAbilitySystemComponent* TargetASC, float Coefficient, bool& OutIsEatableEnemy) {};
 };

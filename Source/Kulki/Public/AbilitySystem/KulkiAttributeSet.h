@@ -13,6 +13,8 @@
 	GAMEPLAYATTRIBUTE_VALUE_SETTER(PropertyName) \
 	GAMEPLAYATTRIBUTE_VALUE_INITTER(PropertyName)
 
+DECLARE_MULTICAST_DELEGATE(FOnStrengthReachedZero);
+
 USTRUCT()
 struct FEffectProperties
 {
@@ -81,6 +83,8 @@ public:
 	FGameplayAttributeData MaxSpeed;
 	ATTRIBUTE_ACCESSORS(UKulkiAttributeSet, MaxSpeed);
 
+	FOnStrengthReachedZero OnAttributeReachedZero;
+	
 private:
 	void SetEffectProperties(const FGameplayEffectModCallbackData& Data, FEffectProperties& OutProps) const;
 };

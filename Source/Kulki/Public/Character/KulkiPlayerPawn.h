@@ -47,15 +47,6 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Kulki|Immunity")
 	FLinearColor ImmunityColor;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Kulki|Gameplay")
-	TSubclassOf<UGameplayEffect> REDGameplayEffectClass;
-	
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Kulki|Gameplay")
-	TSubclassOf<UGameplayEffect> YELLOWGameplayEffectClass;
-	
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Kulki|Gameplay")
-	TSubclassOf<UGameplayEffect> PURPLEGameplayEffectClass;
-	
 private:
 	UFUNCTION()
 	void OnOverlapAttack(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
