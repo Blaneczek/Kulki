@@ -97,4 +97,5 @@ protected:
 private:
 	void SetKulkiPawnSize(const FOnAttributeChangeData& Data);
 	void SetKulkiMovementSpeed(const FOnAttributeChangeData& Data);
+	void SetKulkiMovementSpeed(float Strength);
 };

@@ -107,7 +107,7 @@ void UKulkiEnemyComponent::SpawnEnemy(const FVector& SpawnLocation, const TPair<
 		nullptr,
 		ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
                     				
-	if (Enemy && EnemyData.Value.StrengthToDistanceCurve && EnemyData.Value.SpeedToDistanceCurve)
+	if (IsValid(Enemy) && EnemyData.Value.StrengthToDistanceCurve && EnemyData.Value.SpeedToDistanceCurve)
 	{
 		Enemy->Type = EnemyData.Key;
 		Enemy->SetSpawnOverlapGameplayEffectClass(*OverlapGameplayEffectClasses.Find(EnemyData.Key));

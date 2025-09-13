@@ -32,34 +32,5 @@ void UKulkiAttributeSet::PreAttributeBaseChange(const FGameplayAttribute& Attrib
 	Super::PreAttributeBaseChange(Attribute, NewValue);
 }
 
-void UKulkiAttributeSet::SetEffectProperties(const FGameplayEffectModCallbackData& Data, FEffectProperties& OutProps) const
-{
-	OutProps.EffectContextHandle = Data.EffectSpec.GetContext();
-	OutProps.SourceASC = OutProps.EffectContextHandle.GetOriginalInstigatorAbilitySystemComponent();
 
-	if (IsValid(OutProps.SourceASC) && OutProps.SourceASC->AbilityActorInfo.IsValid() && IsValid(OutProps.SourceASC->GetAvatarActor()))
-	{
-		OutProps.SourceAvatarActor = OutProps.SourceASC->GetAvatarActor();
-		OutProps.SourceController = OutProps.SourceASC->AbilityActorInfo->PlayerController.Get();
-		if (!OutProps.SourceController && OutProps.SourceAvatarActor)
-		{
-			if (const APawn* Pawn = Cast<APawn>(OutProps.SourceAvatarActor))
-			{
-				OutProps.SourceController = Pawn->GetController();
-			}
-		}
-		if (OutProps.SourceController)
-		{
-			OutProps.SourcePawn = OutProps.SourceController->GetPawn();
-		}
-	}
-
-	if (Data.Target.AbilityActorInfo.IsValid() && Data.Target.AbilityActorInfo->AvatarActor.IsValid())
-	{
-		OutProps.TargetAvatarActor = Data.Target.GetAvatarActor();
-		OutProps.TargetController = Data.Target.AbilityActorInfo->PlayerController.Get();
-		OutProps.TargetPawn = Cast<APawn>(OutProps.TargetAvatarActor);
-		OutProps.TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(OutProps.TargetAvatarActor);
-	}
-}
 

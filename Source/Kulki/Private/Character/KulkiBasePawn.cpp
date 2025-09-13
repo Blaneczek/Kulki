@@ -78,11 +78,19 @@ void AKulkiBasePawn::SetKulkiPawnSize(const FOnAttributeChangeData& Data)
 {
 	const float NewScale = FMath::Clamp((Data.NewValue * SizeMultiplier), 0.5f, 1000.f);
 	SetActorScale3D(FVector(NewScale, NewScale, NewScale * 0.5));
+
+	SetKulkiMovementSpeed(Data.NewValue);
 }
 
 void AKulkiBasePawn::SetKulkiMovementSpeed(const FOnAttributeChangeData& Data)
 {
 	const float NewValue = BaseMovementSpeed + (Data.NewValue * SpeedMultiplier) - (AttributeSet->GetStrength() * SpeedPenaltyMultiplier);
+	FloatingPawnMovement->MaxSpeed = FMath::Clamp(NewValue, MinMovementSpeed, MaxMovementSpeed);
+}
+
+void AKulkiBasePawn::SetKulkiMovementSpeed(float Strength)
+{
+	const float NewValue = BaseMovementSpeed + (AttributeSet->GetSpeed() * SpeedMultiplier) - (Strength * SpeedPenaltyMultiplier);
 	FloatingPawnMovement->MaxSpeed = FMath::Clamp(NewValue, MinMovementSpeed, MaxMovementSpeed);
 }
 

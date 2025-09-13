@@ -15,40 +15,6 @@
 
 DECLARE_MULTICAST_DELEGATE(FOnStrengthReachedZero);
 
-USTRUCT()
-struct FEffectProperties
-{
-	GENERATED_BODY()
-
-	FEffectProperties(){}
-
-	FGameplayEffectContextHandle EffectContextHandle;
-
-	UPROPERTY()
-	TObjectPtr<UAbilitySystemComponent> SourceASC = nullptr;
-
-	UPROPERTY()
-	TObjectPtr<AActor> SourceAvatarActor = nullptr;
-
-	UPROPERTY()
-	TObjectPtr<AController> SourceController = nullptr;
-
-	UPROPERTY()
-	TObjectPtr<APawn> SourcePawn = nullptr;
-
-	UPROPERTY()
-	TObjectPtr<UAbilitySystemComponent> TargetASC = nullptr;;
-
-	UPROPERTY()
-	TObjectPtr<AActor> TargetAvatarActor = nullptr;
-
-	UPROPERTY()
-	TObjectPtr<AController> TargetController = nullptr;
-
-	UPROPERTY()
-	TObjectPtr<APawn> TargetPawn = nullptr;
-};
-
 template<class T>
 using TStaticFuncPtr = typename TBaseStaticDelegateInstance<T, FDefaultDelegateUserPolicy>::FFuncPtr;
 
@@ -84,7 +50,4 @@ public:
 	ATTRIBUTE_ACCESSORS(UKulkiAttributeSet, MaxSpeed);
 
 	FOnStrengthReachedZero OnAttributeReachedZero;
-	
-private:
-	void SetEffectProperties(const FGameplayEffectModCallbackData& Data, FEffectProperties& OutProps) const;
 };
