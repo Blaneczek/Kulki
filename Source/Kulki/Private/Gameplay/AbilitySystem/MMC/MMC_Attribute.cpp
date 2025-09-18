@@ -1,9 +1,9 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "AbilitySystem/MMC/MMC_Attribute.h"
+#include "Gameplay/AbilitySystem/MMC/MMC_Attribute.h"
 #include "AbilitySystemBlueprintLibrary.h"
-#include "AbilitySystem/KulkiAttributeSet.h"
+#include "Gameplay/AbilitySystem/KulkiAttributeSet.h"
 #include "Gameplay/KulkiGameplayTags.h"
 
 UMMC_Attribute::UMMC_Attribute()

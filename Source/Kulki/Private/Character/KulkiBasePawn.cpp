@@ -1,8 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Character/KulkiBasePawn.h"
-#include "AbilitySystem/KulkiAbilitySystemComponent.h"
-#include "AbilitySystem/KulkiAttributeSet.h"
+#include "Gameplay/AbilitySystem/KulkiAbilitySystemComponent.h"
+#include "Gameplay/AbilitySystem/KulkiAttributeSet.h"
 #include "Components/SphereComponent.h"
 #include "GameFramework/FloatingPawnMovement.h"
 

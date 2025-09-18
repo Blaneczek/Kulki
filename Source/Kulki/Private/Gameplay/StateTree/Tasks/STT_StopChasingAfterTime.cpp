@@ -2,7 +2,6 @@
 
 
 #include "Gameplay/StateTree/Tasks/STT_StopChasingAfterTime.h"
-
 #include "Character/KulkiEnemyPawn.h"
 
 USTT_StopChasingAfterTime::USTT_StopChasingAfterTime(const FObjectInitializer& ObjectInitializer)

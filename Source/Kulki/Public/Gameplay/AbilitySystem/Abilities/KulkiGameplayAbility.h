@@ -18,5 +18,5 @@ public:
 	UKulkiGameplayAbility();
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Kulki|Input")
-	FGameplayTag StartupInputTag;
+	FGameplayTag InputTag;
 };

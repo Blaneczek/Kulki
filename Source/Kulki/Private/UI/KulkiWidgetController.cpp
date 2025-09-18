@@ -2,7 +2,7 @@
 
 
 #include "UI/KulkiWidgetController.h"
-#include "AbilitySystem/KulkiAttributeSet.h"
+#include "Gameplay/AbilitySystem/KulkiAttributeSet.h"
 
 
 void UKulkiWidgetController::SetWidgetControllerParams(const FWidgetControllerParams& WCParams)

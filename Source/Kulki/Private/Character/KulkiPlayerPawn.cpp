@@ -3,7 +3,7 @@
 
 #include "Character/KulkiPlayerPawn.h"
 #include "AbilitySystemBlueprintLibrary.h"
-#include "AbilitySystem/KulkiAttributeSet.h"
+#include "Gameplay/AbilitySystem/KulkiAttributeSet.h"
 #include "Camera/CameraComponent.h"
 #include "Character/KulkiEnemyPawn.h"
 #include "Components/SphereComponent.h"

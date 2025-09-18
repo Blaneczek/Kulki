@@ -4,7 +4,9 @@
 #include "Player/KulkiPlayerController.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "Gameplay/AbilitySystem/KulkiAbilitySystemComponent.h"
 #include "Character/KulkiPlayerPawn.h"
+#include "Gameplay/KulkiGameplayTags.h"
 
 AKulkiPlayerController::AKulkiPlayerController()
 {
@@ -20,6 +22,15 @@ void AKulkiPlayerController::Tick(float DeltaTime)
 	{
 		FollowMouseCursor();
 	}
+}
+
+UKulkiAbilitySystemComponent* AKulkiPlayerController::GetASC()
+{
+	if (!PlayerASC)
+	{
+		PlayerASC = Cast<UKulkiAbilitySystemComponent>(PlayerPawn->GetAbilitySystemComponent());
+	}
+	return PlayerASC;
 }
 
 void AKulkiPlayerController::BeginPlay()
@@ -49,6 +60,7 @@ void AKulkiPlayerController::SetupInputComponent()
 
 	EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Started, this, &AKulkiPlayerController::StartPlayerInput);
 	EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Completed, this, &AKulkiPlayerController::StopPlayerInput);
+	EnhancedInputComponent->BindAction(AbilityAction, ETriggerEvent::Triggered, this, &AKulkiPlayerController::AbilityInput, KulkiGameplayTags::Input_Spacebar.GetTag());
 }
 
 void AKulkiPlayerController::OnPossess(APawn* InPawn)
@@ -68,9 +80,17 @@ void AKulkiPlayerController::StopPlayerInput()
 	bCanMove = false;	
 }
 
+void AKulkiPlayerController::AbilityInput(FGameplayTag InputTag)
+{
+	if (GetASC())
+	{
+		GetASC()->AbilityInputTagHeld(InputTag);
+	}
+}
+
 void AKulkiPlayerController::FollowMouseCursor()
 {
-	if (!IsValid(PlayerPawn))
+	if (!PlayerPawn)
 	{
 		return;
 	}

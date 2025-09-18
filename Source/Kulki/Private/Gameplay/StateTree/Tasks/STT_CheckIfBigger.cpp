@@ -2,7 +2,7 @@
 
 
 #include "Gameplay/StateTree/Tasks/STT_CheckIfBigger.h"
-#include "AbilitySystem/KulkiAttributeSet.h"
+#include "Gameplay/AbilitySystem/KulkiAttributeSet.h"
 #include "Character/KulkiEnemyPawn.h"
 
 USTT_CheckIfBigger::USTT_CheckIfBigger(const FObjectInitializer& ObjectInitializer)

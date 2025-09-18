@@ -6,6 +6,8 @@
 #include "GameFramework/PlayerController.h"
 #include "KulkiPlayerController.generated.h"
 
+struct FGameplayTag;
+class UKulkiAbilitySystemComponent;
 class AKulkiPlayerPawn;
 class UInputAction;
 class UInputMappingContext;
@@ -21,6 +23,8 @@ public:
 	AKulkiPlayerController();
 
 	virtual void Tick(float DeltaTime) override;
+
+	UKulkiAbilitySystemComponent* GetASC();
 	
 protected:
 	virtual void BeginPlay() override;
@@ -32,8 +36,10 @@ protected:
 private:
 	void StartPlayerInput();
 	void StopPlayerInput();
-
+	void AbilityInput(FGameplayTag InputTag);
+	
 	void FollowMouseCursor();
+
 	
 	UPROPERTY(EditAnywhere, Category="Kulki|Input")
 	TObjectPtr<UInputMappingContext> KulkiContext;
@@ -41,8 +47,14 @@ private:
 	UPROPERTY(EditAnywhere, Category="Kulki|Input")
 	TObjectPtr<UInputAction> MoveAction;
 
+	UPROPERTY(EditAnywhere, Category="Kulki|Input")
+	TObjectPtr<UInputAction> AbilityAction;
+	
 	UPROPERTY()
 	TObjectPtr<AKulkiPlayerPawn> PlayerPawn;
+
+	UPROPERTY()
+	TObjectPtr<UKulkiAbilitySystemComponent> PlayerASC;
 	
 	bool bCanMove;
 };

@@ -1,8 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "AbilitySystem/KulkiAttributeSet.h"
-#include "AbilitySystemBlueprintLibrary.h"
-#include "GameplayEffectExtension.h"
+#include "Gameplay/AbilitySystem/KulkiAttributeSet.h"
 #include "Gameplay/KulkiGameplayTags.h"
 
 UKulkiAttributeSet::UKulkiAttributeSet()

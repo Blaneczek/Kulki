@@ -1,8 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "AbilitySystem/KulkiAbilitySystemComponent.h"
-#include "AbilitySystem/Abilities/KulkiGameplayAbility.h"
+#include "Gameplay/AbilitySystem/KulkiAbilitySystemComponent.h"
+#include "Gameplay/AbilitySystem/Abilities/KulkiGameplayAbility.h"
 
 
 UKulkiAbilitySystemComponent::UKulkiAbilitySystemComponent()
@@ -18,7 +18,7 @@ void UKulkiAbilitySystemComponent::AddCharactersAbilities(const TArray<TSubclass
 		FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(AbilityClass, 1);
 		if (const UKulkiGameplayAbility* KulkiAbility = Cast<UKulkiGameplayAbility>(AbilitySpec.Ability))
 		{
-			AbilitySpec.GetDynamicSpecSourceTags().AddTag(KulkiAbility->StartupInputTag);
+			AbilitySpec.GetDynamicSpecSourceTags().AddTag(KulkiAbility->InputTag);
 			GiveAbility(AbilitySpec);
 		}
 	}
