@@ -9,9 +9,10 @@
 class USpringArmComponent;
 class UCameraComponent;
 
-DECLARE_DELEGATE(FOnImmunityActivation);
-DECLARE_DELEGATE(FOnImmunityDeactivation);
+DECLARE_MULTICAST_DELEGATE(FOnImmunityActivation);
+DECLARE_MULTICAST_DELEGATE(FOnImmunityDeactivation);
 DECLARE_DELEGATE(FOnEatableEnemyKilled);
+DECLARE_MULTICAST_DELEGATE(FOnStrengthChanged);
 
 /**
  * 
@@ -24,15 +25,18 @@ class KULKI_API AKulkiPlayerPawn : public AKulkiBasePawn
 public:
 	AKulkiPlayerPawn();
 	
+	bool IsImmune() const { return bIsImmune; }
+	
 	FOnImmunityActivation OnImmunityActivation;
 	FOnImmunityDeactivation OnImmunityDeactivation;
 	FOnEatableEnemyKilled OnEatableEnemyKilled;
+	FOnStrengthChanged OnStrengthChanged;
 	
 protected:
 	virtual void BeginPlay() override;
 
 	virtual void InitAbilityActorInfo() override;
-	
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Kulki")
 	TObjectPtr<UCameraComponent> Camera;
 	
@@ -49,7 +53,7 @@ protected:
 
 private:
 	UFUNCTION()
-	void OnOverlapAttack(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
+	void OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
 		int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
 	void OnPlayerLost();

@@ -8,7 +8,9 @@ public class Kulki : ModuleRules
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 	
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput", "NavigationSystem", "GameplayAbilities", "GameplayTags", "GameplayTasks" });
+		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", 
+			"EnhancedInput", "NavigationSystem", "GameplayAbilities", "GameplayTags", "GameplayTasks", "StateTreeModule",
+			"GameplayStateTreeModule", "AIModule" });
 
 		PrivateDependencyModuleNames.AddRange(new string[] { });
 

@@ -95,7 +95,7 @@ protected:
 	float SizeMultiplier = 0.1f;
 	
 private:
-	void SetKulkiPawnSize(const FOnAttributeChangeData& Data);
-	void SetKulkiMovementSpeed(const FOnAttributeChangeData& Data);
-	void SetKulkiMovementSpeed(float Strength);
+	virtual void SetKulkiPawnSize(const FOnAttributeChangeData& Data);
+	virtual void SetKulkiMovementSpeed(const FOnAttributeChangeData& Data);
+	virtual void SetKulkiMovementSpeed(float Strength);
 };

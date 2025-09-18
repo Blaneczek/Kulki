@@ -25,8 +25,6 @@ void UKulkiEnemyComponent::BindDelegatesFromPlayer()
 {
 	if (AKulkiPlayerPawn* PlayerPawn = Cast<AKulkiPlayerPawn>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0)))
 	{
-		PlayerPawn->OnImmunityActivation.BindUObject(this, &UKulkiEnemyComponent::StopChasingPlayer);
-		PlayerPawn->OnImmunityDeactivation.BindUObject(this, &UKulkiEnemyComponent::SetCanChasePlayer);
 		PlayerPawn->OnEatableEnemyKilled.BindUObject(this, &UKulkiEnemyComponent::EatableEnemyKilled);
 	}
 }
@@ -85,7 +83,7 @@ FVector UKulkiEnemyComponent::CalculateValidRandomLocation(const FVector& Player
 	OutRandomDistance = FMath::RandRange(DistanceRange.MinDistance, DistanceRange.MaxDistance);
 	
 	const FVector RandomLocationFromPlayer =
-		PlayerLocation + FVector(RandomDirection.X * OutRandomDistance,RandomDirection.Y * OutRandomDistance,92.f);
+		PlayerLocation + FVector(RandomDirection.X * OutRandomDistance,RandomDirection.Y * OutRandomDistance,42.f);
 
 	if (UNavigationSystemV1* NavSystem = UNavigationSystemV1::GetCurrent(GetWorld()))
 	{
@@ -93,7 +91,7 @@ FVector UKulkiEnemyComponent::CalculateValidRandomLocation(const FVector& Player
 		NavSystem->ProjectPointToNavigation(RandomLocationFromPlayer, SpawnNavLocation) ? OutFoundValidLocation = true : OutFoundValidLocation = false;
 	}
 
-	return FVector(RandomLocationFromPlayer.X, RandomLocationFromPlayer.Y, 92.f);
+	return FVector(RandomLocationFromPlayer.X, RandomLocationFromPlayer.Y, 42.f);
 }
 
 void UKulkiEnemyComponent::SpawnEnemy(const FVector& SpawnLocation, const TPair<EEnemyType, FSpawnEnemyData>& EnemyData, float RandomDistance, float DifficultyLevelScale)
@@ -123,29 +121,6 @@ void UKulkiEnemyComponent::SpawnEnemy(const FVector& SpawnLocation, const TPair<
 			NumberOfEatableEnemies++;
 		}
 	}				
-}
-
-void UKulkiEnemyComponent::StopChasingPlayer()
-{
-	for (AKulkiEnemyPawn* Enemy : Enemies)
-	{
-		if (IsValid(Enemy))
-		{
-			Enemy->SetState(EEnemyState::IDLE);
-			Enemy->bCanChase = false;
-		}
-	}
-}
-
-void UKulkiEnemyComponent::SetCanChasePlayer()
-{
-	for (AKulkiEnemyPawn* Enemy : Enemies)
-	{
-		if (IsValid(Enemy))
-		{
-			Enemy->bCanChase = true;
-		}
-	}
 }
 
 void UKulkiEnemyComponent::EatableEnemyKilled()

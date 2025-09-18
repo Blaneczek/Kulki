@@ -3,10 +3,22 @@
 
 #include "Character/KulkiEnemyPawn.h"
 #include "AbilitySystemComponent.h"
+#include "Components/SphereComponent.h"
 #include "Gameplay/KulkiGameplayTags.h"
 
 AKulkiEnemyPawn::AKulkiEnemyPawn()
 {
+	StartAICheckSphere = CreateDefaultSubobject<USphereComponent>(TEXT("StartAICheckSphere"));
+	StartAICheckSphere->SetupAttachment(RootComponent);
+
+	EndAICheckSphere = CreateDefaultSubobject<USphereComponent>(TEXT("EndAICheckSphere"));
+	EndAICheckSphere->SetupAttachment(RootComponent);
+
+	StartAvoidanceSphere = CreateDefaultSubobject<USphereComponent>(TEXT("StartAvoidanceSphere"));
+	StartAvoidanceSphere->SetupAttachment(RootComponent);
+
+	EndAvoidanceSphere = CreateDefaultSubobject<USphereComponent>(TEXT("EndAvoidanceSphere"));
+	EndAvoidanceSphere->SetupAttachment(RootComponent);
 }
 
 void AKulkiEnemyPawn::BeginPlay()
@@ -15,6 +27,11 @@ void AKulkiEnemyPawn::BeginPlay()
 
 	SetMeshColor();
 
+	StartAICheckSphere->OnComponentBeginOverlap.AddDynamic(this, &AKulkiEnemyPawn::OnStartAICheck);
+	EndAICheckSphere->OnComponentEndOverlap.AddDynamic(this, &AKulkiEnemyPawn::OnEndAICheck);
+
+	StartAvoidanceSphere->OnComponentBeginOverlap.AddDynamic(this, &AKulkiEnemyPawn::OnStartAvoidance);
+	EndAvoidanceSphere->OnComponentEndOverlap.AddDynamic(this, &AKulkiEnemyPawn::OnEndAvoidance);
 }
 
 void AKulkiEnemyPawn::SetSpawnAttributesValue(float Strength, float Speed)
@@ -29,6 +46,8 @@ void AKulkiEnemyPawn::SetSpawnAttributesValue(float Strength, float Speed)
 	GameplayEffectSpec.Data->SetSetByCallerMagnitude(KulkiGameplayTags::Attribute_Speed.GetTag(), Speed);
 
 	GetAbilitySystemComponent()->ApplyGameplayEffectSpecToTarget(*GameplayEffectSpec.Data.Get(), GetAbilitySystemComponent());
+
+	SetAISpheresSize();
 }
 
 void AKulkiEnemyPawn::SetSpawnOverlapGameplayEffectClass(TSubclassOf<UGameplayEffect> GameplayEffectClass)
@@ -44,6 +63,11 @@ void AKulkiEnemyPawn::ApplyOverlapEffect(UAbilitySystemComponent* TargetASC, flo
 	}
 
 	OutIsEatableEnemy = Type == EEnemyType::RED || Type == EEnemyType::YELLOW;
+
+	// If enemy is Purple and was smaller than player
+	bool bWasSmallerPurple = !OutIsEatableEnemy && Coefficient > 0.f;
+	
+	// If enemy is Purple decrease player's stats regardless size
 	Coefficient = OutIsEatableEnemy ? Coefficient : -1.f;
 	
 	FGameplayEffectContextHandle ContextHandle = GetAbilitySystemComponent()->MakeEffectContext();
@@ -53,9 +77,25 @@ void AKulkiEnemyPawn::ApplyOverlapEffect(UAbilitySystemComponent* TargetASC, flo
 	
 	GetAbilitySystemComponent()->ApplyGameplayEffectSpecToTarget(*GameplayEffectSpec.Data.Get(), TargetASC);
 
-	if (Coefficient > 0.f)
+	// Enemy was smaller than player
+	if (bWasSmallerPurple || Coefficient > 0.f)
 	{
 		Destroy();
+	}
+} 
+
+void AKulkiEnemyPawn::ResetNeighbours()
+{
+	AvoidanceNeighbours.Empty();
+	
+	TArray<AActor*> Neighbours;
+	StartAvoidanceSphere->GetOverlappingActors(Neighbours, AKulkiEnemyPawn::StaticClass());
+	for (AActor* Actor : Neighbours)
+	{
+		if (Actor != this)
+		{
+			AvoidanceNeighbours.Add(Actor);
+		}		
 	}
 }
 
@@ -86,6 +126,51 @@ void AKulkiEnemyPawn::SetMeshColor()
 	{
 		DynMaterial->SetVectorParameterValue("MeshColor", Color);
 		KulkiMesh->SetMaterial(0, DynMaterial);
+	}
+}
+
+void AKulkiEnemyPawn::SetAISpheresSize()
+{
+	const float Scale = GetActorScale().X;
+	StartAICheckSphere->SetSphereRadius((Scale * 10.f) + StartAICheckRadius);
+	EndAICheckSphere->SetSphereRadius((Scale * 10.f) + EndAICheckRadius);
+}
+
+void AKulkiEnemyPawn::OnStartAICheck(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+		UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	if (bIdleState && OtherActor)
+	{
+		OnCheckIfBigger.Broadcast();
+		bIdleState = false;
+	}
+}
+
+void AKulkiEnemyPawn::OnEndAICheck(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+		UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+	if (!bIdleState && OtherActor)
+	{
+		bIdleState = true;
+		OnBackToIdle.Broadcast();
+	}
+}
+
+void AKulkiEnemyPawn::OnStartAvoidance(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+		UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	if (!bIdleState && OtherActor)
+	{
+		AvoidanceNeighbours.Add(OtherActor);
+	}
+}
+
+void AKulkiEnemyPawn::OnEndAvoidance(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+		UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+	if (!bIdleState && OtherActor)
+	{
+		AvoidanceNeighbours.Remove(OtherActor);
 	}
 }
 

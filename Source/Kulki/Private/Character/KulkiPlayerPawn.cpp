@@ -31,8 +31,8 @@ void AKulkiPlayerPawn::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	AttackSphereCollision->OnComponentBeginOverlap.AddDynamic(this, &AKulkiPlayerPawn::OnOverlapAttack);
-	DefendSphereCollision->OnComponentBeginOverlap.AddDynamic(this, &AKulkiPlayerPawn::OnOverlapAttack);
+	AttackSphereCollision->OnComponentBeginOverlap.AddDynamic(this, &AKulkiPlayerPawn::OnOverlap);
+	DefendSphereCollision->OnComponentBeginOverlap.AddDynamic(this, &AKulkiPlayerPawn::OnOverlap);
 
 	DynamicMaterialInstance = UMaterialInstanceDynamic::Create(KulkiMesh->GetMaterial(0), this);
 }
@@ -52,7 +52,7 @@ void AKulkiPlayerPawn::InitAbilityActorInfo()
 	}	
 }
 
-void AKulkiPlayerPawn::OnOverlapAttack(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+void AKulkiPlayerPawn::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
                                        UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	if (bIsImmune)
@@ -101,7 +101,7 @@ void AKulkiPlayerPawn::OnPlayerLost()
 
 void AKulkiPlayerPawn::ActivateImmunity()
 {
-	OnImmunityActivation.ExecuteIfBound();	
+	OnImmunityActivation.Broadcast();
 	bIsImmune = true;
 
 	FLinearColor BaseColor = FLinearColor::Green;
@@ -121,7 +121,7 @@ void AKulkiPlayerPawn::ActivateImmunity()
 
 void AKulkiPlayerPawn::DeactivateImmunity(const FLinearColor Color)
 {
-	OnImmunityDeactivation.ExecuteIfBound();
+	OnImmunityDeactivation.Broadcast();
 	bIsImmune = false;
 	
 	if (IsValid(DynamicMaterialInstance))
@@ -146,3 +146,4 @@ void AKulkiPlayerPawn::EnemyHitApplyEffectToSelf(APawn* Enemy, TSubclassOf<UGame
 	
 	GetAbilitySystemComponent()->ApplyGameplayEffectSpecToTarget(*GameplayEffectSpec.Data.Get(), GetAbilitySystemComponent());
 }
+
