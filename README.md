@@ -1,5 +1,5 @@
 # Getting Started
-<sub>Unreal Engine version 5.5.4</sub>
+<sub>Unreal Engine version 5.6</sub>
 
 Clone the repository or download the ZIP, generate Visual Studio files, and compile using the IDE.
 
