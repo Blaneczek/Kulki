@@ -16,7 +16,6 @@ class KULKI_API USTE_EnemyEvaluator : public UStateTreeEvaluatorBlueprintBase
 {
 	GENERATED_BODY()
 public:
-	/** The owning Enemy Pawn (set at TreeStart) */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Context, meta=(AllowPrivateAccess="true"))
 	TObjectPtr<AKulkiEnemyPawn> Actor;
 	

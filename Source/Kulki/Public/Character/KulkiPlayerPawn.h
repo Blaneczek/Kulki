@@ -68,4 +68,7 @@ private:
 	TObjectPtr<UMaterialInstanceDynamic> DynamicMaterialInstance;
 	
 	bool bIsImmune = false;
+
+protected:
+	virtual void SetKulkiPawnSize(const FOnAttributeChangeData& Data) override;
 };

@@ -2,6 +2,8 @@
 
 
 #include "Player/KulkiPlayerController.h"
+
+#include "AbilitySystemBlueprintLibrary.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "Gameplay/AbilitySystem/KulkiAbilitySystemComponent.h"
@@ -28,7 +30,7 @@ UKulkiAbilitySystemComponent* AKulkiPlayerController::GetASC()
 {
 	if (!PlayerASC)
 	{
-		PlayerASC = Cast<UKulkiAbilitySystemComponent>(PlayerPawn->GetAbilitySystemComponent());
+		PlayerASC = Cast<UKulkiAbilitySystemComponent>(UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(GetPawn()));
 	}
 	return PlayerASC;
 }
@@ -60,7 +62,7 @@ void AKulkiPlayerController::SetupInputComponent()
 
 	EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Started, this, &AKulkiPlayerController::StartPlayerInput);
 	EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Completed, this, &AKulkiPlayerController::StopPlayerInput);
-	EnhancedInputComponent->BindAction(AbilityAction, ETriggerEvent::Triggered, this, &AKulkiPlayerController::AbilityInput, KulkiGameplayTags::Input_Spacebar.GetTag());
+	EnhancedInputComponent->BindAction(AbilityAction, ETriggerEvent::Started, this, &AKulkiPlayerController::AbilityInput, KulkiGameplayTags::Input_Spacebar.GetTag());
 }
 
 void AKulkiPlayerController::OnPossess(APawn* InPawn)

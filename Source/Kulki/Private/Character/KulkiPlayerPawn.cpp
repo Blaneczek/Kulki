@@ -101,9 +101,7 @@ void AKulkiPlayerPawn::OnPlayerLost()
 
 void AKulkiPlayerPawn::ActivateImmunity()
 {
-	OnImmunityActivation.Broadcast();
 	bIsImmune = true;
-
 	FLinearColor BaseColor = FLinearColor::Green;
 	if (IsValid(DynamicMaterialInstance))
 	{
@@ -117,18 +115,21 @@ void AKulkiPlayerPawn::ActivateImmunity()
 	FTimerDelegate ImmunityDelegate;
 	ImmunityDelegate.BindUObject(this, &AKulkiPlayerPawn::DeactivateImmunity, BaseColor);
 	GetWorldTimerManager().SetTimer(ImmunityTimer, ImmunityDelegate, ImmunityTime, false);
+	
+	OnImmunityActivation.Broadcast();
 }
 
 void AKulkiPlayerPawn::DeactivateImmunity(const FLinearColor Color)
-{
-	OnImmunityDeactivation.Broadcast();
+{	
 	bIsImmune = false;
 	
 	if (IsValid(DynamicMaterialInstance))
 	{
 		DynamicMaterialInstance->SetVectorParameterValue("MeshColor", Color);
 		KulkiMesh->SetMaterial(0, DynamicMaterialInstance);
-	}		
+	}
+	
+	OnImmunityDeactivation.Broadcast();	
 }
 
 void AKulkiPlayerPawn::EnemyHitApplyEffectToSelf(APawn* Enemy, TSubclassOf<UGameplayEffect> GameplayEffectClass, float Level, float Coefficient)
@@ -145,5 +146,11 @@ void AKulkiPlayerPawn::EnemyHitApplyEffectToSelf(APawn* Enemy, TSubclassOf<UGame
 	GameplayEffectSpec.Data->SetSetByCallerMagnitude(KulkiGameplayTags::GameplayEffect_Coefficient.GetTag(), Coefficient);
 	
 	GetAbilitySystemComponent()->ApplyGameplayEffectSpecToTarget(*GameplayEffectSpec.Data.Get(), GetAbilitySystemComponent());
+}
+
+void AKulkiPlayerPawn::SetKulkiPawnSize(const FOnAttributeChangeData& Data)
+{
+	Super::SetKulkiPawnSize(Data);
+	OnStrengthChanged.Broadcast();
 }
 

@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "AbilitySystemInterface.h"
+#include "Gameplay/AbilitySystem/KulkiAbilitySystemComponent.h"
 #include "GameFramework/Pawn.h"
 #include "KulkiBasePawn.generated.h"
 
@@ -25,7 +26,9 @@ public:
 
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override { return AbilitySystemComponent; }
 	UKulkiAttributeSet* GetAttributeSet() const { return AttributeSet; }
-		
+
+	UStaticMeshComponent* GetKulkiMesh() const { return KulkiMesh; };
+	
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -53,7 +56,7 @@ protected:
 	TObjectPtr<UFloatingPawnMovement> FloatingPawnMovement;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Kulki")
-	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
+	TObjectPtr<UKulkiAbilitySystemComponent> AbilitySystemComponent;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Kulki")
 	TObjectPtr<UKulkiAttributeSet> AttributeSet;
@@ -94,7 +97,7 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(UIMin="0.01", ClampMin="0.01"), Category="Kulki|Strength")
 	float SizeMultiplier = 0.1f;
 	
-private:
+protected:
 	virtual void SetKulkiPawnSize(const FOnAttributeChangeData& Data);
 	virtual void SetKulkiMovementSpeed(const FOnAttributeChangeData& Data);
 	virtual void SetKulkiMovementSpeed(float Strength);
