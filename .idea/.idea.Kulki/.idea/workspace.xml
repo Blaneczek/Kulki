@@ -14,41 +14,25 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="afbf4fc1-8513-469a-b1a5-ac1f5cec4871" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Source/Kulki/Private/Character/KulkiDoppelgangerPawn.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Source/Kulki/Private/Gameplay/AbilitySystem/AbilityTasks/TargetDataUnderCursor.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Source/Kulki/Private/Gameplay/StateTree/Tasks/GSTT_DoppelgangerManager.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Source/Kulki/Private/Gameplay/StateTree/Tasks/STT_MergeDoppelganger.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Source/Kulki/Private/Player/KulkiCameraComponent.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Source/Kulki/Public/Character/KulkiDoppelgangerPawn.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Source/Kulki/Public/Gameplay/AbilitySystem/AbilityTasks/TargetDataUnderCursor.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Source/Kulki/Public/Gameplay/StateTree/Tasks/GSTT_DoppelgangerManager.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Source/Kulki/Public/Gameplay/StateTree/Tasks/STT_MergeDoppelganger.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Source/Kulki/Public/Player/KulkiCameraComponent.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Kulki/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Kulki/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Blueprints/Character/Enemy/BP_DummyActor.uasset" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/Blueprints/Character/Enemy/BP_Enemy.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/Character/Enemy/BP_Enemy.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/Blueprints/Character/Player/BP_PlayerPawn.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/Character/Player/BP_PlayerPawn.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/Blueprints/GameMode/BP_GameMode.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/GameMode/BP_GameMode.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/Blueprints/Gameplay/AI/AIC_Enemy.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/Gameplay/AI/AIC_Enemy.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Blueprints/Gameplay/AI/NewBlueprint.uasset" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/Blueprints/Gameplay/AI/ST_EnemyAI.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/Gameplay/AI/ST_EnemyAI.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Blueprints/Gameplay/AI/test.uasset" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/Blueprints/Gameplay/AbilitySystem/GameplayEffect/Attributes/GE_Player_DefaultAttributes.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/Gameplay/AbilitySystem/GameplayEffect/Attributes/GE_Player_DefaultAttributes.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Blueprints/Player/BP_PlayerController.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/Player/BP_PlayerController.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Blueprints/Gameplay/Data/Spawn/DA_Spawn_Debug.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/Gameplay/Data/Spawn/DA_Spawn_Debug.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Kulki.sln.DotSettings.user" beforeDir="false" afterPath="$PROJECT_DIR$/Kulki.sln.DotSettings.user" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Kulki/Private/Character/KulkiBasePawn.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Kulki/Private/Character/KulkiBasePawn.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/Kulki/Private/Character/KulkiEnemyPawn.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Kulki/Private/Character/KulkiEnemyPawn.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/Kulki/Private/Character/KulkiPlayerPawn.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Kulki/Private/Character/KulkiPlayerPawn.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Kulki/Private/Gameplay/AbilitySystem/Abilities/KulkiDoppelganger.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Kulki/Private/Gameplay/AbilitySystem/Abilities/KulkiDoppelganger.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Kulki/Private/Gameplay/StateTree/KulkiAIController.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Kulki/Private/Gameplay/StateTree/KulkiAIController.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Kulki/Private/Gameplay/StateTree/Tasks/GSTT_GlobalManager.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Kulki/Private/Gameplay/StateTree/Tasks/GSTT_EnemyManager.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Kulki/Private/Player/KulkiPlayerController.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Kulki/Private/Player/KulkiPlayerController.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Kulki/Public/Character/KulkiBasePawn.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Kulki/Public/Character/KulkiBasePawn.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/Kulki/Private/Gameplay/StateTree/Evaluators/STE_EnemyEvaluator.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Kulki/Private/Gameplay/StateTree/Evaluators/STE_EnemyEvaluator.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/Kulki/Private/Gameplay/StateTree/Evaluators/STE_PlayerEvaluator.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Kulki/Private/Gameplay/StateTree/Evaluators/STE_PlayerEvaluator.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/Kulki/Private/Gameplay/StateTree/Tasks/GSTT_EnemyManager.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Kulki/Private/Gameplay/StateTree/Tasks/GSTT_EnemyManager.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/Kulki/Private/Gameplay/StateTree/Tasks/STT_RunEQSTick.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Kulki/Private/Gameplay/StateTree/Tasks/STT_RunEQSTick.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/Kulki/Private/Player/KulkiCameraComponent.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Kulki/Private/Component/KulkiCameraComponent.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/Kulki/Public/Character/KulkiPlayerPawn.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Kulki/Public/Character/KulkiPlayerPawn.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Kulki/Public/Gameplay/AbilitySystem/Abilities/KulkiDoppelganger.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Kulki/Public/Gameplay/AbilitySystem/Abilities/KulkiDoppelganger.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Kulki/Public/Gameplay/StateTree/Evaluators/STE_EnemyEvaluator.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Kulki/Public/Gameplay/StateTree/Evaluators/STE_EnemyEvaluator.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Kulki/Public/Gameplay/StateTree/KulkiAIController.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Kulki/Public/Gameplay/StateTree/KulkiAIController.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Kulki/Public/Gameplay/StateTree/Tasks/GSTT_GlobalManager.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Kulki/Public/Gameplay/StateTree/Tasks/GSTT_EnemyManager.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/Kulki/Public/Gameplay/StateTree/Tasks/STT_RunEQSTick.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Kulki/Public/Gameplay/StateTree/Tasks/STT_RunEQSTick.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/Kulki/Public/Player/KulkiCameraComponent.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Kulki/Public/Component/KulkiCameraComponent.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -62,70 +46,7 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="cidr-memory-view://9" root0="FORCE_HIGHLIGHTING" />
+    <setting file="cidr-memory-view://3" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://C:/Program Files (x86)/Windows Kits/10/Include/10.0.22000.0/ucrt/corecrt_math.h" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.42.34433/include/atomic" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../ActionRPG/Source/ActionRPG/Private/RPGPlayerControllerBase.cpp" root0="SKIP_HIGHLIGHTING" />
@@ -272,11 +193,13 @@
     <setting file="file://$PROJECT_DIR$/../../../UE/UE_5.6/Engine/Source/Runtime/AIModule/Classes/EnvironmentQuery/EnvQueryContext.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../../UE/UE_5.6/Engine/Source/Runtime/AIModule/Classes/EnvironmentQuery/EnvQueryManager.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../../UE/UE_5.6/Engine/Source/Runtime/AIModule/Classes/EnvironmentQuery/EnvQueryTypes.h" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../../../UE/UE_5.6/Engine/Source/Runtime/AIModule/Classes/Tasks/AITask_MoveTo.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../../UE/UE_5.6/Engine/Source/Runtime/AIModule/Private/EnvironmentQuery/Contexts/EnvQueryContext_BlueprintBase.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../../UE/UE_5.6/Engine/Source/Runtime/AIModule/Private/EnvironmentQuery/EnvQueryContext.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../../UE/UE_5.6/Engine/Source/Runtime/AIModule/Private/EnvironmentQuery/EnvQueryInstance.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../../UE/UE_5.6/Engine/Source/Runtime/AIModule/Private/EnvironmentQuery/EnvQueryManager.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../../UE/UE_5.6/Engine/Source/Runtime/AIModule/Private/EnvironmentQuery/EnvQueryTypes.cpp" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../../../UE/UE_5.6/Engine/Source/Runtime/AIModule/Private/Tasks/AITask_MoveTo.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../../UE/UE_5.6/Engine/Source/Runtime/Core/Private/Logging/StructuredLog.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../../UE/UE_5.6/Engine/Source/Runtime/Core/Private/Misc/CoreGlobals.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../../UE/UE_5.6/Engine/Source/Runtime/Core/Private/UObject/UnrealNames.cpp" root0="FORCE_HIGHLIGHTING" />
@@ -657,6 +580,11 @@
       <workItem from="1758552979214" duration="2875000" />
       <workItem from="1758798160440" duration="2465000" />
       <workItem from="1758802195559" duration="8837000" />
+      <workItem from="1758980054171" duration="6202000" />
+      <workItem from="1758990196731" duration="212000" />
+      <workItem from="1758990580763" duration="6803000" />
+      <workItem from="1758997505963" duration="2472000" />
+      <workItem from="1759045419215" duration="6888000" />
     </task>
     <servers />
   </component>
@@ -665,6 +593,29 @@
   </component>
   <component name="UnityCheckinConfiguration" checkUnsavedScenes="true" />
   <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="main" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
   </component>

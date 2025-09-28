@@ -2,7 +2,6 @@
 
 
 #include "Gameplay/StateTree/Tasks/STT_RunEQSTick.h"
-
 #include "EnvironmentQuery/EnvQueryManager.h"
 
 USTT_RunEQSTick::USTT_RunEQSTick(const FObjectInitializer& ObjectInitializer)
@@ -17,16 +16,24 @@ USTT_RunEQSTick::USTT_RunEQSTick(const FObjectInitializer& ObjectInitializer)
 EStateTreeRunStatus USTT_RunEQSTick::EnterState(FStateTreeExecutionContext& Context,
                                                 const FStateTreeTransitionResult& Transition)
 {
+	Super::EnterState(Context, Transition);
+	
 	if (EnvQuery && Actor)
 	{
 		EnvQueryRequest = FEnvQueryRequest(EnvQuery,	Actor);
+		EnvQueryRequest.Execute(EEnvQueryRunMode::SingleResult, this, &USTT_RunEQSTick::QueryFinished);
 	}
 	else
 	{
 		return EStateTreeRunStatus::Failed;
 	}
-		
-	return Super::EnterState(Context, Transition);
+
+	if (OutLocation == FVector::ZeroVector)
+	{
+		return EStateTreeRunStatus::Failed;
+	}
+	
+	return EStateTreeRunStatus::Running;
 }
 
 EStateTreeRunStatus USTT_RunEQSTick::Tick(FStateTreeExecutionContext& Context, const float DeltaTime)
@@ -34,7 +41,7 @@ EStateTreeRunStatus USTT_RunEQSTick::Tick(FStateTreeExecutionContext& Context, c
 	Super::Tick(Context, DeltaTime);
 	
 	EnvQueryRequest.Execute(EEnvQueryRunMode::SingleResult, this, &USTT_RunEQSTick::QueryFinished);
-	
+
 	return EStateTreeRunStatus::Running;
 }
 

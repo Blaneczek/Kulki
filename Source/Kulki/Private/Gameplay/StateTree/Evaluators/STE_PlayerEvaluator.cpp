@@ -21,6 +21,13 @@ void USTE_PlayerEvaluator::TreeStart(FStateTreeExecutionContext& Context)
 void USTE_PlayerEvaluator::TreeStop(FStateTreeExecutionContext& Context)
 {
 	Super::TreeStop(Context);
+
+	if (PlayerPawn)
+	{
+		PlayerPawn->OnImmunityActivation.RemoveAll(this);
+		PlayerPawn->OnImmunityDeactivation.RemoveAll(this);
+		PlayerPawn->OnStrengthChanged.RemoveAll(this);
+	}
 	
 	PlayerPawn = nullptr;
 	PlayerAttributeSet = nullptr;

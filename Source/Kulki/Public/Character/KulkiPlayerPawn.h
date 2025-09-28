@@ -6,8 +6,8 @@
 #include "Character/KulkiBasePawn.h"
 #include "KulkiPlayerPawn.generated.h"
 
+class UKulkiCameraComponent;
 class USpringArmComponent;
-class UCameraComponent;
 
 DECLARE_MULTICAST_DELEGATE(FOnImmunityActivation);
 DECLARE_MULTICAST_DELEGATE(FOnImmunityDeactivation);
@@ -38,7 +38,7 @@ protected:
 	virtual void InitAbilityActorInfo() override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Kulki")
-	TObjectPtr<UCameraComponent> Camera;
+	TObjectPtr<UKulkiCameraComponent> Camera;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Kulki")
 	TObjectPtr<USpringArmComponent> CameraArm;

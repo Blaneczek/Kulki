@@ -22,6 +22,7 @@ EStateTreeRunStatus UGSTT_EnemyManager::EnterState(FStateTreeExecutionContext& C
 	return EStateTreeRunStatus::Running;
 }
 
+
 void UGSTT_EnemyManager::BindEnemyDelegates()
 {
 	if (Actor)
@@ -31,14 +32,14 @@ void UGSTT_EnemyManager::BindEnemyDelegates()
 			if (PlayerPawn && !PlayerPawn->IsImmune())
 			{
 				BroadcastDelegate(CheckIfBigger);
+				
 			}		
 		});
 		Actor->OnBackToIdle.AddWeakLambda(this, [this]()
 		{
 			BroadcastDelegate(BackToIdle);
 		});
-	}
-	
+	}	
 }
 
 void UGSTT_EnemyManager::BindPlayerDelegates()
@@ -67,7 +68,7 @@ void UGSTT_EnemyManager::BindPlayerDelegates()
 			}	
 		});
 		auto a = PlayerPawn->OnImmunityActivation.GetAllocatedSize();
-		UE_LOG(LogTemp, Warning, TEXT(": %llu"), a);
+		UE_LOG(LogTemp, Warning, TEXT("przed: %llu"), a);
 	}
 }
 

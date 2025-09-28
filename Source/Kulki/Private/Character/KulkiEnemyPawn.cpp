@@ -3,6 +3,8 @@
 
 #include "Character/KulkiEnemyPawn.h"
 #include "AbilitySystemComponent.h"
+#include "AIController.h"
+#include "BrainComponent.h"
 #include "Components/SphereComponent.h"
 #include "Gameplay/KulkiGameplayTags.h"
 
@@ -79,8 +81,12 @@ void AKulkiEnemyPawn::ApplyOverlapEffect(UAbilitySystemComponent* TargetASC, flo
 
 	// Enemy was smaller than player
 	if (bWasSmallerPurple || Coefficient > 0.f)
-	{
-		Destroy();
+	{		
+		if (AAIController* AIC = Cast<AAIController>(GetController()))
+		{
+			AIC->GetBrainComponent()->StopLogic("");		
+		}
+		SetLifeSpan(0.01f);
 	}
 } 
 

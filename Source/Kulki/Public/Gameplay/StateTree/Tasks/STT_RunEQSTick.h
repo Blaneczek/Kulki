@@ -27,6 +27,7 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Output)
 	FVector OutLocation;
+
 	
 protected:
 	virtual EStateTreeRunStatus EnterState(FStateTreeExecutionContext& Context, const FStateTreeTransitionResult& Transition) override;

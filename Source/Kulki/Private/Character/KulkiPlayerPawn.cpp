@@ -4,8 +4,8 @@
 #include "Character/KulkiPlayerPawn.h"
 #include "AbilitySystemBlueprintLibrary.h"
 #include "Gameplay/AbilitySystem/KulkiAttributeSet.h"
-#include "Camera/CameraComponent.h"
 #include "Character/KulkiEnemyPawn.h"
+#include "Component/KulkiCameraComponent.h"
 #include "Components/SphereComponent.h"
 #include "GameFramework/FloatingPawnMovement.h"
 #include "GameFramework/SpringArmComponent.h"
@@ -22,7 +22,7 @@ AKulkiPlayerPawn::AKulkiPlayerPawn()
 	CameraArm->SetupAttachment(RootComponent);
 	CameraArm->SetRelativeRotation(FRotator(-90.f, 0.0f, 0.0f));
 	
-	Camera = CreateDefaultSubobject<UCameraComponent>("Camera");
+	Camera = CreateDefaultSubobject<UKulkiCameraComponent>("Camera");
 	Camera->SetupAttachment(CameraArm);
 	Camera->ProjectionMode = ECameraProjectionMode::Orthographic;
 }
@@ -152,5 +152,6 @@ void AKulkiPlayerPawn::SetKulkiPawnSize(const FOnAttributeChangeData& Data)
 {
 	Super::SetKulkiPawnSize(Data);
 	OnStrengthChanged.Broadcast();
+	Camera->ChangeOrtoWidth(Data.NewValue);
 }
 
