@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright (c) 2025 Dawid Szoldra. All rights reserved.
 
 #include "Character/KulkiBasePawn.h"
 #include "Gameplay/AbilitySystem/KulkiAttributeSet.h"
@@ -81,7 +81,7 @@ void AKulkiBasePawn::SetKulkiPawnSize(const FOnAttributeChangeData& Data)
 	const float NewScale = FMath::Clamp((Data.NewValue * SizeMultiplier), 0.5f, 1000.f);
 	SetActorScale3D(FVector(NewScale, NewScale, NewScale * 0.5));
 
-	SetKulkiMovementSpeed(Data.NewValue);
+	SetKulkiSizePenaltyMovementSpeed(Data.NewValue);
 }
 
 void AKulkiBasePawn::SetKulkiMovementSpeed(const FOnAttributeChangeData& Data)
@@ -90,7 +90,7 @@ void AKulkiBasePawn::SetKulkiMovementSpeed(const FOnAttributeChangeData& Data)
 	FloatingPawnMovement->MaxSpeed = FMath::Clamp(NewValue, MinMovementSpeed, MaxMovementSpeed);
 }
 
-void AKulkiBasePawn::SetKulkiMovementSpeed(float Strength)
+void AKulkiBasePawn::SetKulkiSizePenaltyMovementSpeed(float Strength)
 {
 	const float NewValue = BaseMovementSpeed + (AttributeSet->GetSpeed() * SpeedMultiplier) - (Strength * SpeedPenaltyMultiplier);
 	FloatingPawnMovement->MaxSpeed = FMath::Clamp(NewValue, MinMovementSpeed, MaxMovementSpeed);

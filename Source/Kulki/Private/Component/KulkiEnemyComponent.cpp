@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright (c) 2025 Dawid Szoldra. All rights reserved.
 
 
 #include "Component/KulkiEnemyComponent.h"
@@ -103,7 +103,7 @@ void UKulkiEnemyComponent::SpawnEnemy(const FVector& SpawnLocation, const TPair<
 		SpawnTransform,
 		GetOwner(),
 		nullptr,
-		ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
+		ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn);
                     				
 	if (IsValid(Enemy) && EnemyData.Value.StrengthToDistanceCurve && EnemyData.Value.SpeedToDistanceCurve)
 	{

@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright (c) 2025 Dawid Szoldra. All rights reserved.
 
 
 #include "Character/KulkiEnemyPawn.h"
@@ -7,6 +7,7 @@
 #include "BrainComponent.h"
 #include "Components/SphereComponent.h"
 #include "Gameplay/KulkiGameplayTags.h"
+#include "Gameplay/AbilitySystem/KulkiAttributeSet.h"
 
 AKulkiEnemyPawn::AKulkiEnemyPawn()
 {
@@ -88,7 +89,12 @@ void AKulkiEnemyPawn::ApplyOverlapEffect(UAbilitySystemComponent* TargetASC, flo
 		}
 		SetLifeSpan(0.01f);
 	}
-} 
+}
+
+float AKulkiEnemyPawn::GetStrength() const
+{
+	return AttributeSet ? AttributeSet->GetStrength() : 0.f;
+}
 
 void AKulkiEnemyPawn::ResetNeighbours()
 {

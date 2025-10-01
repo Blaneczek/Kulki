@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright (c) 2025 Dawid Szoldra. All rights reserved.
 
 
 #include "Character/KulkiDoppelgangerPawn.h"
@@ -33,16 +33,17 @@ void AKulkiDoppelgangerPawn::MergeWithOwner()
 	FGameplayEffectContextHandle ContextHandle = GetAbilitySystemComponent()->MakeEffectContext();
 	ContextHandle.AddSourceObject(this);
 	const FGameplayEffectSpecHandle GameplayEffectSpec = GetAbilitySystemComponent()->MakeOutgoingSpec(MergeEffectClass, 1.f, ContextHandle);
-	GetAbilitySystemComponent()->ApplyGameplayEffectSpecToTarget(*GameplayEffectSpec.Data.Get(), UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(OwnerActor.Get()));
+	UAbilitySystemComponent* OwnerASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(OwnerActor.Get());
+	GetAbilitySystemComponent()->ApplyGameplayEffectSpecToTarget(*GameplayEffectSpec.Data.Get(), OwnerASC);
 	
 	SetLifeSpan(0.01f);
 }
-
 
 void AKulkiDoppelgangerPawn::BeginPlay()
 {
 	Super::BeginPlay();
 
+	// Enable merging
 	FTimerHandle MergeHandle;
 	FTimerDelegate MergeDelegate;
 	MergeDelegate.BindWeakLambda(this, [this]()
@@ -52,6 +53,7 @@ void AKulkiDoppelgangerPawn::BeginPlay()
 	});
 	GetWorldTimerManager().SetTimer(MergeHandle, MergeDelegate, MergeTime, false);
 
+	// Disable physics after being "launched" by owner
 	FTimerHandle ImpulseHandle;
 	FTimerDelegate ImpulseDelegate;
 	ImpulseDelegate.BindWeakLambda(this, [this]()
@@ -73,27 +75,25 @@ void AKulkiDoppelgangerPawn::OnOverlap(UPrimitiveComponent* OverlappedComponent,
 		return;
 	}
 	
-	bool bFoundStrengthAttribute = false;
-	const float EnemyStrength = UAbilitySystemBlueprintLibrary::GetFloatAttribute(OtherActor, UKulkiAttributeSet::GetStrengthAttribute(), bFoundStrengthAttribute);
-	if (bFoundStrengthAttribute)
+	const float EnemyStrength = CombatInterface->GetStrength();
+	float Coefficient = -1.f;
+	if (AttributeSet->GetStrength() >= EnemyStrength)
 	{
-		float Coefficient = -1.f;
-		if (AttributeSet->GetStrength() >= EnemyStrength)
+		Coefficient = 1.f;
+	}
+	
+	bool bEatableEnemy = false;
+	CombatInterface->ApplyOverlapEffect(GetAbilitySystemComponent(), Coefficient, bEatableEnemy);
+	if (Coefficient > 0.f)
+	{
+		const AKulkiPlayerPawn* Player = Cast<AKulkiPlayerPawn>(OwnerActor.Get());
+		if (bEatableEnemy && Player)
 		{
-			Coefficient = 1.f;
+			Player->OnEatableEnemyKilled.ExecuteIfBound();			
 		}
-		bool bEatableEnemy = false;
-		CombatInterface->ApplyOverlapEffect(GetAbilitySystemComponent(), Coefficient, bEatableEnemy);
-		if (Coefficient > 0.f)
-		{
-			if (const AKulkiPlayerPawn* Player = Cast<AKulkiPlayerPawn>(OwnerActor.Get()); bEatableEnemy && Player)
-			{
-				Player->OnEatableEnemyKilled.ExecuteIfBound();			
-			}
-		}
-		else
-		{
-			SetLifeSpan(0.01f);
-		}
+	}
+	else
+	{
+		SetLifeSpan(0.01f);
 	}
 }

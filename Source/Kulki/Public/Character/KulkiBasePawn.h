@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright (c) 2025 Dawid Szoldra. All rights reserved.
 
 #pragma once
 
@@ -26,7 +26,6 @@ public:
 
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override { return AbilitySystemComponent; }
 	UKulkiAttributeSet* GetAttributeSet() const { return AttributeSet; }
-
 	UStaticMeshComponent* GetKulkiMesh() const { return KulkiMesh; };
 	
 protected:
@@ -34,12 +33,15 @@ protected:
 	virtual void BeginPlay() override;
 
 	virtual void InitAbilityActorInfo();
-
 	void InitDefaultAttributes();
-	
+	void AddCharacterAbilities();
 	void ApplyEffectToSelf(TSubclassOf<UGameplayEffect> GameplayEffectClass, float Level);
 
-	void AddCharacterAbilities();
+	virtual void SetKulkiPawnSize(const FOnAttributeChangeData& Data);
+	virtual void SetKulkiMovementSpeed(const FOnAttributeChangeData& Data);
+
+	/* As Strength increases, movement speed decreases. */
+	virtual void SetKulkiSizePenaltyMovementSpeed(float Strength);
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Kulki")
 	TObjectPtr<UStaticMeshComponent> KulkiMesh;
@@ -61,6 +63,7 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Kulki")
 	TObjectPtr<UKulkiAttributeSet> AttributeSet;
 
+	/* Gameplay Effect used to set default values of attributes. */
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category="Kulki|Attributes")
 	TSubclassOf<UGameplayEffect> DefaultAttributes;
 
@@ -97,8 +100,4 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(UIMin="0.01", ClampMin="0.01"), Category="Kulki|Strength")
 	float SizeMultiplier = 0.1f;
 	
-protected:
-	virtual void SetKulkiPawnSize(const FOnAttributeChangeData& Data);
-	virtual void SetKulkiMovementSpeed(const FOnAttributeChangeData& Data);
-	virtual void SetKulkiMovementSpeed(float Strength);
 };

@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright (c) 2025 Dawid Szoldra. All rights reserved.
 
 #pragma once
 
@@ -32,9 +32,12 @@ public:
 
 	void SetSpawnAttributesValue(float Strength, float Speed);	
 	void SetSpawnOverlapGameplayEffectClass(TSubclassOf<UGameplayEffect> GameplayEffectClass);
-	
-	virtual void ApplyOverlapEffect(UAbilitySystemComponent* TargetASC, float Coefficient, bool& OutIsEatableEnemy) override;
 
+	/* IKulkiCombatInterface */
+	virtual void ApplyOverlapEffect(UAbilitySystemComponent* TargetASC, float Coefficient, bool& OutIsEatableEnemy) override;
+	virtual float GetStrength() const override;
+	/* */
+	
 	void ResetNeighbours();
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Kulki")

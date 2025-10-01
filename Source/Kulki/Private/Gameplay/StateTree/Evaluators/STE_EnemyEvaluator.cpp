@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright (c) 2025 Dawid Szoldra. All rights reserved.
 
 
 #include "Gameplay/StateTree/Evaluators/STE_EnemyEvaluator.h"

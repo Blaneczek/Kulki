@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright (c) 2025 Dawid Szoldra. All rights reserved.
 
 
 #include "Gameplay/StateTree/Tasks/STT_RunEQSTick.h"
@@ -28,6 +28,7 @@ EStateTreeRunStatus USTT_RunEQSTick::EnterState(FStateTreeExecutionContext& Cont
 		return EStateTreeRunStatus::Failed;
 	}
 
+	// To prevent the pawn from moving to vector 0,0,0 before query is finished
 	if (OutLocation == FVector::ZeroVector)
 	{
 		return EStateTreeRunStatus::Failed;
