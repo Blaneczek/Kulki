@@ -16,8 +16,10 @@ USTT_GetRandomLocation::USTT_GetRandomLocation(const FObjectInitializer& ObjectI
 EStateTreeRunStatus USTT_GetRandomLocation::EnterState(FStateTreeExecutionContext& Context,
                                                        const FStateTreeTransitionResult& Transition)
 {
+	Super::EnterState(Context, Transition);
+	
 	//DrawDebugSphere(GetWorld(), OriginLocation, RadiusFromOrigin, 15, FColor::White, false, 30.f);
-	if (UNavigationSystemV1* NavSys = FNavigationSystem::GetCurrent<UNavigationSystemV1>(GetWorld()))
+	if (const UNavigationSystemV1* NavSys = FNavigationSystem::GetCurrent<UNavigationSystemV1>(GetWorld()))
 	{
 		FNavLocation ResultLocation;
         NavSys->GetRandomReachablePointInRadius(OriginLocation, RadiusFromOrigin, ResultLocation);
@@ -28,5 +30,5 @@ EStateTreeRunStatus USTT_GetRandomLocation::EnterState(FStateTreeExecutionContex
 		return EStateTreeRunStatus::Failed;
 	}
 	
-	return Super::EnterState(Context, Transition);
+	return EStateTreeRunStatus::Running;
 }

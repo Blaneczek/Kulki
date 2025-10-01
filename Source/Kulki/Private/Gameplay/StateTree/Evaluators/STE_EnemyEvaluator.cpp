@@ -21,12 +21,6 @@ void USTE_EnemyEvaluator::TreeStop(FStateTreeExecutionContext& Context)
 {
 	Super::TreeStop(Context);
 
-	if (Actor)
-	{
-		Actor->OnCheckIfBigger.RemoveAll(this);
-		Actor->OnBackToIdle.RemoveAll(this);
-	}
-	
 	Actor = nullptr;
 	EnemyAttributeSet = nullptr;
 	SpawnLocation = FVector::ZeroVector;

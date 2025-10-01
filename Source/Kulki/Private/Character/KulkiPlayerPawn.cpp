@@ -27,6 +27,14 @@ AKulkiPlayerPawn::AKulkiPlayerPawn()
 	Camera->ProjectionMode = ECameraProjectionMode::Orthographic;
 }
 
+void AKulkiPlayerPawn::PossessedBy(AController* NewController)
+{
+	Super::PossessedBy(NewController);
+
+	InitAbilityActorInfo();
+	AddAbilities();
+}
+
 void AKulkiPlayerPawn::BeginPlay()
 {
 	Super::BeginPlay();
@@ -43,6 +51,9 @@ void AKulkiPlayerPawn::InitAbilityActorInfo()
 
 	AttributeSet->OnAttributeReachedZero.AddUObject(this, &AKulkiPlayerPawn::OnPlayerLost);
 	
+	InitDefaultAttributes();
+		
+	// Create UI
 	if (AKulkiPlayerController* KulkiPC = Cast<AKulkiPlayerController>(GetController()))
 	{
 		if (AKulkiHUD* KulkiHUD = Cast<AKulkiHUD>(KulkiPC->GetHUD()))
@@ -52,39 +63,49 @@ void AKulkiPlayerPawn::InitAbilityActorInfo()
 	}	
 }
 
+void AKulkiPlayerPawn::AddAbilities()
+{
+	if (AbilitySystemComponent)
+	{
+		AbilitySystemComponent->AddCharactersAbilities(StartupAbilities);
+	}	
+}
+
+void AKulkiPlayerPawn::InitDefaultAttributes()
+{
+	if (DefaultAttributes)
+	{
+		ApplyEffectToSelf(DefaultAttributes, 1.f);
+	}	
+}
+
 void AKulkiPlayerPawn::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
                                        UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
-{
-	if (bIsImmune)
-	{
-		return;
-	}
-	
+{	
 	IKulkiCombatInterface* CombatInterface = Cast<IKulkiCombatInterface>(OtherActor);
-	if (!CombatInterface)
+	if (bIsImmune || !CombatInterface)
 	{
 		return;
 	}
 	
-	bool bFoundStrengthAttribute = false;
-	const float EnemyStrength = UAbilitySystemBlueprintLibrary::GetFloatAttribute(OtherActor, UKulkiAttributeSet::GetStrengthAttribute(), bFoundStrengthAttribute);
-	if (bFoundStrengthAttribute)
+	const float EnemyStrength = CombatInterface->GetStrength();
+	float Coefficient = -1.f;
+
+	// If Player is bigger, coefficient is positive to increase Player's attributes
+    if (AttributeSet->GetStrength() >= EnemyStrength)
+    {
+        Coefficient = 1.f;
+    }
+	
+	bool bEatableEnemy = false;
+	CombatInterface->ApplyOverlapEffect(GetAbilitySystemComponent(), Coefficient, bEatableEnemy);
+	if (Coefficient > 0.f)
 	{
-		float Coefficient = -1.f;
-        if (AttributeSet->GetStrength() >= EnemyStrength)
-        {
-        	Coefficient = 1.f;
-        }
-		bool bEatableEnemy = false;
-		CombatInterface->ApplyOverlapEffect(GetAbilitySystemComponent(), Coefficient, bEatableEnemy);
-		if (Coefficient > 0.f)
-		{
-			if (bEatableEnemy) OnEatableEnemyKilled.ExecuteIfBound();
-		}
-		else
-		{
-			ActivateImmunity();
-		}
+		if (bEatableEnemy) OnEatableEnemyKilled.ExecuteIfBound();
+	}
+	else
+	{
+		ActivateImmunity();
 	}
 }
 
@@ -103,9 +124,10 @@ void AKulkiPlayerPawn::ActivateImmunity()
 {
 	bIsImmune = true;
 	FLinearColor BaseColor = FLinearColor::Green;
-	if (IsValid(DynamicMaterialInstance))
+	
+	if (DynamicMaterialInstance)
 	{
-		FMaterialParameterInfo ParamInfo = FMaterialParameterInfo(TEXT("MeshColor"));
+		const FMaterialParameterInfo ParamInfo = FMaterialParameterInfo(TEXT("MeshColor"));
 		DynamicMaterialInstance->GetVectorParameterValue(ParamInfo, BaseColor);
 		DynamicMaterialInstance->SetVectorParameterValue("MeshColor", ImmunityColor);
 		KulkiMesh->SetMaterial(0, DynamicMaterialInstance);
@@ -123,7 +145,7 @@ void AKulkiPlayerPawn::DeactivateImmunity(const FLinearColor Color)
 {	
 	bIsImmune = false;
 	
-	if (IsValid(DynamicMaterialInstance))
+	if (DynamicMaterialInstance)
 	{
 		DynamicMaterialInstance->SetVectorParameterValue("MeshColor", Color);
 		KulkiMesh->SetMaterial(0, DynamicMaterialInstance);
@@ -151,6 +173,7 @@ void AKulkiPlayerPawn::EnemyHitApplyEffectToSelf(APawn* Enemy, TSubclassOf<UGame
 void AKulkiPlayerPawn::SetKulkiPawnSize(const FOnAttributeChangeData& Data)
 {
 	Super::SetKulkiPawnSize(Data);
+	
 	OnStrengthChanged.Broadcast();
 	Camera->ChangeOrtoWidth(Data.NewValue);
 }

@@ -9,7 +9,7 @@
 
 class AKulkiEnemyPawn;
 
-DECLARE_MULTICAST_DELEGATE(FOnAllEatableEnemyKilled);
+DECLARE_DELEGATE(FOnAllEatableEnemyKilled);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class KULKI_API UKulkiEnemyComponent : public UActorComponent

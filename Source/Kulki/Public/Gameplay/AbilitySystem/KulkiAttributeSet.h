@@ -15,9 +15,6 @@
 
 DECLARE_MULTICAST_DELEGATE(FOnStrengthReachedZero);
 
-template<class T>
-using TStaticFuncPtr = typename TBaseStaticDelegateInstance<T, FDefaultDelegateUserPolicy>::FFuncPtr;
-
 /**
  * 
  */
@@ -31,8 +28,6 @@ public:
 
 	virtual void PreAttributeBaseChange(const FGameplayAttribute& Attribute, float& NewValue) const override;
 	
-	TMap<FGameplayTag, TStaticFuncPtr<FGameplayAttribute()>> TagsToAttributes;
-
 	UPROPERTY(BlueprintReadOnly, Category = "Attributes")
 	FGameplayAttributeData Strength;
 	ATTRIBUTE_ACCESSORS(UKulkiAttributeSet, Strength);

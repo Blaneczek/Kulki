@@ -2,7 +2,6 @@
 
 
 #include "Character/KulkiDoppelgangerPawn.h"
-
 #include "AbilitySystemBlueprintLibrary.h"
 #include "Character/KulkiPlayerPawn.h"
 #include "Components/SphereComponent.h"
@@ -49,7 +48,7 @@ void AKulkiDoppelgangerPawn::BeginPlay()
 	MergeDelegate.BindWeakLambda(this, [this]()
 	{
 		bCanMerge = true;
-        OnCanMerge.Broadcast();
+        OnCanMerge.ExecuteIfBound();
 	});
 	GetWorldTimerManager().SetTimer(MergeHandle, MergeDelegate, MergeTime, false);
 

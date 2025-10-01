@@ -39,7 +39,7 @@ void AKulkiPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	checkf(KulkiContext, TEXT("AKulkiPlayerController | Kulki Mapping Context is not set"));
+	checkf(KulkiContext, TEXT("AKulkiPlayerController | Kulki Mapping Context is not valid"));
 	if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer()))
 	{
 		Subsystem->AddMappingContext(KulkiContext, 0);

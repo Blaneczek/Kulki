@@ -6,11 +6,10 @@
 #include "Gameplay/AbilitySystem/KulkiAttributeSet.h"
 #include "Gameplay/AbilitySystem/AbilityTasks/TargetDataUnderCursor.h"
 #include "Kismet/GameplayStatics.h"
-#include "Physics/ImmediatePhysics/ImmediatePhysicsShared/ImmediatePhysicsCore.h"
 
 bool UKulkiDoppelganger::CheckCost(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
-                                   FGameplayTagContainer* OptionalRelevantTags) const
-{
+	FGameplayTagContainer* OptionalRelevantTags) const
+{	
 	if (const UKulkiAttributeSet* KulkiAS = Cast<UKulkiAttributeSet>(ActorInfo->AbilitySystemComponent->GetAttributeSet(UKulkiAttributeSet::StaticClass())))		
 	{
 		// Minimum Strength to perform ability
@@ -20,13 +19,11 @@ bool UKulkiDoppelganger::CheckCost(const FGameplayAbilitySpecHandle Handle, cons
 	return false;
 }
 
-void UKulkiDoppelganger::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
-                                         const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
-                                         const FGameplayEventData* TriggerEventData)
+void UKulkiDoppelganger::ActivateAbility(const FGameplayAbilitySpecHandle Handle,const FGameplayAbilityActorInfo* ActorInfo,
+	const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 
-	
 }
 
 void UKulkiDoppelganger::SpawnDoppelganger(const FVector& TargetLocation)
@@ -53,6 +50,7 @@ void UKulkiDoppelganger::SpawnDoppelganger(const FVector& TargetLocation)
 	{
 		Doppelganger->SetData(GetAvatarActorFromActorInfo(), MergeTime);
 		UGameplayStatics::FinishSpawningActor(Doppelganger, SpawnTransform);
+		Doppelganger->InitAbilityActorInfo();
 		Doppelganger->GetKulkiMesh()->AddImpulse(Direction * ImpulseForce);
 		
 		UAbilitySystemComponent* SourceASC = GetActorInfo().AbilitySystemComponent.Get();

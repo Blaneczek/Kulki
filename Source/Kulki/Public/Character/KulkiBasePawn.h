@@ -21,25 +21,24 @@ class KULKI_API AKulkiBasePawn : public APawn, public IAbilitySystemInterface
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this pawn's properties
 	AKulkiBasePawn();
-
+	
+	virtual void InitAbilityActorInfo();
+	
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override { return AbilitySystemComponent; }
 	UKulkiAttributeSet* GetAttributeSet() const { return AttributeSet; }
 	UStaticMeshComponent* GetKulkiMesh() const { return KulkiMesh; };
 	
 protected:
-	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-
-	virtual void InitAbilityActorInfo();
-	void InitDefaultAttributes();
-	void AddCharacterAbilities();
+	
+	
+	virtual void AddAbilities() {};
 	void ApplyEffectToSelf(TSubclassOf<UGameplayEffect> GameplayEffectClass, float Level);
 
 	virtual void SetKulkiPawnSize(const FOnAttributeChangeData& Data);
 	virtual void SetKulkiMovementSpeed(const FOnAttributeChangeData& Data);
-
+	
 	/* As Strength increases, movement speed decreases. */
 	virtual void SetKulkiSizePenaltyMovementSpeed(float Strength);
 	
@@ -62,13 +61,6 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Kulki")
 	TObjectPtr<UKulkiAttributeSet> AttributeSet;
-
-	/* Gameplay Effect used to set default values of attributes. */
-	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category="Kulki|Attributes")
-	TSubclassOf<UGameplayEffect> DefaultAttributes;
-
-	UPROPERTY(EditAnywhere, Category="Kulki|Abilities")
-	TArray<TSubclassOf<UGameplayAbility>> StartupAbilities;
 
 	/* Base value from which character's movement speed is calculated. */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(UIMin="0.0", ClampMin="0.0"), Category="Kulki|Speed")

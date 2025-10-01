@@ -15,13 +15,13 @@ class KULKI_API UKulkiCameraComponent : public UCameraComponent
 	GENERATED_BODY()
 public:
 	UKulkiCameraComponent();
-	
+	 
 	void ChangeOrtoWidth(float Strength);
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Kulki")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Kulki")
 	float OrthoWidthChangeStep = 1000.f;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Kulki")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Kulki")
 	float PlayerStrengthChangeStep = 150.f;
 
 private:

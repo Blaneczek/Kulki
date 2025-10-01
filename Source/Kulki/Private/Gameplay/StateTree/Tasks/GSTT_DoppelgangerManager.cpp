@@ -17,7 +17,7 @@ EStateTreeRunStatus UGSTT_DoppelgangerManager::EnterState(FStateTreeExecutionCon
 
 	if (Actor)
 	{
-		Actor->OnCanMerge.AddWeakLambda(this, [this]()
+		Actor->OnCanMerge.BindWeakLambda(this, [this]()
 		{
 			BroadcastDelegate(Merge);	
 		});

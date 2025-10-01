@@ -22,7 +22,8 @@ EStateTreeRunStatus USTT_MergeDoppelganger::EnterState(FStateTreeExecutionContex
 		return EStateTreeRunStatus::Failed;
 	}
 
-	Actor->MergeWithOwner();	
+	Actor->MergeWithOwner();
+	
 	return EStateTreeRunStatus::Succeeded;
 }
 

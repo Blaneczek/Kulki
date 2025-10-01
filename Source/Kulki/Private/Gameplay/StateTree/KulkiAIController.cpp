@@ -30,7 +30,7 @@ void AKulkiAIController::OnPossess(APawn* InPawn)
         	StateTreeAIComponent->StartLogic();
         }
 	});
-	GetWorldTimerManager().SetTimer(TimerHandle, TimerDelegate, 0.5f, false);
+	GetWorldTimerManager().SetTimer(TimerHandle, TimerDelegate, 0.2f, false);
 }
 
 

@@ -39,5 +39,7 @@ protected:
 
 private:
 	UPROPERTY()
-	TSet<TWeakObjectPtr<AActor>> AvoidanceNeighbours;
+	TArray<TWeakObjectPtr<AActor>> AvoidanceNeighbors;
+
+	FVector GetAvoidanceLocation();
 };

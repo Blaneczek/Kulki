@@ -8,7 +8,7 @@
 
 class AKulkiPlayerPawn;
 
-DECLARE_MULTICAST_DELEGATE(FOnCanMerge);
+DECLARE_DELEGATE(FOnCanMerge);
 
 UCLASS()
 class KULKI_API AKulkiDoppelgangerPawn : public AKulkiBasePawn

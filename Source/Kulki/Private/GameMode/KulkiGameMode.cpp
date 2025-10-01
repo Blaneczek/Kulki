@@ -15,18 +15,12 @@ void AKulkiGameMode::BeginPlay()
 {
 	Super::BeginPlay();
 
-	FadeInCamera(4.f);
+	UGameplayStatics::GetPlayerCameraManager(this, 0)->StartCameraFade(1.f, 0.f,
+		4.f, FLinearColor::Black, false, true);
 	
-	EnemyManager->OnAllEatableEnemyKilled.AddUObject(this, &AKulkiGameMode::GameWon);
+	EnemyManager->OnAllEatableEnemyKilled.BindUObject(this, &AKulkiGameMode::GameWon);
 	EnemyManager->SpawnEnemies();
 }
-
-void AKulkiGameMode::FadeInCamera(float FadeOutTime)
-{
-	UGameplayStatics::GetPlayerCameraManager(this, 0)->StartCameraFade(1.f, 0.f,
-		FadeOutTime, FLinearColor::Black, false, true);
-}
-
 
 void AKulkiGameMode::ResetGame()
 {

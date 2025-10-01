@@ -38,5 +38,5 @@ void AKulkiMenuGameMode::StartGame()
 
 void AKulkiMenuGameMode::ExitGame()
 {
-    UKismetSystemLibrary::QuitGame(GetWorld(), 0, EQuitPreference::Quit, true);
+    UKismetSystemLibrary::QuitGame(GetWorld(), nullptr, EQuitPreference::Quit, true);
 }

@@ -13,6 +13,7 @@ USTT_StopChasingAfterTime::USTT_StopChasingAfterTime(const FObjectInitializer& O
 EStateTreeRunStatus USTT_StopChasingAfterTime::EnterState(FStateTreeExecutionContext& Context,
 	const FStateTreeTransitionResult& Transition)
 {
+	Super::EnterState(Context, Transition);
 	if (Actor)
 	{
 		FTimerHandle TimerHandle;
@@ -26,5 +27,5 @@ EStateTreeRunStatus USTT_StopChasingAfterTime::EnterState(FStateTreeExecutionCon
 		GetWorld()->GetTimerManager().SetTimer(TimerHandle, TimerDelegate, Delay, false);	
 	}
 	
-	return Super::EnterState(Context, Transition);
+	return EStateTreeRunStatus::Running;
 }

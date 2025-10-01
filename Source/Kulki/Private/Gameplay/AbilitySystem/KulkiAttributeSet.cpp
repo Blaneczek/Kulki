@@ -5,10 +5,6 @@
 
 UKulkiAttributeSet::UKulkiAttributeSet()
 {
-	TagsToAttributes.Add(KulkiGameplayTags::Attribute_Strength.GetTag(), GetStrengthAttribute);
-	TagsToAttributes.Add(KulkiGameplayTags::Attribute_MaxStrength.GetTag(), GetMaxStrengthAttribute);
-	TagsToAttributes.Add(KulkiGameplayTags::Attribute_Speed.GetTag(), GetSpeedAttribute);
-	TagsToAttributes.Add(KulkiGameplayTags::Attribute_MaxSpeed.GetTag(), GetMaxSpeedAttribute);
 }
 
 void UKulkiAttributeSet::PreAttributeBaseChange(const FGameplayAttribute& Attribute, float& NewValue) const

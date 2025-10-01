@@ -9,8 +9,5 @@ void UKulkiEQSPlayerContext::ProvideContext(FEnvQueryInstance& QueryInstance, FE
 {
 	Super::ProvideContext(QueryInstance, ContextData);
 
-	if (const APawn* Player = UGameplayStatics::GetPlayerPawn(this, 0))
-	{
-		UEnvQueryItemType_Actor::SetContextHelper(ContextData, Player);
-	}
+	UEnvQueryItemType_Actor::SetContextHelper(ContextData, UGameplayStatics::GetPlayerPawn(this, 0));
 }

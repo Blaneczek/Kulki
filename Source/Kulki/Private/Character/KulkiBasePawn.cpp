@@ -33,47 +33,32 @@ void AKulkiBasePawn::BeginPlay()
 {
 	Super::BeginPlay();
 
-	InitAbilityActorInfo();
 }
 
 void AKulkiBasePawn::InitAbilityActorInfo()
 {
+	checkf(IsValid(GetAbilitySystemComponent()), TEXT("AKulkiBasePawn::InitAbilityActorInfo || AbilitySystemComponent is not valid"));
+	checkf(IsValid(AttributeSet), TEXT("AKulkiBasePawn::InitAbilityActorInfo || AttributeSet is not valid"));
+	
 	GetAbilitySystemComponent()->InitAbilityActorInfo(this, this);
 
 	GetAbilitySystemComponent()->GetGameplayAttributeValueChangeDelegate(
 		AttributeSet->GetStrengthAttribute()).AddUObject(this, &AKulkiBasePawn::SetKulkiPawnSize);
 	GetAbilitySystemComponent()->GetGameplayAttributeValueChangeDelegate(
-		AttributeSet->GetSpeedAttribute()).AddUObject(this, &AKulkiBasePawn::SetKulkiMovementSpeed);
-	
-	InitDefaultAttributes();
-	AddCharacterAbilities();
-}
-
-void AKulkiBasePawn::InitDefaultAttributes()
-{
-	if (DefaultAttributes)
-	{
-		ApplyEffectToSelf(DefaultAttributes, 1.f);
-	}	
+		AttributeSet->GetSpeedAttribute()).AddUObject(this, &AKulkiBasePawn::SetKulkiMovementSpeed);	
 }
 
 void AKulkiBasePawn::ApplyEffectToSelf(TSubclassOf<UGameplayEffect> GameplayEffectClass, float Level) 
 {
-	checkf(IsValid(GetAbilitySystemComponent()), TEXT("AKulkiBasePawn::ApplyEffectToSelf | AbilitySystemComponent is null"));
-	checkf(GameplayEffectClass, TEXT("AKulkiBasePawn::ApplyEffectToSelf | GameplayEffectClass is null"));
+	if (!GetAbilitySystemComponent() || !GameplayEffectClass)
+	{
+		return;
+	}
 
 	FGameplayEffectContextHandle ContextHandle = GetAbilitySystemComponent()->MakeEffectContext();
 	ContextHandle.AddSourceObject(this);
 	const FGameplayEffectSpecHandle GameplayEffectSpec = GetAbilitySystemComponent()->MakeOutgoingSpec(GameplayEffectClass, Level, ContextHandle);
 	GetAbilitySystemComponent()->ApplyGameplayEffectSpecToSelf(*GameplayEffectSpec.Data.Get());
-}
-
-void AKulkiBasePawn::AddCharacterAbilities()
-{
-	if (AbilitySystemComponent)
-	{
-		AbilitySystemComponent->AddCharactersAbilities(StartupAbilities);
-	}	
 }
 
 void AKulkiBasePawn::SetKulkiPawnSize(const FOnAttributeChangeData& Data)

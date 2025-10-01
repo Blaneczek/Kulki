@@ -25,6 +25,9 @@ class KULKI_API AKulkiPlayerPawn : public AKulkiBasePawn
 public:
 	AKulkiPlayerPawn();
 	
+	virtual void PossessedBy(AController* NewController) override;
+	virtual void InitAbilityActorInfo() override;
+	
 	bool IsImmune() const { return bIsImmune; }
 	
 	FOnImmunityActivation OnImmunityActivation;
@@ -35,8 +38,9 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
-	virtual void InitAbilityActorInfo() override;
-
+	virtual void AddAbilities() override;
+	virtual void SetKulkiPawnSize(const FOnAttributeChangeData& Data) override;
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Kulki")
 	TObjectPtr<UKulkiCameraComponent> Camera;
 	
@@ -51,6 +55,13 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Kulki|Immunity")
 	FLinearColor ImmunityColor;
 
+	/* Gameplay Effect used to set default values of attributes. */
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category="Kulki|Attributes")
+	TSubclassOf<UGameplayEffect> DefaultAttributes;
+
+	UPROPERTY(EditAnywhere, Category="Kulki|Abilities")
+	TArray<TSubclassOf<UGameplayAbility>> StartupAbilities;
+	
 private:
 	UFUNCTION()
 	void OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
@@ -59,16 +70,14 @@ private:
 	void OnPlayerLost();
 	
 	void ActivateImmunity();
-	
 	void DeactivateImmunity(const FLinearColor Color);
 
 	void EnemyHitApplyEffectToSelf(APawn* Enemy, TSubclassOf<UGameplayEffect> GameplayEffectClass, float Level, float Coefficient);
+
+	void InitDefaultAttributes();
 	
 	UPROPERTY()
 	TObjectPtr<UMaterialInstanceDynamic> DynamicMaterialInstance;
 	
 	bool bIsImmune = false;
-
-protected:
-	virtual void SetKulkiPawnSize(const FOnAttributeChangeData& Data) override;
 };

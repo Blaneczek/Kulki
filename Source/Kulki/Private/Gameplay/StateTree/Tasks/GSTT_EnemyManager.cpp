@@ -27,15 +27,14 @@ void UGSTT_EnemyManager::BindEnemyDelegates()
 {
 	if (Actor)
 	{
-		Actor->OnCheckIfBigger.AddWeakLambda(this, [this]()
+		Actor->OnCheckIfBigger.BindWeakLambda(this, [this]()
 		{
 			if (PlayerPawn && !PlayerPawn->IsImmune())
 			{
-				BroadcastDelegate(CheckIfBigger);
-				
+				BroadcastDelegate(CheckIfBigger);			
 			}		
 		});
-		Actor->OnBackToIdle.AddWeakLambda(this, [this]()
+		Actor->OnBackToIdle.BindWeakLambda(this, [this]()
 		{
 			BroadcastDelegate(BackToIdle);
 		});
@@ -67,8 +66,6 @@ void UGSTT_EnemyManager::BindPlayerDelegates()
 				BroadcastDelegate(CheckIfBigger);
 			}	
 		});
-		auto a = PlayerPawn->OnImmunityActivation.GetAllocatedSize();
-		UE_LOG(LogTemp, Warning, TEXT("przed: %llu"), a);
 	}
 }
 

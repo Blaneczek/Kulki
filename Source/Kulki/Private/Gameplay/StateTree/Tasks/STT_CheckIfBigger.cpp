@@ -23,7 +23,7 @@ EStateTreeRunStatus USTT_CheckIfBigger::EnterState(FStateTreeExecutionContext& C
 
 	if (EnemyAttributeSet->GetStrength() > PlayerAttributeSet->GetStrength())
 	{
-		Actor->ResetNeighbours();
+		Actor->ResetNeighbors();
 		BroadcastDelegate(StartChase);	
 	}
 	else

@@ -37,25 +37,30 @@ void AKulkiEnemyPawn::BeginPlay()
 	EndAvoidanceSphere->OnComponentEndOverlap.AddDynamic(this, &AKulkiEnemyPawn::OnEndAvoidance);
 }
 
-void AKulkiEnemyPawn::SetSpawnAttributesValue(float Strength, float Speed)
+void AKulkiEnemyPawn::SetAttributesValue(float Strength, float Speed)
 {
-	checkf(IsValid(GetAbilitySystemComponent()), TEXT("AKulkiEnemyPawn::SpawnApplyEffectToSelf | AbilitySystemComponent is null"));
-	checkf(SpawnAttributes, TEXT("AKulkiEnemyPawn::SpawnApplyEffectToSelf | SpawnAttributes is null"));
+	checkf(SpawnAttributes, TEXT("AKulkiEnemyPawn::SpawnApplyEffectToSelf | SpawnAttributes is not valid"));
 
 	FGameplayEffectContextHandle ContextHandle = GetAbilitySystemComponent()->MakeEffectContext();
 	ContextHandle.AddSourceObject(this);
 	const FGameplayEffectSpecHandle GameplayEffectSpec = GetAbilitySystemComponent()->MakeOutgoingSpec(SpawnAttributes, 1.f, ContextHandle);
+	
 	GameplayEffectSpec.Data->SetSetByCallerMagnitude(KulkiGameplayTags::Attribute_Strength.GetTag(), Strength);
 	GameplayEffectSpec.Data->SetSetByCallerMagnitude(KulkiGameplayTags::Attribute_Speed.GetTag(), Speed);
-
+	
 	GetAbilitySystemComponent()->ApplyGameplayEffectSpecToSelf(*GameplayEffectSpec.Data.Get());
-
-	SetAISpheresSize();
 }
 
-void AKulkiEnemyPawn::SetSpawnOverlapGameplayEffectClass(TSubclassOf<UGameplayEffect> GameplayEffectClass)
+void AKulkiEnemyPawn::SetOverlapGameplayEffectClass(TSubclassOf<UGameplayEffect> GameplayEffectClass)
 {
 	OverlapGameplayEffectClass = GameplayEffectClass;
+}
+
+void AKulkiEnemyPawn::InitSpawn(float Strength, float Speed)
+{
+	InitAbilityActorInfo();
+	SetAttributesValue(Strength, Speed);
+	SetAISpheresSize();
 }
 
 void AKulkiEnemyPawn::ApplyOverlapEffect(UAbilitySystemComponent* TargetASC, float Coefficient, bool& OutIsEatableEnemy)
@@ -96,17 +101,17 @@ float AKulkiEnemyPawn::GetStrength() const
 	return AttributeSet ? AttributeSet->GetStrength() : 0.f;
 }
 
-void AKulkiEnemyPawn::ResetNeighbours()
+void AKulkiEnemyPawn::ResetNeighbors()
 {
-	AvoidanceNeighbours.Empty();
+	AvoidanceNeighbors.Empty();
 	
 	TArray<AActor*> Neighbours;
-	StartAvoidanceSphere->GetOverlappingActors(Neighbours, AKulkiEnemyPawn::StaticClass());
+	StartAvoidanceSphere->GetOverlappingActors(Neighbours, StaticClass());
 	for (AActor* Actor : Neighbours)
 	{
 		if (Actor != this)
 		{
-			AvoidanceNeighbours.Add(Actor);
+			AvoidanceNeighbors.Add(Actor);
 		}		
 	}
 }
@@ -153,7 +158,7 @@ void AKulkiEnemyPawn::OnStartAICheck(UPrimitiveComponent* OverlappedComponent, A
 {
 	if (bIdleState && OtherActor)
 	{
-		OnCheckIfBigger.Broadcast();
+		OnCheckIfBigger.ExecuteIfBound();
 		bIdleState = false;
 	}
 }
@@ -164,7 +169,7 @@ void AKulkiEnemyPawn::OnEndAICheck(UPrimitiveComponent* OverlappedComponent, AAc
 	if (!bIdleState && OtherActor)
 	{
 		bIdleState = true;
-		OnBackToIdle.Broadcast();
+		OnBackToIdle.ExecuteIfBound();
 	}
 }
 
@@ -173,7 +178,7 @@ void AKulkiEnemyPawn::OnStartAvoidance(UPrimitiveComponent* OverlappedComponent,
 {
 	if (!bIdleState && OtherActor)
 	{
-		AvoidanceNeighbours.Add(OtherActor);
+		AvoidanceNeighbors.Add(OtherActor);
 	}
 }
 
@@ -182,7 +187,7 @@ void AKulkiEnemyPawn::OnEndAvoidance(UPrimitiveComponent* OverlappedComponent, A
 {
 	if (!bIdleState && OtherActor)
 	{
-		AvoidanceNeighbours.Remove(OtherActor);
+		AvoidanceNeighbors.Remove(OtherActor);
 	}
 }
 

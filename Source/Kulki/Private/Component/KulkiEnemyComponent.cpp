@@ -31,6 +31,8 @@ void UKulkiEnemyComponent::BindDelegatesFromPlayer()
 
 void UKulkiEnemyComponent::SpawnEnemies()
 {
+	checkf(SpawnDataAsset, TEXT("UKulkiEnemyComponent::SpawnEnemies | SpawnDataAsset is not valid"));
+	
 #if WITH_EDITOR
 	if (bNotSpawn_Debug)
 	{
@@ -39,8 +41,8 @@ void UKulkiEnemyComponent::SpawnEnemies()
 #endif
 	
 	NumberOfEatableEnemies = 0;
-	AKulkiPlayerPawn* Player = Cast<AKulkiPlayerPawn>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
-	if (!Player || !EnemyClass || !SpawnDataAsset)
+	const AKulkiPlayerPawn* Player = Cast<AKulkiPlayerPawn>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
+	if (!Player)
 	{
 		return;
 	}
@@ -48,7 +50,7 @@ void UKulkiEnemyComponent::SpawnEnemies()
 	// Get chosen difficulty level
 	int32 DifficultyLevel = 1;
 	float DifficultyLevelScale = 1.f;
-	if (UKulkiGameInstance* GameInstance = Cast<UKulkiGameInstance>(UGameplayStatics::GetGameInstance(GetWorld())))
+	if (const UKulkiGameInstance* GameInstance = Cast<UKulkiGameInstance>(UGameplayStatics::GetGameInstance(GetWorld())))
 	{
 		DifficultyLevel = GameInstance->DifficultyLevel;
 	}
@@ -96,6 +98,8 @@ FVector UKulkiEnemyComponent::CalculateValidRandomLocation(const FVector& Player
 
 void UKulkiEnemyComponent::SpawnEnemy(const FVector& SpawnLocation, const TPair<EEnemyType, FSpawnEnemyData>& EnemyData, float RandomDistance, float DifficultyLevelScale)
 {
+	checkf(EnemyClass, TEXT("UKulkiEnemyComponent::SpawnEnemy | EnemyClass is not valid"));
+	
 	FTransform SpawnTransform;
 	SpawnTransform.SetLocation(SpawnLocation);
 	AKulkiEnemyPawn* Enemy = GetWorld()->SpawnActorDeferred<AKulkiEnemyPawn>(
@@ -108,15 +112,15 @@ void UKulkiEnemyComponent::SpawnEnemy(const FVector& SpawnLocation, const TPair<
 	if (IsValid(Enemy) && EnemyData.Value.StrengthToDistanceCurve && EnemyData.Value.SpeedToDistanceCurve)
 	{
 		Enemy->Type = EnemyData.Key;
-		Enemy->SetSpawnOverlapGameplayEffectClass(*OverlapGameplayEffectClasses.Find(EnemyData.Key));
+		Enemy->SetOverlapGameplayEffectClass(*OverlapGameplayEffectClasses.Find(EnemyData.Key));
 		const float Strength = EnemyData.Value.StrengthToDistanceCurve->GetFloatValue(RandomDistance) * DifficultyLevelScale;
 		const float Speed = EnemyData.Value.SpeedToDistanceCurve->GetFloatValue(RandomDistance) * DifficultyLevelScale;	
-		UGameplayStatics::FinishSpawningActor(Enemy, SpawnTransform);
-		Enemy->SetSpawnAttributesValue(Strength, Speed);
+		UGameplayStatics::FinishSpawningActor(Enemy, SpawnTransform);	
+		Enemy->InitSpawn(Strength, Speed);
 		
 		Enemies.Add(Enemy);
 		
-		if (EnemyData.Key == EEnemyType::RED || EnemyData.Key == EEnemyType::YELLOW)
+		if (EnemyData.Key != EEnemyType::PURPLE)
 		{
 			NumberOfEatableEnemies++;
 		}
@@ -128,7 +132,7 @@ void UKulkiEnemyComponent::EatableEnemyKilled()
 	NumberOfEatableEnemies--;
 	if (NumberOfEatableEnemies <= 0)
 	{
-		OnAllEatableEnemyKilled.Broadcast();		
+		OnAllEatableEnemyKilled.ExecuteIfBound();		
 	}
 }
 

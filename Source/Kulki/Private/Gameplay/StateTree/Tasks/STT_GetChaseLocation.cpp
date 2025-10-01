@@ -17,6 +17,7 @@ USTT_GetChaseLocation::USTT_GetChaseLocation(const FObjectInitializer& ObjectIni
 EStateTreeRunStatus USTT_GetChaseLocation::EnterState(FStateTreeExecutionContext& Context,
 	const FStateTreeTransitionResult& Transition)
 {
+	Super::EnterState(Context, Transition);
 	if (Actor && Player)
 	{
 		// Add mesh (cylinder) radius 
@@ -24,40 +25,45 @@ EStateTreeRunStatus USTT_GetChaseLocation::EnterState(FStateTreeExecutionContext
 		OutLocation = Player->GetActorLocation();
 	}
 	
-	return Super::EnterState(Context, Transition);
+	return EStateTreeRunStatus::Running;
 }
 
 EStateTreeRunStatus USTT_GetChaseLocation::Tick(FStateTreeExecutionContext& Context, const float DeltaTime)
 {	
+	OutLocation = GetAvoidanceLocation();
+
+	return Super::Tick(Context, DeltaTime);
+}
+
+FVector USTT_GetChaseLocation::GetAvoidanceLocation()
+{
 	if (!Actor || !Player)
 	{
-		return EStateTreeRunStatus::Failed;
+		FinishTask(false);
+		return FVector::ZeroVector;
 	}
 	
-	AvoidanceNeighbours = Actor->AvoidanceNeighbours;
+	AvoidanceNeighbors = Actor->AvoidanceNeighbors;
 	const FVector ActorLocation = Actor->GetActorLocation();
 	const FVector PlayerLocation = Player->GetActorLocation();
 
-	const float ActorDistanceFromPlayer = FVector::DistSquared(ActorLocation, PlayerLocation);
-		
-	if (AvoidanceNeighbours.IsEmpty() || ActorDistanceFromPlayer < FMath::Square(DistanceFromPlayerWithoutAvoidance))
+	const float ActorDistanceFromPlayer = FVector::DistSquared(ActorLocation, PlayerLocation);	
+	if (AvoidanceNeighbors.IsEmpty() || ActorDistanceFromPlayer < FMath::Square(DistanceFromPlayerWithoutAvoidance))
 	{
-		// Early return, enemy is close enough to player or there are no neighbours
-		OutLocation = PlayerLocation;
-		
-		return Super::Tick(Context, DeltaTime);
+		// Early return, enemy is close enough to player or there are no neighbors
+		return PlayerLocation;
 	}
 	
 	FVector Avoidance = FVector::ZeroVector;
-	for (const auto& OtherEnemy : AvoidanceNeighbours)
+	for (const auto& OtherEnemy : AvoidanceNeighbors)
 	{
-		if (AActor* OtherActor = OtherEnemy.Get())
+		if (const AActor* OtherActor = OtherEnemy.Get())
 		{
 			Avoidance += (((ActorLocation - OtherActor->GetActorLocation()).GetSafeNormal()) * AvoidanceStrength);
 		}
 	}
 
-	OutLocation = (PlayerLocation + Avoidance);
-
-	return Super::Tick(Context, DeltaTime);
+	return PlayerLocation + Avoidance;
 }
+
+

@@ -22,5 +22,4 @@ void UTargetDataUnderCursor::Activate()
 	{
 		ValidData.Broadcast(FVector::ZeroVector);
 	}
-	
 }

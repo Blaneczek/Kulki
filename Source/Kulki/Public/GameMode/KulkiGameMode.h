@@ -23,15 +23,12 @@ public:
 
 	UKulkiEnemyComponent* GetEnemyManager() const { return EnemyManager; }
 	
-	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<UUserWidget> WonGameWidgetClass;
-
 protected:
 	virtual void BeginPlay() override;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(EditDefaultsOnly, Category="Kulki")
+    TSubclassOf<UUserWidget> WonGameWidgetClass;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Kulki")
     TObjectPtr<UKulkiEnemyComponent> EnemyManager;
-
-private:
-	void FadeInCamera(float FadeOutTime);
 };
