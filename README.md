@@ -4,14 +4,86 @@
 Clone the repository or download the ZIP, generate Visual Studio files, and compile using the IDE.
 
 # KULKI
-Kulki is a simple game in which the player's task is to eat weaker enemies and avoid stronger ones.
+Kulki is a simple game in which the player's task is to eat weaker and avoid stronger enemies.
 
-# Movement
-Movement is controlled with the mouse. When you click the right button, the player's ball follows the cursor. 
+![kulki](https://github.com/user-attachments/assets/f8d3b9e0-f522-4871-8319-0f2b060e674f)
 
-<img src="https://github.com/user-attachments/assets/54b08d13-6441-4c58-aef9-00946a86485b" width="800">
+# Introduction
+xxxx
 
-# Enemies
+# Key elements
+
+|                                                                               | Description                                                     |
+|-------------------------------------------------------------------------------|-----------------------------------------------------------------|
+| [Movement](#movement-code)                                                    | Mouse movement.                                                 |
+| [Gameplay Ability System](#gameplay-ability-system-code)                      | Use of GAS in the project.                                      |
+| [Enemies](#enemies-code)                                                      | Spawn system and AI behaviour.                                  |
+
+# Movement ([code](Source/Kulki/Private/Player.KulkiPlayerController.cpp))
+<details>
+<summary>More</summary>
+<br>
+Movement is controlled with the mouse. The player's ball follows the cursor when you click the right button. 
+
+```c++
+void AKulkiPlayerController::FollowMouseCursor()
+{
+	if (!PlayerPawn)
+	{
+		return;
+	}
+
+	FHitResult HitResult;
+	// ECC_GameTraceChannel1 - Floor
+	GetHitResultUnderCursor(ECollisionChannel::ECC_GameTraceChannel1, false, HitResult);	
+	if (HitResult.bBlockingHit)
+	{		
+		const FVector HitDirection = (HitResult.ImpactPoint - PlayerPawn->GetActorLocation()).GetSafeNormal();
+		PlayerPawn->AddMovementInput(FVector(HitDirection.X, HitDirection.Y, 0.f));
+	}
+}
+```
+
+All movement properties can be set in the PlayerPawn blueprint.
+<img src="https://github.com/user-attachments/assets/4ba97b53-6649-4abd-9b22-6da080f0d8e7" width="800">
+
+```c++
+  /* Base value from which character's movement speed is calculated. */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(UIMin="0.0", ClampMin="0.0"), Category="Kulki|Speed")
+	float BaseMovementSpeed = 500.f;
+
+	/* Character's movement speed can't go below this value. */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(UIMin="10.0", ClampMin="10.0"), Category="Kulki|Speed")	
+	float MinMovementSpeed = 200.f;
+	
+	/* Character's movement speed can't surpass this value */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(UIMin="10.0", ClampMin="10.0"), Category="Kulki|Speed")
+	float MaxMovementSpeed = 1500.f;
+
+	/* Used to multiply Speed Attribute value. Increases Movement speed.
+	 * Movement speed = BaseMovementSpeed + (SpeedAttribute * SpeedMultiplier) - (StrengthAttribute * SpeedPenaltyMultiplier) 
+	 */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(UIMin="0.1", ClampMin="0.1"), Category="Kulki|Speed")
+	float SpeedMultiplier = 10.f;
+
+	/* Used to multiply Strength Attribute value. Decreases Movement speed.
+	 * Movement speed = BaseMovementSpeed + (SpeedAttribute * SpeedMultiplier) - (StrengthAttribute * SpeedPenaltyMultiplier) 
+	 */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(UIMin="0.1", ClampMin="0.1"), Category="Kulki|Speed")
+	float SpeedPenaltyMultiplier = 5.f;
+```
+</details>
+
+# Gameplay Ability System ([code](Source/Kulki/Private/Gameplay/AbilitySystem))
+<details>
+<summary>More</summary>
+<br>
+</details>
+
+# Enemies ([code spawn](Source/Kulki/Private/Component/KulkiEnemyComponent.cpp))([code AI](Source/Kulki/Private/Gameplay/StateTree))
+<details>
+<summary>More</summary>
+<br>
 Enemies are spawned at the beginning of the game. The further away they are from the player, the higher their attribute values. These values can be set using a float curve where the X axis is the distance from the player and the Y axis is the enemy's Strength/Speed. 
 - Yellow ball: adds Speed if we eat it, subtracts it if it eats us
 - Red ball: adds Strength if we eat it, subtracts it if it eats us
@@ -28,5 +100,5 @@ When one of our attributes drops to 0, we lose and start over.
 <br>The Strength and Speed values of opponents scale with the selected difficulty level. The multiplier is set in the same DataAsset, and the difficulty level is set after clicking Start Game in the menu.
 
 <img src="https://github.com/user-attachments/assets/ced9ea94-7b2b-4d66-9a10-fa363cd3932d" width="800">
-<img src="https://github.com/user-attachments/assets/b0ea5828-7dde-454d-bdd9-212976563b1e" width="800">
 
+</details>
