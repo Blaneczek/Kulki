@@ -19,7 +19,7 @@ xxxx
 | [Gameplay Ability System](#gameplay-ability-system-code)                      | Use of GAS in the project.                                      |
 | [Enemies](#enemies-code)                                                      | Spawn system and AI behaviour.                                  |
 
-# Movement ([code](Source/Kulki/Private/Player.KulkiPlayerController.cpp))
+# Movement ([code](Source/Kulki/Private/Player/KulkiPlayerController.cpp))
 <details>
 <summary>More</summary>
 <br>
@@ -78,18 +78,25 @@ All movement properties can be set in the PlayerPawn blueprint.
 <details>
 <summary>More</summary>
 <br>
+	
+## Attribute Set
+
+## Gameplay Effects
+
+## Doppelganger Gameplay Ability
+
 </details>
 
 # Enemies ([code spawn](Source/Kulki/Private/Component/KulkiEnemyComponent.cpp))([code AI](Source/Kulki/Private/Gameplay/StateTree))
 <details>
 <summary>More</summary>
-<br>
-Enemies are spawned at the beginning of the game. The further away they are from the player, the higher their attribute values. These values can be set using a float curve where the X axis is the distance from the player and the Y axis is the enemy's Strength/Speed. 
-- Yellow ball: adds Speed if we eat it, subtracts it if it eats us
-- Red ball: adds Strength if we eat it, subtracts it if it eats us
-- Purple ball: subtracts Strength and Speed if we eat it or it eats us
+	
+<br>**Yellow ball:** adds Speed if we eat it, subtracts it if it eats us
+<br>**Red ball:** adds Strength if we eat it, subtracts it if it eats us
+<br>**Purple ball:** subtracts Strength and Speed if we eat it or it eats us	
 
-When one of our attributes drops to 0, we lose and start over.
+## Enemy Component
+Enemies are spawned at the beginning of the game. The further away they are from the player, the higher their attribute values. These values can be set using a float curve where the X axis is the distance from the player and the Y axis is the enemy's Strength/Speed. 
 
 <img src="https://github.com/user-attachments/assets/68e998d7-bc25-4a8e-a3fd-e947d63d9f8c" width="800">
 
@@ -97,8 +104,60 @@ When one of our attributes drops to 0, we lose and start over.
 
 <img src="https://github.com/user-attachments/assets/f58c2307-3a02-495b-a8d7-ecef96c072a4" width="800">
 
+<br> Calculating a random location in a given range. Distance from the player and the spawn location will be used to set the attribute values. 
+```c++
+FVector UKulkiEnemyComponent::CalculateValidRandomLocation(const FVector& PlayerLocation, const FSpawnDistanceRange& DistanceRange, float& OutDistanceFromPlayer, bool& OutFoundValidLocation)
+{
+	const FVector RandomDirection = UKismetMathLibrary::RandomUnitVector().GetSafeNormal2D();	
+	OutDistanceFromPlayer = FMath::RandRange(DistanceRange.MinDistance, DistanceRange.MaxDistance);
+	
+	const FVector RandomLocationFromPlayer = PlayerLocation + FVector(RandomDirection.X * OutDistanceFromPlayer, RandomDirection.Y * OutDistanceFromPlayer ,42.f);
+
+	if (UNavigationSystemV1* NavSystem = UNavigationSystemV1::GetCurrent(GetWorld()))
+	{
+		FNavLocation SpawnNavLocation;
+		NavSystem->ProjectPointToNavigation(RandomLocationFromPlayer, SpawnNavLocation) ? OutFoundValidLocation = true : OutFoundValidLocation = false;
+	}
+
+	return FVector(RandomLocationFromPlayer.X, RandomLocationFromPlayer.Y, 42.f);
+}
+```
+
+```c++
+void UKulkiEnemyComponent::SpawnEnemy(const FVector& SpawnLocation, const TPair<EEnemyType, FSpawnEnemyData>& EnemyData, float DistanceFromPlayer, float DifficultyLevelScale)
+{
+	checkf(EnemyClass, TEXT("UKulkiEnemyComponent::SpawnEnemy | EnemyClass is not valid"));
+	
+	FTransform SpawnTransform;
+	SpawnTransform.SetLocation(SpawnLocation);
+	AKulkiEnemyPawn* Enemy = GetWorld()->SpawnActorDeferred<AKulkiEnemyPawn>(
+		EnemyClass,
+		SpawnTransform,
+		GetOwner(),
+		nullptr,
+		ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn);
+                    				
+	if (IsValid(Enemy) && EnemyData.Value.StrengthToDistanceCurve && EnemyData.Value.SpeedToDistanceCurve)
+	{
+		Enemy->Type = EnemyData.Key;
+		Enemy->SetOverlapGameplayEffectClass(*OverlapGameplayEffectClasses.Find(EnemyData.Key));
+		const float Strength = EnemyData.Value.StrengthToDistanceCurve->GetFloatValue(DistanceFromPlayer) * DifficultyLevelScale;
+		const float Speed = EnemyData.Value.SpeedToDistanceCurve->GetFloatValue(DistanceFromPlayer) * DifficultyLevelScale;	
+		UGameplayStatics::FinishSpawningActor(Enemy, SpawnTransform);	
+		Enemy->InitSpawn(Strength, Speed);
+
+		Enemies.Add(Enemy);		
+		if (EnemyData.Key != EEnemyType::PURPLE)
+		{
+			NumberOfEatableEnemies++;
+		}
+	}				
+}
+```
+
 <br>The Strength and Speed values of opponents scale with the selected difficulty level. The multiplier is set in the same DataAsset, and the difficulty level is set after clicking Start Game in the menu.
 
 <img src="https://github.com/user-attachments/assets/ced9ea94-7b2b-4d66-9a10-fa363cd3932d" width="800">
 
+## State Tree AI
 </details>
