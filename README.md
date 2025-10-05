@@ -77,13 +77,165 @@ All movement properties can be set in the PlayerPawn blueprint.
 # Gameplay Ability System ([code](Source/Kulki/Private/Gameplay/AbilitySystem))
 <details>
 <summary>More</summary>
-<br>
 	
 ## Attribute Set
+Player and enemies have the same Attribute Set, in which two main Attributes are declared. 
+
+```c++
+UPROPERTY(BlueprintReadOnly, Category = "Attributes")
+	FGameplayAttributeData Strength;
+	ATTRIBUTE_ACCESSORS(UKulkiAttributeSet, Strength);
+
+	UPROPERTY(BlueprintReadOnly, Category = "Attributes")
+	FGameplayAttributeData MaxStrength;
+	ATTRIBUTE_ACCESSORS(UKulkiAttributeSet, MaxStrength);
+
+	UPROPERTY(BlueprintReadOnly, Category = "Attributes")
+	FGameplayAttributeData Speed;
+	ATTRIBUTE_ACCESSORS(UKulkiAttributeSet, Speed);
+
+	UPROPERTY(BlueprintReadOnly, Category = "Attributes")
+	FGameplayAttributeData MaxSpeed;
+	ATTRIBUTE_ACCESSORS(UKulkiAttributeSet, MaxSpeed);
+```
+
+<br>
+As the Strength value changes, the size of the pawn changes, and as the Speed changes, the movement speed changes. Therefore, in the base pawn class, we bind the functions to GameplayAttributeValueChangeDelegate.
+
+```c++
+void AKulkiBasePawn::InitAbilityActorInfo()
+{
+	checkf(IsValid(GetAbilitySystemComponent()), TEXT("AKulkiBasePawn::InitAbilityActorInfo || AbilitySystemComponent is not valid"));
+	checkf(IsValid(AttributeSet), TEXT("AKulkiBasePawn::InitAbilityActorInfo || AttributeSet is not valid"));
+	
+	GetAbilitySystemComponent()->InitAbilityActorInfo(this, this);
+
+	GetAbilitySystemComponent()->GetGameplayAttributeValueChangeDelegate(
+		AttributeSet->GetStrengthAttribute()).AddUObject(this, &AKulkiBasePawn::SetKulkiPawnSize);
+	GetAbilitySystemComponent()->GetGameplayAttributeValueChangeDelegate(
+		AttributeSet->GetSpeedAttribute()).AddUObject(this, &AKulkiBasePawn::SetKulkiMovementSpeed);	
+}
+```
+
 
 ## Gameplay Effects
+Gameplay effects are used to set attributes. Initially, as default values and during interactions with enemies. 
+
+```c++
+void AKulkiPlayerPawn::InitDefaultAttributes()
+{
+	if (DefaultAttributes)
+	{
+		ApplyEffectToSelf(DefaultAttributes, 1.f);
+	}	
+}
+```
+```c++
+void AKulkiBasePawn::ApplyEffectToSelf(TSubclassOf<UGameplayEffect> GameplayEffectClass, float Level) 
+{
+	if (!GetAbilitySystemComponent() || !GameplayEffectClass)
+	{
+		return;
+	}
+
+	FGameplayEffectContextHandle ContextHandle = GetAbilitySystemComponent()->MakeEffectContext();
+	ContextHandle.AddSourceObject(this);
+	const FGameplayEffectSpecHandle GameplayEffectSpec = GetAbilitySystemComponent()->MakeOutgoingSpec(GameplayEffectClass, Level, ContextHandle);
+	GetAbilitySystemComponent()->ApplyGameplayEffectSpecToSelf(*GameplayEffectSpec.Data.Get());
+}
+```
+
+<img src="https://github.com/user-attachments/assets/01c783c2-03f0-4477-9ab7-01fe394310b4" width="800">
+
+<br>When interacting with enemies, attributes can be added or subtracted. To use only one GameplayEffect for both operations, I created a custom MMC class that returns a positive or negative value that will affect the player. 
+
+<img src="https://github.com/user-attachments/assets/ad4d9a71-2a8d-459b-a7ff-101272ce0674" width="800">
+
+<br>After checking both Player and Enemy Strength, the coefficient is determined. 
+
+```c++
+void AKulkiPlayerPawn::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+                                       UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{	
+	IKulkiCombatInterface* CombatInterface = Cast<IKulkiCombatInterface>(OtherActor);
+	if (bIsImmune || !CombatInterface)
+	{
+		return;
+	}
+	
+	const float EnemyStrength = CombatInterface->GetStrength();
+	float Coefficient = -1.f;
+
+	// If Player is bigger, the coefficient is positive to increase Player's attributes
+    if (AttributeSet->GetStrength() >= EnemyStrength)
+    {
+        Coefficient = 1.f;
+    }
+	
+	bool bEatableEnemy = false;
+	CombatInterface->ApplyOverlapEffect(GetAbilitySystemComponent(), Coefficient, bEatableEnemy);
+	if (Coefficient > 0.f)
+	{
+		if (bEatableEnemy) OnEatableEnemyKilled.ExecuteIfBound();
+	}
+	else
+	{
+		ActivateImmunity();
+	}
+}
+```
+
+<br>The coefficient is used in the custom MMC thanks to setting the Magnitude by the code and Gameplay Tags (SetSetByCallerMagnitude/GetSetByCallerMagnitude).
+
+```c++
+void AKulkiEnemyPawn::ApplyOverlapEffect(UAbilitySystemComponent* TargetASC, float Coefficient, bool& OutIsEatableEnemy)
+{
+	if (!TargetASC || !GetAbilitySystemComponent() || !OverlapGameplayEffectClass)
+	{
+		return;
+	}
+
+	OutIsEatableEnemy = Type == EEnemyType::RED || Type == EEnemyType::YELLOW;
+
+	// If enemy is Purple and was smaller than player
+	bool bWasSmallerPurple = !OutIsEatableEnemy && Coefficient > 0.f;
+	
+	// If enemy is Purple decrease player's stats regardless size
+	Coefficient = OutIsEatableEnemy ? Coefficient : -1.f;
+	
+	FGameplayEffectContextHandle ContextHandle = GetAbilitySystemComponent()->MakeEffectContext();
+	ContextHandle.AddSourceObject(this);
+	const FGameplayEffectSpecHandle GameplayEffectSpec = GetAbilitySystemComponent()->MakeOutgoingSpec(OverlapGameplayEffectClass, 1.f, ContextHandle);
+	GameplayEffectSpec.Data->SetSetByCallerMagnitude(KulkiGameplayTags::GameplayEffect_Coefficient.GetTag(), Coefficient);
+	
+	GetAbilitySystemComponent()->ApplyGameplayEffectSpecToTarget(*GameplayEffectSpec.Data.Get(), TargetASC);
+
+	// Enemy was smaller than the player
+	if (bWasSmallerPurple || Coefficient > 0.f)
+	{				
+		SetLifeSpan(0.01f);
+	}
+}
+```
+
+```c++
+float UMMC_Attribute::CalculateBaseMagnitude_Implementation(const FGameplayEffectSpec& Spec) const
+{
+	const float Coefficient = Spec.GetSetByCallerMagnitude(KulkiGameplayTags::GameplayEffect_Coefficient.GetTag(), false, 1.f);
+
+	FAggregatorEvaluateParameters Params;
+	float AttributeValue = 0.f;
+	GetCapturedAttributeMagnitude(StrengthDef, Spec, Params, AttributeValue);
+
+	const float CurveValue = AttributeCurve ? AttributeCurve->GetFloatValue(AttributeValue) : 0.f;
+	
+	return Coefficient * CurveValue;
+}
+```
 
 ## Doppelganger Gameplay Ability
+In the game, the player has the Gameplay Ability that creates and throws their copy to catch faster opponents. 
+
 
 </details>
 
