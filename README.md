@@ -17,7 +17,7 @@ There are 2 main attributes that affect all aspects of the game. Despite the sim
 |-------------------------------------------------------------------------------|-----------------------------------------------------------------|
 | [Movement](#movement-code)                                                    | Mouse movement.                                                 |
 | [Gameplay Ability System](#gameplay-ability-system-code)                      | Use of GAS in the project.                                      |
-| [Enemies](#enemies-code)                                                      | Spawn system and AI behaviour.                                  |
+| [Enemies](#enemies-code-spawncode-ai)                           				| Spawn system and AI behaviour.                                  |
 
 # Movement ([code](Source/Kulki/Private/Player/KulkiPlayerController.cpp))
 <details>
@@ -233,9 +233,47 @@ float UMMC_Attribute::CalculateBaseMagnitude_Implementation(const FGameplayEffec
 }
 ```
 
-## Doppelganger Gameplay Ability
-In the game, the player has the Gameplay Ability that creates and throws their copy to catch faster opponents. 
+## Gameplay Ability
+In the game, the player has the Gameplay Ability that creates and throws their copy to catch faster opponents. That action decreases Strength by half. After some time player can merge with Doppelganger and take over its Strength.
 
+![doppelganger](https://github.com/user-attachments/assets/1845ee12-f2e2-4417-9d90-073aa2f6b16d)
+
+```c++
+void UKulkiDoppelganger::SpawnDoppelganger(const FVector& TargetLocation)
+{
+	if (!DoppelgangerPawnClass || !DoppelgangerEffectClass)
+	{
+		return;
+	}
+	
+	const FVector OwnerLocation = GetAvatarActorFromActorInfo()->GetActorLocation();
+	const FVector Direction = (TargetLocation - OwnerLocation).GetSafeNormal2D();
+
+	FTransform SpawnTransform;
+	SpawnTransform.SetLocation(OwnerLocation);
+	SpawnTransform.SetRotation(Direction.ToOrientationQuat());
+	AKulkiDoppelgangerPawn* Doppelganger = GetWorld()->SpawnActorDeferred<AKulkiDoppelgangerPawn>(
+		DoppelgangerPawnClass,
+		SpawnTransform,
+		GetAvatarActorFromActorInfo(),
+		nullptr,
+		ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
+                    				
+	if (IsValid(Doppelganger))
+	{
+		Doppelganger->SetData(GetAvatarActorFromActorInfo(), MergeTime);
+		UGameplayStatics::FinishSpawningActor(Doppelganger, SpawnTransform);
+		Doppelganger->InitAbilityActorInfo();
+		Doppelganger->GetKulkiMesh()->AddImpulse(Direction * ImpulseForce);
+		
+		UAbilitySystemComponent* SourceASC = GetActorInfo().AbilitySystemComponent.Get();
+        const FGameplayEffectSpecHandle SpecHandle = SourceASC->MakeOutgoingSpec(DoppelgangerEffectClass, 1.f, SourceASC->MakeEffectContext());    
+        SourceASC->ApplyGameplayEffectSpecToTarget(*SpecHandle.Data.Get(), Doppelganger->GetAbilitySystemComponent());
+	}	
+}
+```
+
+<img src="https://github.com/user-attachments/assets/82cd31fa-b190-4351-87f3-e08cf68f7eaf" width="800">
 
 </details>
 
