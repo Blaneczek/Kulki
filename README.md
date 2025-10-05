@@ -9,7 +9,7 @@ Kulki is a simple game in which the player's task is to eat weaker and avoid str
 ![kulki](https://github.com/user-attachments/assets/f8d3b9e0-f522-4871-8319-0f2b060e674f)
 
 # Introduction
-xxxx
+There are 2 main attributes that affect all aspects of the game. Despite the simplicity of the game I wanted to use the Gameplay Ability System. The **Strength** attribute is responsible for the size of the ball, and the **Speed** attribute for movement speed.
 
 # Key elements
 
