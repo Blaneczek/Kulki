@@ -91,7 +91,7 @@ void AKulkiPlayerPawn::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActo
 	const float EnemyStrength = CombatInterface->GetStrength();
 	float Coefficient = -1.f;
 
-	// If Player is bigger, coefficient is positive to increase Player's attributes
+	// If Player is bigger, the coefficient is positive to increase Player's attributes
     if (AttributeSet->GetStrength() >= EnemyStrength)
     {
         Coefficient = 1.f;

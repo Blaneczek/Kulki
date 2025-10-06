@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Camera/CameraComponent.h"
+#include "Components/TimelineComponent.h"
 #include "KulkiCameraComponent.generated.h"
 
 /**
@@ -24,6 +25,18 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Kulki")
 	float PlayerStrengthChangeStep = 150.f;
 
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="Kulki")
+	TObjectPtr<UCurveFloat> OrthoWidthChangeCurve;
+
+	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+	
 private:
 	uint8 StepNumber = 0;
+	float OrthoWidthOld = 0;
+	float OrthoWidthNew = 0;
+	
+	FTimeline OrthoWidthTimeline;
+	
+	UFUNCTION()
+	void UpdateWidth(float Alpha);
 };

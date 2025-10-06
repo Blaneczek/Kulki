@@ -103,7 +103,7 @@ void AKulkiPlayerController::FollowMouseCursor()
 	if (HitResult.bBlockingHit)
 	{		
 		const FVector HitDirection = (HitResult.ImpactPoint - PlayerPawn->GetActorLocation()).GetSafeNormal();
-		PlayerPawn->AddMovementInput(FVector(HitDirection.X, HitDirection.Y,0.f));
+		PlayerPawn->AddMovementInput(FVector(HitDirection.X, HitDirection.Y, 0.f));
 	}
 }
 

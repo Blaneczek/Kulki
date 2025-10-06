@@ -87,11 +87,7 @@ void AKulkiEnemyPawn::ApplyOverlapEffect(UAbilitySystemComponent* TargetASC, flo
 
 	// Enemy was smaller than player
 	if (bWasSmallerPurple || Coefficient > 0.f)
-	{		
-		if (AAIController* AIC = Cast<AAIController>(GetController()))
-		{
-			AIC->GetBrainComponent()->StopLogic("");		
-		}
+	{				
 		SetLifeSpan(0.01f);
 	}
 }

@@ -67,11 +67,11 @@ protected:
 	float BaseMovementSpeed = 500.f;
 
 	/* Character's movement speed can't go below this value. */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(UIMin="10.0", ClampMin="10.0"), Category="Kulki|Speed")	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(UIMin="10.0", ClampMin="10.0"), Category="Kulki|Speed")	
 	float MinMovementSpeed = 200.f;
 	
 	/* Character's movement speed can't surpass this value */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(UIMin="10.0", ClampMin="10.0"), Category="Kulki|Speed")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(UIMin="10.0", ClampMin="10.0"), Category="Kulki|Speed")
 	float MaxMovementSpeed = 1500.f;
 
 	/* Used to multiply Speed Attribute value. Increases Movement speed.
