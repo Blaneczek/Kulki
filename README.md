@@ -350,4 +350,54 @@ void UKulkiEnemyComponent::SpawnEnemy(const FVector& SpawnLocation, const TPair<
 <img src="https://github.com/user-attachments/assets/ced9ea94-7b2b-4d66-9a10-fa363cd3932d" width="800">
 
 ## State Tree AI
+Enemies have 3 states:
+<br>**IDLE:** They move to a random location in range from the origin location (spawn location)
+<br>**CHASE:** If they're bigger, they chase the player.
+<br>**ESCAPE:** If they're smaller, they move away from the player.
+  
+<img src="https://github.com/user-attachments/assets/dc58131c-a192-447c-81a4-3b87d8b2706c" width="800">
+
+<br>In ESCAPE state, when chasing the player, enemies use avoidance to prevent clumping.
+ 
+```c++
+FVector USTT_GetChaseLocation::GetAvoidanceLocation()
+{
+	if (!Actor || !Player)
+	{
+		FinishTask(false);
+		return FVector::ZeroVector;
+	}
+	
+	AvoidanceNeighbors = Actor->AvoidanceNeighbors;
+	const FVector ActorLocation = Actor->GetActorLocation();
+	const FVector PlayerLocation = Player->GetActorLocation();
+
+	const float ActorDistanceFromPlayer = FVector::DistSquared(ActorLocation, PlayerLocation);	
+	if (AvoidanceNeighbors.IsEmpty() || ActorDistanceFromPlayer < FMath::Square(DistanceFromPlayerWithoutAvoidance))
+	{
+		// Early return, enemy is close enough to player or there are no neighbors
+		return PlayerLocation;
+	}
+	
+	FVector Avoidance = FVector::ZeroVector;
+	for (const auto& OtherEnemy : AvoidanceNeighbors)
+	{
+		if (const AActor* OtherActor = OtherEnemy.Get())
+		{
+			Avoidance += (((ActorLocation - OtherActor->GetActorLocation()).GetSafeNormal()) * AvoidanceStrength);
+		}
+	}
+
+	return PlayerLocation + Avoidance;
+}
+```
+
+<br>Without avoidance
+
+![without](https://github.com/user-attachments/assets/e0c551bc-d9f1-4e71-8a6e-d398fdab589f)
+
+<br>With avoidance
+
+![with](https://github.com/user-attachments/assets/a4e05034-8e55-4ac8-add2-72a76ea4a65b)
+
 </details>
