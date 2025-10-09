@@ -368,7 +368,7 @@ FVector USTT_GetChaseLocation::GetAvoidanceLocation()
 		return FVector::ZeroVector;
 	}
 	
-	AvoidanceNeighbors = Actor->AvoidanceNeighbors;
+	const TSet<TWeakObjectPtr<AActor>>& AvoidanceNeighbors = Actor->GetAvoidanceNeighbors();
 	const FVector ActorLocation = Actor->GetActorLocation();
 	const FVector PlayerLocation = Player->GetActorLocation();
 
