@@ -65,24 +65,19 @@ void AKulkiPlayerPawn::InitAbilityActorInfo()
 
 void AKulkiPlayerPawn::AddAbilities()
 {
-	if (AbilitySystemComponent)
-	{
-		AbilitySystemComponent->AddCharactersAbilities(StartupAbilities);
-	}	
+	AbilitySystemComponent->AddCharactersAbilities(StartupAbilities);
 }
 
 void AKulkiPlayerPawn::InitDefaultAttributes()
 {
-	if (DefaultAttributes)
-	{
-		ApplyEffectToSelf(DefaultAttributes, 1.f);
-	}	
+	ApplyEffectToSelf(DefaultAttributes, 1.f);
 }
 
 void AKulkiPlayerPawn::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
                                        UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {	
 	IKulkiCombatInterface* CombatInterface = Cast<IKulkiCombatInterface>(OtherActor);
+	
 	if (bIsImmune || !CombatInterface)
 	{
 		return;
@@ -152,22 +147,6 @@ void AKulkiPlayerPawn::DeactivateImmunity(const FLinearColor Color)
 	}
 	
 	OnImmunityDeactivation.Broadcast();	
-}
-
-void AKulkiPlayerPawn::EnemyHitApplyEffectToSelf(APawn* Enemy, TSubclassOf<UGameplayEffect> GameplayEffectClass, float Level, float Coefficient)
-{
-	if (!GameplayEffectClass)
-	{
-		return;
-	}
-	
-	FGameplayEffectContextHandle ContextHandle = GetAbilitySystemComponent()->MakeEffectContext();
-	ContextHandle.AddSourceObject(this);
-	ContextHandle.AddInstigator(Enemy, Enemy);
-	const FGameplayEffectSpecHandle GameplayEffectSpec = GetAbilitySystemComponent()->MakeOutgoingSpec(GameplayEffectClass, Level, ContextHandle);
-	GameplayEffectSpec.Data->SetSetByCallerMagnitude(KulkiGameplayTags::GameplayEffect_Coefficient.GetTag(), Coefficient);
-	
-	GetAbilitySystemComponent()->ApplyGameplayEffectSpecToTarget(*GameplayEffectSpec.Data.Get(), GetAbilitySystemComponent());
 }
 
 void AKulkiPlayerPawn::SetKulkiPawnSize(const FOnAttributeChangeData& Data)

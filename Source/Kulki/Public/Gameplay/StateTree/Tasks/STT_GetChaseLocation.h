@@ -38,8 +38,5 @@ protected:
 	virtual EStateTreeRunStatus Tick(FStateTreeExecutionContext& Context, const float DeltaTime) override;
 
 private:
-	UPROPERTY()
-	TArray<TWeakObjectPtr<AActor>> AvoidanceNeighbors;
-
 	FVector GetAvoidanceLocation();
 };

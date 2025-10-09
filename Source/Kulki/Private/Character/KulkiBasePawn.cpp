@@ -50,11 +50,11 @@ void AKulkiBasePawn::InitAbilityActorInfo()
 
 void AKulkiBasePawn::ApplyEffectToSelf(TSubclassOf<UGameplayEffect> GameplayEffectClass, float Level) 
 {
-	if (!GetAbilitySystemComponent() || !GameplayEffectClass)
+	if (!GameplayEffectClass)
 	{
 		return;
 	}
-
+	
 	FGameplayEffectContextHandle ContextHandle = GetAbilitySystemComponent()->MakeEffectContext();
 	ContextHandle.AddSourceObject(this);
 	const FGameplayEffectSpecHandle GameplayEffectSpec = GetAbilitySystemComponent()->MakeOutgoingSpec(GameplayEffectClass, Level, ContextHandle);

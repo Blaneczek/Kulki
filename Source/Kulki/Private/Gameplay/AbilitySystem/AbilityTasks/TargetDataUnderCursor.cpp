@@ -2,6 +2,7 @@
 
 
 #include "Gameplay/AbilitySystem/AbilityTasks/TargetDataUnderCursor.h"
+#include "Kulki/Kulki.h"
 
 UTargetDataUnderCursor* UTargetDataUnderCursor::CreateTargetDataUnderMouse(UGameplayAbility* OwningAbility)
 {
@@ -14,8 +15,7 @@ void UTargetDataUnderCursor::Activate()
 	if (APlayerController* PC = Ability->GetCurrentActorInfo()->PlayerController.Get())
 	{
 		FHitResult CursorHit;
-		// ECC_GameTraceChannel1 - Floor
-		PC->GetHitResultUnderCursor(ECollisionChannel::ECC_GameTraceChannel1, false, CursorHit);	
+		PC->GetHitResultUnderCursor(ECC_Floor, false, CursorHit);	
 		ValidData.Broadcast(CursorHit.Location);
 	}
 	else

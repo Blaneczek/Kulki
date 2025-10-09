@@ -15,6 +15,11 @@ EStateTreeRunStatus UGSTT_EnemyManager::EnterState(FStateTreeExecutionContext& C
 	const FStateTreeTransitionResult& Transition)
 {
 	Super::EnterState(Context, Transition);
+
+	if (!PlayerPawn || !Actor)
+	{
+		return EStateTreeRunStatus::Failed;
+	}
 	
 	BindEnemyDelegates();
 	BindPlayerDelegates();
@@ -25,48 +30,45 @@ EStateTreeRunStatus UGSTT_EnemyManager::EnterState(FStateTreeExecutionContext& C
 
 void UGSTT_EnemyManager::BindEnemyDelegates()
 {
-	if (Actor)
+	Actor->OnCheckIfBigger.BindWeakLambda(this, [this]()
 	{
-		Actor->OnCheckIfBigger.BindWeakLambda(this, [this]()
+		if (IsValid(Actor) && PlayerPawn && !PlayerPawn->IsImmune())
 		{
-			if (PlayerPawn && !PlayerPawn->IsImmune())
-			{
-				BroadcastDelegate(CheckIfBigger);			
-			}		
-		});
-		Actor->OnBackToIdle.BindWeakLambda(this, [this]()
+			BroadcastDelegate(CheckIfBigger);			
+		}		
+	});
+	Actor->OnBackToIdle.BindWeakLambda(this, [this]()
+	{
+		if (IsValid(Actor))
 		{
 			BroadcastDelegate(BackToIdle);
-		});
-	}	
+		}		
+	});	
 }
 
 void UGSTT_EnemyManager::BindPlayerDelegates()
 {
-	if (PlayerPawn && Actor)
+	PlayerPawn->OnImmunityActivation.AddWeakLambda(this, [this]()
 	{
-		PlayerPawn->OnImmunityActivation.AddWeakLambda(this, [this]()
+		if (IsValid(Actor) && !Actor->bIdleState)
 		{
-			if (!Actor->bIdleState)
-			{
-				BroadcastDelegate(BackToIdle);
-			}			
-		});
-		PlayerPawn->OnImmunityDeactivation.AddWeakLambda(this, [this]()
+			BroadcastDelegate(BackToIdle);
+		}			
+	});
+	PlayerPawn->OnImmunityDeactivation.AddWeakLambda(this, [this]()
+	{
+		if (IsValid(Actor) && !Actor->bIdleState)
 		{
-			if (!Actor->bIdleState)
-			{
-				BroadcastDelegate(CheckIfBigger);
-			}
-		});
-		PlayerPawn->OnStrengthChanged.AddWeakLambda(this, [this]()
+			BroadcastDelegate(CheckIfBigger);
+		}
+	});
+	PlayerPawn->OnStrengthChanged.AddWeakLambda(this, [this]()
+	{
+		if (IsValid(Actor) && !Actor->bIdleState && !PlayerPawn->IsImmune())
 		{
-			if (!Actor->bIdleState && !PlayerPawn->IsImmune())
-			{
-				BroadcastDelegate(CheckIfBigger);
-			}	
-		});
-	}
+			BroadcastDelegate(CheckIfBigger);
+		}	
+	});
 }
 
 

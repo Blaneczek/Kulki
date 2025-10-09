@@ -51,9 +51,7 @@ public:
 	FOnCheckIfBigger OnCheckIfBigger;
 	FOnBackToIdle OnBackToIdle;
 
-	/* Other Enemies that overlap with this pawn. */
-	UPROPERTY()
-	TArray<TWeakObjectPtr<AActor>> AvoidanceNeighbors;
+	const TSet<TWeakObjectPtr<AActor>>& GetAvoidanceNeighbors() const { return AvoidanceNeighbors; }
 		
 protected:	
 	virtual void BeginPlay() override;
@@ -89,6 +87,10 @@ protected:
 	float EndAICheckRadius;
 	
 private:
+	/* Other Enemies that overlap with this pawn. */
+    UPROPERTY()
+    TSet<TWeakObjectPtr<AActor>> AvoidanceNeighbors;
+	
 	void SetMeshColor();
 	void SetAISpheresSize();
 	void SetAttributesValue(float Strength, float Speed);

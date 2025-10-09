@@ -72,8 +72,6 @@ private:
 	void ActivateImmunity();
 	void DeactivateImmunity(const FLinearColor Color);
 
-	void EnemyHitApplyEffectToSelf(APawn* Enemy, TSubclassOf<UGameplayEffect> GameplayEffectClass, float Level, float Coefficient);
-
 	void InitDefaultAttributes();
 	
 	UPROPERTY()

@@ -9,6 +9,7 @@
 #include "Gameplay/AbilitySystem/KulkiAbilitySystemComponent.h"
 #include "Character/KulkiPlayerPawn.h"
 #include "Gameplay/KulkiGameplayTags.h"
+#include "Kulki/Kulki.h"
 
 AKulkiPlayerController::AKulkiPlayerController()
 {
@@ -98,8 +99,7 @@ void AKulkiPlayerController::FollowMouseCursor()
 	}
 
 	FHitResult HitResult;
-	// ECC_GameTraceChannel1 - Floor
-	GetHitResultUnderCursor(ECollisionChannel::ECC_GameTraceChannel1, false, HitResult);	
+	GetHitResultUnderCursor(ECC_Floor, false, HitResult);	
 	if (HitResult.bBlockingHit)
 	{		
 		const FVector HitDirection = (HitResult.ImpactPoint - PlayerPawn->GetActorLocation()).GetSafeNormal();
