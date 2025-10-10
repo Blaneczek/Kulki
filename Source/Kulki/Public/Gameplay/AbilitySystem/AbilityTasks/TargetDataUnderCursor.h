@@ -7,6 +7,7 @@
 #include "TargetDataUnderCursor.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FMouseTargetDataSignature, const FVector&, Data);
+
 /**
  * 
  */

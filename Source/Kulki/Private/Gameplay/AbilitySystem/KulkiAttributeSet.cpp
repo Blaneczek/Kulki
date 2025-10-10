@@ -13,7 +13,7 @@ void UKulkiAttributeSet::PreAttributeBaseChange(const FGameplayAttribute& Attrib
 	{
 		NewValue = FMath::Clamp(NewValue, 0.0f, GetMaxStrength());	
 	}
-	if (Attribute == GetSpeedAttribute())
+	else if (Attribute == GetSpeedAttribute())
 	{
 		NewValue = FMath::Clamp(NewValue, 0.0f, GetMaxSpeed());
 	}

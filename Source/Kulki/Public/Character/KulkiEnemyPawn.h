@@ -42,6 +42,8 @@ public:
 	/* Gets new overlapping actors for avoidance system. */
 	void ResetNeighbors();
 	
+	const TSet<TWeakObjectPtr<AActor>>& GetAvoidanceNeighbors() const { return AvoidanceNeighbors; }
+	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Kulki")
 	EEnemyType Type = EEnemyType::NONE;
 	
@@ -50,8 +52,6 @@ public:
 
 	FOnCheckIfBigger OnCheckIfBigger;
 	FOnBackToIdle OnBackToIdle;
-
-	const TSet<TWeakObjectPtr<AActor>>& GetAvoidanceNeighbors() const { return AvoidanceNeighbors; }
 		
 protected:	
 	virtual void BeginPlay() override;

@@ -74,13 +74,8 @@ void AKulkiDoppelgangerPawn::OnOverlap(UPrimitiveComponent* OverlappedComponent,
 		return;
 	}
 	
-	const float EnemyStrength = CombatInterface->GetStrength();
-	float Coefficient = -1.f;
-	if (AttributeSet->GetStrength() >= EnemyStrength)
-	{
-		Coefficient = 1.f;
-	}
-	
+	const float Coefficient = AttributeSet->GetStrength() >= CombatInterface->GetStrength() ? 1.f : -1.f;
+
 	bool bEatableEnemy = false;
 	CombatInterface->ApplyOverlapEffect(GetAbilitySystemComponent(), Coefficient, bEatableEnemy);
 	if (Coefficient > 0.f)

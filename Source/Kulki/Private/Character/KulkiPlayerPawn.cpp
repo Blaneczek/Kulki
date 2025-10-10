@@ -78,19 +78,19 @@ void AKulkiPlayerPawn::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActo
 {	
 	IKulkiCombatInterface* CombatInterface = Cast<IKulkiCombatInterface>(OtherActor);
 	
-	if (bIsImmune || !CombatInterface)
+	if (bImmune || !CombatInterface)
 	{
 		return;
 	}
 	
-	const float EnemyStrength = CombatInterface->GetStrength();
-	float Coefficient = -1.f;
-
 	// If Player is bigger, the coefficient is positive to increase Player's attributes
-    if (AttributeSet->GetStrength() >= EnemyStrength)
-    {
-        Coefficient = 1.f;
-    }
+	const float Coefficient = AttributeSet->GetStrength() >= CombatInterface->GetStrength() ? 1.f : -1.f;
+
+	// Activating immunity has to be before applying effect and changing Strength
+	if (Coefficient < 0.f)
+	{
+		ActivateImmunity();
+	}
 	
 	bool bEatableEnemy = false;
 	CombatInterface->ApplyOverlapEffect(GetAbilitySystemComponent(), Coefficient, bEatableEnemy);
@@ -98,15 +98,11 @@ void AKulkiPlayerPawn::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActo
 	{
 		if (bEatableEnemy) OnEatableEnemyKilled.ExecuteIfBound();
 	}
-	else
-	{
-		ActivateImmunity();
-	}
 }
 
 void AKulkiPlayerPawn::OnPlayerLost()
 {
-	bIsImmune = true;
+	bImmune = true;
 	FloatingPawnMovement->Deactivate();
 	GetWorldTimerManager().ClearAllTimersForObject(this);
 	if (AKulkiGameMode* GameMode = Cast<AKulkiGameMode>(UGameplayStatics::GetGameMode(this)))
@@ -117,7 +113,7 @@ void AKulkiPlayerPawn::OnPlayerLost()
 
 void AKulkiPlayerPawn::ActivateImmunity()
 {
-	bIsImmune = true;
+	bImmune = true;
 	FLinearColor BaseColor = FLinearColor::Green;
 	
 	if (DynamicMaterialInstance)
@@ -138,7 +134,7 @@ void AKulkiPlayerPawn::ActivateImmunity()
 
 void AKulkiPlayerPawn::DeactivateImmunity(const FLinearColor Color)
 {	
-	bIsImmune = false;
+	bImmune = false;
 	
 	if (DynamicMaterialInstance)
 	{

@@ -28,7 +28,7 @@ public:
 	virtual void PossessedBy(AController* NewController) override;
 	virtual void InitAbilityActorInfo() override;
 	
-	bool IsImmune() const { return bIsImmune; }
+	bool IsImmune() const { return bImmune; }
 	
 	FOnImmunityActivation OnImmunityActivation;
 	FOnImmunityDeactivation OnImmunityDeactivation;
@@ -77,5 +77,5 @@ private:
 	UPROPERTY()
 	TObjectPtr<UMaterialInstanceDynamic> DynamicMaterialInstance;
 	
-	bool bIsImmune = false;
+	bool bImmune = false;
 };

@@ -32,7 +32,6 @@ public:
 protected:
 	virtual void BeginPlay() override;
 	
-	
 	virtual void AddAbilities() {};
 	void ApplyEffectToSelf(TSubclassOf<UGameplayEffect> GameplayEffectClass, float Level);
 

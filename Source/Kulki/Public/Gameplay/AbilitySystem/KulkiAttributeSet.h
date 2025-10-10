@@ -7,12 +7,6 @@
 #include "AttributeSet.h"
 #include "KulkiAttributeSet.generated.h"
 
-#define ATTRIBUTE_ACCESSORS(ClassName, PropertyName) \
-	GAMEPLAYATTRIBUTE_PROPERTY_GETTER(ClassName, PropertyName) \
-	GAMEPLAYATTRIBUTE_VALUE_GETTER(PropertyName) \
-	GAMEPLAYATTRIBUTE_VALUE_SETTER(PropertyName) \
-	GAMEPLAYATTRIBUTE_VALUE_INITTER(PropertyName)
-
 DECLARE_MULTICAST_DELEGATE(FOnStrengthReachedZero);
 
 /**
@@ -30,19 +24,19 @@ public:
 	
 	UPROPERTY(BlueprintReadOnly, Category = "Attributes")
 	FGameplayAttributeData Strength;
-	ATTRIBUTE_ACCESSORS(UKulkiAttributeSet, Strength);
+	ATTRIBUTE_ACCESSORS_BASIC(UKulkiAttributeSet, Strength);
 
 	UPROPERTY(BlueprintReadOnly, Category = "Attributes")
 	FGameplayAttributeData MaxStrength;
-	ATTRIBUTE_ACCESSORS(UKulkiAttributeSet, MaxStrength);
+	ATTRIBUTE_ACCESSORS_BASIC(UKulkiAttributeSet, MaxStrength);
 
 	UPROPERTY(BlueprintReadOnly, Category = "Attributes")
 	FGameplayAttributeData Speed;
-	ATTRIBUTE_ACCESSORS(UKulkiAttributeSet, Speed);
+	ATTRIBUTE_ACCESSORS_BASIC(UKulkiAttributeSet, Speed);
 
 	UPROPERTY(BlueprintReadOnly, Category = "Attributes")
 	FGameplayAttributeData MaxSpeed;
-	ATTRIBUTE_ACCESSORS(UKulkiAttributeSet, MaxSpeed);
+	ATTRIBUTE_ACCESSORS_BASIC(UKulkiAttributeSet, MaxSpeed);
 
 	FOnStrengthReachedZero OnAttributeReachedZero;
 };

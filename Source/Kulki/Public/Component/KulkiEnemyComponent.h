@@ -43,9 +43,8 @@ protected:
 
 private:
 	void BindDelegatesFromPlayer();
-
+	
 	FVector CalculateValidRandomLocation(const FVector& PlayerLocation, const FSpawnDistanceRange& DistanceRange, float& OutDistanceFromPlayer, bool& OutFoundValidLocation);
-
 	void SpawnEnemy(const FVector& SpawnLocation, const TPair<EEnemyType, FSpawnEnemyData>& EnemyData, float DistanceFromPlayer, float DifficultyLevelScale);
 
 	UPROPERTY()

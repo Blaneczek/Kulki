@@ -145,6 +145,7 @@ void AKulkiEnemyPawn::SetMeshColor()
 void AKulkiEnemyPawn::SetAISpheresSize()
 {
 	const float Scale = GetActorScale().X;
+	// From edge of the mesh + AICheckRadius
 	StartAICheckSphere->SetSphereRadius((Scale * 50.f) + StartAICheckRadius);
 	EndAICheckSphere->SetSphereRadius((Scale * 50.f) + EndAICheckRadius);
 }
@@ -152,7 +153,7 @@ void AKulkiEnemyPawn::SetAISpheresSize()
 void AKulkiEnemyPawn::OnStartAICheck(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 		UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	if (bIdleState && OtherActor)
+	if (bIdleState && OtherActor && OtherActor != this)
 	{
 		OnCheckIfBigger.ExecuteIfBound();
 		bIdleState = false;
@@ -162,7 +163,7 @@ void AKulkiEnemyPawn::OnStartAICheck(UPrimitiveComponent* OverlappedComponent, A
 void AKulkiEnemyPawn::OnEndAICheck(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 		UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-	if (!bIdleState && OtherActor)
+	if (!bIdleState && OtherActor && OtherActor != this)
 	{
 		bIdleState = true;
 		OnBackToIdle.ExecuteIfBound();

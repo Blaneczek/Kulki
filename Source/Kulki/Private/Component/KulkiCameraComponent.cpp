@@ -30,7 +30,7 @@ void UKulkiCameraComponent::ChangeOrtoWidth(float Strength)
 	}
 
 	FOnTimelineFloat TimelineProgress;
-    TimelineProgress.BindUFunction(this, FName("UpdateWidth"));
+    TimelineProgress.BindUFunction(this, FName("UpdateOrtoWidth"));
     OrthoWidthTimeline.AddInterpFloat(OrthoWidthChangeCurve, TimelineProgress);
 	OrthoWidthTimeline.PlayFromStart();
 }
@@ -43,7 +43,7 @@ void UKulkiCameraComponent::TickComponent(float DeltaTime, enum ELevelTick TickT
 	OrthoWidthTimeline.TickTimeline(DeltaTime);
 }
 
-void UKulkiCameraComponent::UpdateWidth(float Alpha)
+void UKulkiCameraComponent::UpdateOrtoWidth(float Alpha)
 {
 	const float NewWidth = FMath::Lerp(OrthoWidthOld, OrthoWidthNew, Alpha);
 	OrthoWidth = NewWidth;

@@ -22,7 +22,6 @@ public:
 	void MergeWithOwner();
 	
 	bool bCanMerge = false;
-
 	FOnCanMerge OnCanMerge;
 	
 protected:

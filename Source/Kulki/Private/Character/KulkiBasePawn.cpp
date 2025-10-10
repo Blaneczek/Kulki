@@ -63,7 +63,7 @@ void AKulkiBasePawn::ApplyEffectToSelf(TSubclassOf<UGameplayEffect> GameplayEffe
 
 void AKulkiBasePawn::SetKulkiPawnSize(const FOnAttributeChangeData& Data)
 {
-	const float NewScale = FMath::Clamp((Data.NewValue * SizeMultiplier), 0.5f, 1000.f);
+	const float NewScale = FMath::Clamp((Data.NewValue * SizeMultiplier), 1.f, 1000.f);
 	SetActorScale3D(FVector(NewScale, NewScale, NewScale * 0.5));
 
 	SetKulkiSizePenaltyMovementSpeed(Data.NewValue);

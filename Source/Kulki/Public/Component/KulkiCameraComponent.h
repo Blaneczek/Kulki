@@ -16,7 +16,9 @@ class KULKI_API UKulkiCameraComponent : public UCameraComponent
 	GENERATED_BODY()
 public:
 	UKulkiCameraComponent();
-	 
+	
+	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+	
 	void ChangeOrtoWidth(float Strength);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Kulki")
@@ -27,16 +29,15 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="Kulki")
 	TObjectPtr<UCurveFloat> OrthoWidthChangeCurve;
-
-	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 	
 private:
+	UFUNCTION()
+    void UpdateOrtoWidth(float Alpha);
+	
 	uint8 StepNumber = 0;
 	float OrthoWidthOld = 0;
 	float OrthoWidthNew = 0;
 	
 	FTimeline OrthoWidthTimeline;
 	
-	UFUNCTION()
-	void UpdateWidth(float Alpha);
 };
